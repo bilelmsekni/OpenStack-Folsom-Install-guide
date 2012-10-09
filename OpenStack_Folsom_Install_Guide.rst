@@ -318,11 +318,12 @@ First, I am really impressed with this new project, it literaly eliminated the n
    GRANT ALL ON quantum.* TO 'quantumUser'@'%' IDENTIFIED BY 'quantumPass';
    quit; 
 
-* Edit the OVS plugin configuration file /etc/quantum/plugins/openvswitch/ovs_quantum_plugin.ini with 
+* Edit the OVS plugin configuration file /etc/quantum/plugins/openvswitch/ovs_quantum_plugin.ini with:: 
 
    #Under the database section
    [DATABASE]
    sql_connection = mysql://quantumUser:quantumPass@157.159.100.232/quantum
+
    #Under the OVS section
    [OVS]
    tenant_network_type=vlan
