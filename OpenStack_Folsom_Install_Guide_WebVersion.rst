@@ -49,8 +49,8 @@ status: Still an ongoing work
 ====================
 
 :Node Role: NICs
+:Compute Node: eth0 (157.159.100.250), eth1 (157.159.100.252).
 :Controller Node: eth0 157.159.100.232, eth1 157.159.100.234
-
 
 2. Getting Ready
 ===============
