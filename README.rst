@@ -20,7 +20,7 @@ Table of Contents
 
   0. What is it?
   1. Requirements
-  2. Getting ready
+  2. Getting Ready
   3. Keystone 
   4. Glance
   5. KVM
@@ -44,17 +44,17 @@ version 1.0
 status: Still an ongoing work
 
 
-2. Requirements
+1. Requirements
 ====================
 
-:Node Role: NICs
+:Node Role: NICs.
 :Controller Node: eth0 (157.159.100.232), eth1 (157.159.100.234).
 :Compute Node: eth0 (157.159.100.250), eth1 (157.159.100.252).
 
-3. Getting ready
+2. Getting Ready
 ===============
 
-3.1. Adding the Offical Folsom repositories
+2.1. Adding the Offical Folsom repositories
 -----------------
 
 * Go to the sudo mode and stay in it until the end of this guide::
@@ -72,171 +72,176 @@ status: Still an ongoing work
    apt-get upgrade
    apt-get dist-upgrade
 
-3.2. MySQL & Others
+2.2. MySQL & RabbitMQ
 ------------
 
 * Install MySQL::
 
    apt-get install mysql-server python-mysqldb
 
-* Install RabbitMQ::
-
-   apt-get install rabbitmq-server 
-
 * Configure mysql to accept all incoming requests::
 
    sed -i 's/127.0.0.1/0.0.0.0/g' /etc/mysql/my.cnf
    service mysql restart
 
-* Install other services::
+* Install RabbitMQ::
 
-   apt-get install vlan bridge-utils ntp
+   apt-get install rabbitmq-server 
 
-* Configure the NTP server to synchronize between your compute nodes and the controller node::
-   nano /etc/ntp.conf
-    
-   #Replace server ntp.ubuntu.com with :
-    
-   ntp.ubuntu.com iburst
-   nserver 127.127.1.0
-   nfudge 127.127.1.0 stratum 10
-  
-   #Restart the service
-   service ntp restart   
-
-3.3. Configuration
+2.3. Node synchronization
 ------------------
 
-* Logger configuration:  OCCILogging.conf
-* Server configuration:  occi_server.conf
-* CouchDB configuration: couchdb_server.conf
+* Install other services::
 
-3.4. Server running
+   apt-get install ntp
+
+* Configure the NTP server to synchronize between your compute nodes and the controller node::
+   
+   sed -i 's/server ntp.ubuntu.com/server ntp.ubuntu.com\nserver 127.127.1.0\nfudge 127.127.1.0 stratum 10/g' /etc/ntp.conf
+   service ntp restart  
+
+2.4. Others
 -------------------
-::
+* Install other services::
 
-   sudo python start.py
+   apt-get install vlan bridge-utils
 
-4. HowTo use (examples. The json files are at the end of this README)
+* Enable IP_Forwarding::
+
+   nano /etc/sysctl.conf
+   #Uncomment net.ipv4.ip\_forward=1
+
+________________________________________________________________________________________________________________________
+
+4. Keystone
 =====================================================================
 
-In order to use PyOCNI, you must respect certain rules :
+This is how we install OpenStack's identity service:
 
-#. All data must follow the JSON format declared by OCCI [occi+json], any detected conflict will cancel the request.
-#. Kinds, Mixins and Actions can be created, retrieved, updated or deleted (CRUD) on the fly.
-#. Kinds, Mixins and Actions can be read and created by anyone but updated and deleted by only their creator
-#. Scheme + Term = OCCI_ID : unique identifier of the OCCI (Kind/Mixin/Action) description
-#. PyOCNI_Server_Address + Location : OCCI_Location of (Kind/Mixin) description
+* Start by the keystone packages::
 
+   apt-get install keystone python-keystone python-keystoneclient
 
-These are some commands that you can use with PyOCNI
+* Create a new MySQL database for keystone::
 
-________________________________________________________________________________________________________________________
+   mysql -u root -p
+   CREATE DATABASE keystone;
+   GRANT ALL ON keystone.* TO 'keystoneUser'@'%' IDENTIFIED BY 'keystonePass';
+   quit;
 
-* Create Actions::
+* Adapt the connection attribute in the /etc/keystone/keystone.conf to the new database::
 
-   curl -X POST -d@post_actions.json -H 'content-type: application/occi+json' -H 'accept: application/occi+json' --user user_1:pass -v http://localhost:8090/-/
+   connection = mysql://keystoneUser:keystonePass@157.159.100.232/keystone
 
-* Get Actions::
+* Restart the identity service then synchronize the database::
 
-   curl -X GET -d@get_actions.json -H 'content-type: application/occi+json' -H 'accept: application/occi+json' --user user_1:pass -v http://localhost:8090/-/
+   service keystone restart
+   keystone-manage db_sync
 
-* Update Actions::
+* Fill up the keystone database using the two scripts available.Beware that you MUST modify the HOST_IP variable before executing the scripts::
 
-   curl -X PUT -d@put_actions.json -H 'content-type: application/occi+json' -H 'accept: application/occi+json' --user user_1:pass -v http://localhost:8090/-/
+   chmod +x keystone_basic.sh
+   chmod +x keystone_endpoints_basic.sh
+   ./keystone_basic.sh
+   ./keystone_endpoints_basic.sh
 
-* Delete Actions::
+* Create a simple credential file and load it so you won't be bothered later::
 
-   curl -X DELETE -d@delete_actions.json -H 'content-type: application/occi+json' -H 'accept: application/occi+json' --user user_1:pass -v http://localhost:8090/-/
+   nano creds
+   #Paste the following:
+   export OS_TENANT_NAME=admin
+   export OS_USERNAME=admin
+   export OS_PASSWORD=admin_pass
+   export OS_AUTH_URL="http://157.159.100.232:5000/v2.0/"
+   # Load it:
+   source creds
 
-________________________________________________________________________________________________________________________
+* To test Keystone, we use a simple curl request::
 
-________________________________________________________________________________________________________________________
-
-* Create Mixins::
-
-   curl -X POST -d@post_mixins.json -H 'content-type: application/occi+json' -H 'accept: application/occi+json' --user user_1:pass -v http://localhost:8090/-/
-
-* Get Mixins::
-
-   curl -X GET -d@get_mixins.json -H 'content-type: application/occi+json' -H 'accept: application/occi+json' --user user_1:pass -v http://localhost:8090/-/
-
-* Update Mixins::
-
-   curl -X PUT -d@put_mixins.json -H 'content-type: application/occi+json' -H 'accept: application/occi+json' --user user_1:pass -v http://localhost:8090/-/
-
-* Delete Mixins::
-
-   curl -X DELETE -d@delete_mixins.json -H 'content-type: application/occi+json' -H 'accept: application/occi+json' --user user_1:pass -v http://localhost:8090/-/
+   apt-get install curl openssl
+   curl http://157.159.100.232:35357/v2.0/endpoints -H 'x-auth-token: ADMIN'
 
 ________________________________________________________________________________________________________________________
 
 ________________________________________________________________________________________________________________________
 
-* Creation of Kinds, Mixins and Actions at the same time::
+4. Glance
+=====================================================================
 
-   curl -X POST -d@post_categories.json -H 'content-type: application/occi+json' -H 'accept: application/occi+json' --user user_1:pass -v http://localhost:8090/-/
+* After installing Keystone, we continue with installing image storage service a.k.a Glance::
 
-* Retrieval of all registered Kinds, Mixins and Actions::
+   apt-get install glance python-glance python-glanceclient
 
-   curl -X GET -H 'content-type: application/occi+json' -H 'accept: application/occi+json' --user user_1:pass -v http://localhost:8090/-/
+* Create a new MySQL database for Glance::
 
-* Retrieval of some registered Kinds, Mixins and Actions through filtering::
+   mysql -u root -p
+   CREATE DATABASE glance;
+   GRANT ALL ON glance.* TO 'glanceUser'@'%' IDENTIFIED BY 'glancePass';
+   quit;
 
-   curl -X GET -d@filter_categories.json -H 'content-type: application/occi+json' -H 'accept: application/occi+json' --user user_1:pass -v http://localhost:8090/-/
+* Update /etc/glance/glance-api-paste.ini with::
 
-* Update of Kinds, Mixins and Actions at the same time::
+   [filter:authtoken]
+   paste.filter_factory = keystone.middleware.auth_token:filter_factory
+   auth_host = 157.159.100.232
+   auth_port = 35357
+   auth_protocol = http
+   admin_tenant_name = service
+   admin_user = glance
+   admin_password = service_pass
 
-   curl -X PUT -d@put_categories.json -H 'content-type: application/occi+json' -H 'accept: application/occi+json' --user user_1:pass -v http://localhost:8090/-/
+* Update the /etc/glance/glance-registry-paste.ini with::
 
-* Deletion of Kinds, Mixins and Actions at the same time::
+   [filter:authtoken]
+   paste.filter_factory = keystone.middleware.auth_token:filter_factory
+   auth_host = 157.159.100.232
+   auth_port = 35357
+   auth_protocol = http
+   admin_tenant_name = service
+   admin_user = glance
+   admin_password = service_pass
 
-   curl -X DELETE -d@delete_categories.json -H 'content-type: application/occi+json' -H 'accept: application/occi+json' --user user_1:pass -v http://localhost:8090/-/
+* Update /etc/glance/glance-api.conf with::
 
-________________________________________________________________________________________________________________________
+   sql_connection = mysql://glanceUser:glancePass@157.159.100.232/glance
 
-________________________________________________________________________________________________________________________
+* And::
 
-* Create Kinds::
+   [paste_deploy]
+   flavor = keystone
 
-   curl -X POST -d@post_kinds.json -H 'content-type: application/occi+json' -H 'accept: application/occi+json' --user user_1:pass -v 'http://localhost:8090/-/'
+* Update the /etc/glance/glance-registry.conf with::
 
-* Retrieval of a registered Kind::
+   sql_connection = mysql://glanceUser:glancePass@157.159.100.232/glance
 
-   curl -X GET -H 'content-type: application/occi+json' -H 'accept: application/occi+json' --user user_1:pass -v http://localhost:8090/-/{resource}/
+* And::
 
-* Get Kinds with filetering::
+   [paste_deploy]
+   flavor = keystone
 
-   curl -X GET -d@get_kinds.json -H 'content-type: application/occi+json' -H 'accept: application/occi+json' --user user_1:pass -v http://localhost:8090/-/
+* Restart the glance-api and glance-registry services::
 
-* Update Kinds::
+   service glance-api restart; service glance-registry restart
 
-   curl -X PUT -d@put_kinds.json -H 'content-type: application/occi+json' -H 'accept: application/occi+json' --user user_1:pass -v http://localhost:8090/-/
+* Synchronize the glance database::
 
-* Update Kind providers::
+   glance-manage db_sync
 
-   curl -X DELETE -d@put_providers.json -H 'content-type: application/occi+json' -H 'accept: application/occi+json' --user user_1:pass -v http://localhost:8090/-/
+* Restart the services again to take into account the new modifications::
 
-* Delete Kinds::
+   service glance-registry restart; service glance-api restart
 
-   curl -X DELETE -d@delete_kinds.json -H 'content-type: application/occi+json' -H 'accept: application/occi+json' --user user_1:pass -v http://localhost:8090/-/
+* To test Glance's well installation, we upload a new image to the store. Start by downloading an ubuntu cloud image to your node and then uploading it to Glance::
 
-________________________________________________________________________________________________________________________
+   mkdir images
+   cd images
+   wget http://uec-images.ubuntu.com/releases/precise/release/ubuntu-12.04-server-cloudimg-amd64.tar.gz
+   tar xzvf ubuntu-12.04-server-cloudimg-amd64.tar.gz
+   glance add name="Ubuntu" is_public=true container_format=ovf disk_format=qcow2 < precise-server-cloudimg-amd64.img
 
-________________________________________________________________________________________________________________________
+* Now list the images to see what you have just uploaded::
 
-
-* Get Resources,Links and URLs below a path ::
-
-   curl -X GET -H 'content-type: application/occi+json' -H 'accept: application/occi+json' --user user_1:pass -v http://localhost:8090/{path}
-
-* Get Resources and Links below a path::
-
-   curl -X GET -d@get_res_link_b_path.json -H 'content-type: application/occi+json' -H 'accept: application/occi+json' --user user_1:pass -v http://localhost:8090/{primary}/{secondary}
-
-* Delete all Resources and Links below a path::
-
-   curl -X DELETE -H 'content-type: application/occi+json' -H 'accept: application/occi+json' --user user_1:pass -v http://localhost:8090/{primary}/{secondary}
+   glance image-list
 
 ________________________________________________________________________________________________________________________
 
