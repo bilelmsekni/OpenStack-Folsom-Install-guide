@@ -47,7 +47,7 @@ status: Still an ongoing work
 1. Requirements
 ====================
 
-:Node Role: NICs.
+:Node Role: NICs
 :Controller Node: eth0 (157.159.100.232), eth1 (157.159.100.234).
 :Compute Node: eth0 (157.159.100.250), eth1 (157.159.100.252).
 
@@ -111,8 +111,6 @@ status: Still an ongoing work
    nano /etc/sysctl.conf
    #Uncomment net.ipv4.ip\_forward=1
 
-________________________________________________________________________________________________________________________
-
 4. Keystone
 =====================================================================
 
@@ -160,10 +158,6 @@ This is how we install OpenStack's identity service:
 
    apt-get install curl openssl
    curl http://157.159.100.232:35357/v2.0/endpoints -H 'x-auth-token: ADMIN'
-
-________________________________________________________________________________________________________________________
-
-________________________________________________________________________________________________________________________
 
 4. Glance
 =====================================================================
@@ -243,79 +237,322 @@ ________________________________________________________________________________
 
    glance image-list
 
-________________________________________________________________________________________________________________________
+4. KVM
+=====================================================================
 
-________________________________________________________________________________________________________________________
+* KVM is needed as the hypervisor that will be used to create virtual machines. Before you install KVM, make sure that your hardware enables virtualization::
 
-* Create Resources of a kind::
+   apt-get install cpu-checker
+   kvm-ok
 
-   curl -X POST -d@post_resources.json -H 'content-type: application/occi+json' -H 'accept: application/occi+json' --user user_1:pass -v http://localhost:8090/{resource}/
+* Normally you would get a good response. Now, move to install kvm and configure it::
 
-* Create a Resource with a custom URL path::
+   apt-get install -y kvm libvirt-bin pm-utils
 
-   curl -X PUT -d@post_custom_resource.json -H 'content-type: application/occi+json' -H 'accept: application/occi+json' --user user_1:pass -v http://localhost:8090/{resource}/{user_id}/{my_custom_resource_id}
+* Edit the /etc/libvirt/qemu.conf file and uncomment::
 
-* Get a Resource::
+   cgroup_device_acl = [
+   "/dev/null", "/dev/full", "/dev/zero",
+   "/dev/random", "/dev/urandom",
+   "/dev/ptmx", "/dev/kvm", "/dev/kqemu",
+   "/dev/rtc", "/dev/hpet","/dev/net/tun"
+   ]
 
-   curl -X GET -H 'content-type: application/occi+json' -H 'accept: application/occi+json' --user user_1:pass -v http://localhost:8090/{resource}/{user-id}/{resource-id}
+* Delete default virtual bridge ::
 
-* Full Update a Resource::
+   virsh net-destroy default
+   virsh net-undefine default
 
-   curl -X PUT -d@full_update_resource.json -H 'content-type: application/occi+json' -H 'accept: application/occi+json' --user user_1:pass -v http://localhost:8090/{resource}/{user-id}/{resource-id}
+* Enable live migration by updating /etc/libvirt/libvirtd.conf file::
 
-* Partial Update a Resource::
+   listen_tls = 0
+   listen_tcp = 1
+   auth_tcp = "none"
 
-   curl -X POST -d@partial_update_resource.json -H 'content-type: application/occi+json' -H 'accept: application/occi+json' --user user_1:pass -v http://localhost:8090/{resource}/{user-id}/{resource-id}
+* Edit libvirtd_opts variable in /etc/init/libvirt-bin.conf file::
 
-* Delete a Resource::
+   env libvirtd_opts="-d -l"
 
-   curl -X DELETE -H 'content-type: application/occi+json' -H 'accept: application/occi+json' --user user_1:pass -v http://localhost:8090/{resource}/{user-id}/{resource-id}
+* Edit /etc/default/libvirt-bin file ::
 
-________________________________________________________________________________________________________________________
+   libvirtd_opts="-d -l"
 
-________________________________________________________________________________________________________________________
+* Restart the libvirt service to load the new values::
 
-* Create Links of a kind::
+   service libvirt-bin restart
 
-   curl -X POST -d@post_links.json -H 'content-type: application/occi+json' -H 'accept: application/occi+json' --user user_1:pass -v http://localhost:8090/{link}/
+4. OpenVSwitch
+=====================================================================
 
-* Create a Link with a custom resource path::
+* Install the openVSwitch::
 
-   curl -X PUT -d@post_custom_resource.json -H 'content-type: application/occi+json' -H 'accept: application/occi+json' --user user_1:pass -v http://localhost:8090/{my_custom_link_path}
+   apt-get install -y openvswitch-switch openvswitch-datapath-dkms
 
-* Get a Link::
+* Create the bridges::
 
-   curl -X GET -H 'content-type: application/occi+json' -H 'accept: application/occi+json' --user user_1:pass -v http://localhost:8090/{link}/{user-id}/{link-id}
+   #br-int will be used for integration	
+   ovs-vsctl add-br br-int
+   #br-eth1 will be used for VM communication 
+   ovs-vsctl add-br br-eth1 
+   ovs-vsctl add-port br-eth1 eth1
+   #br-ex will be used to ensure access to VM from the outside world (a.k.a internet)
+   ovs-vsctl add-br br-ex
+   ovs-vsctl add-port br-ex eth2
 
-* Full update a Link::
+4. Quantum
+=====================================================================
 
-   curl -X PUT -d@full_update_link.json -H 'content-type: application/occi+json' -H 'accept: application/occi+json' --user user_1:pass -v http://localhost:8090/{link}/{user-id}/{link-id}
+First, I am really impressed with this new project, it literaly eliminated the network overhead i used to deal with during the nova-network era.
 
-* Patial update a Link::
+* Install the Quantum server and the Quantum OVS plugin::
 
-   curl -X POST -d@partial_update_link.json -H 'content-type: application/occi+json' -H 'accept: application/occi+json' --user user_1:pass -v http://localhost:8090/{link}/{user-id}/{link-id}
+   apt-get install quantum-server python-cliff python-pyparsing
+   apt-get install quantum-plugin-openvswitch
 
-* Delete a link::
+* Create a database::
 
-   curl -X DELETE -H 'content-type: application/occi+json' -H 'accept: application/occi+json' --user user_1:pass -v http://localhost:8090/{link}/{user-id}/{link-id}
+   mysql -u root -p
+   CREATE DATABASE quantum;
+   GRANT ALL ON quantum.* TO 'quantumUser'@'%' IDENTIFIED BY 'quantumPass';
+   quit; 
 
-________________________________________________________________________________________________________________________
+* Edit the OVS plugin configuration file /etc/quantum/plugins/openvswitch/ovs_quantum_plugin.ini with 
 
-5. For developers
+   #Under the database section
+   [DATABASE]
+   sql_connection = mysql://quantumUser:quantumPass@157.159.100.232/quantum
+   
+   #Under the OVS section
+   [OVS]
+   tenant_network_type=vlan
+   network_vlan_ranges = physnet1:1:4094
+   bridge_mappings = physnet1:br-eth1
+
+* Restart the quantum server::
+
+   service quantum-server restart
+
+* Install the OVS plugin agent::
+
+   apt-get install quantum-plugin-openvswitch-agent
+
+* Intall quantum DHCP and l3 agents::
+
+   apt-get -y install quantum-dhcp-agent
+   apt-get -y install quantum-l3-agent
+
+* Edit /etc/quantum/api-paste.ini ::
+
+   [filter:authtoken]
+   paste.filter_factory = keystone.middleware.auth_token:filter_factory
+   auth_host = 157.159.100.232
+   auth_port = 35357
+   auth_protocol = http
+   admin_tenant_name = service
+   admin_user = quantum
+   admin_password = service_pass
+
+* In addition, update the /etc/quantum/l3\_agent.ini::
+
+   auth_url = http://157.159.100.232:35357/v2.0
+   auth_region = RegionOne
+   admin_tenant_name = service
+   admin_user = quantum
+   admin_password = service_pass
+
+* Restart all the services::
+
+   service quantum-server restart
+   service quantum-plugin-openvswitch-agent restart
+   service quantum-dhcp-agent restart
+   service quantum-l3-agent restart
+
+5. Nova
 =================
 
-If you want export the use of your service through OCCI, two parts should be developped:
+* Start by installing nova components::
 
-#. the definition of the kind, action, and mixin with the list of attributes
-#. implementation of the specific service backend (CRUD operations)
+   apt-get install -y nova-api nova-cert nova-common novnc nova-compute-kvm
+   apt-get install -y nova-consoleauth nova-scheduler nova-novncproxy
 
+* Prepare a Mysql database for Nova::
 
-6. Licensing
+   mysql -u root -p
+   CREATE DATABASE nova;
+   GRANT ALL ON nova.* TO 'novaUser'@'%' IDENTIFIED BY 'novaPass';
+   quit;
+
+* Now modify authtoken section in the /etc/nova/api-paste.ini file to this::
+
+   [filter:authtoken]
+   paste.filter_factory = keystone.middleware.auth_token:filter_factory
+   auth_host = 157.159.100.232
+   auth_port = 35357
+   auth_protocol = http
+   admin_tenant_name = service
+   admin_user = nova
+   admin_password = service_pass
+   signing_dirname = /tmp/keystone-signing-nova
+
+* Modify the nova.conf like this::
+
+   [DEFAULT]
+   logdir=/var/log/nova
+   state_path=/var/lib/nova
+   lock_path=/run/lock/nova
+   verbose=True
+   api_paste_config=/etc/nova/api-paste.ini
+   scheduler_driver=nova.scheduler.simple.SimpleScheduler
+   s3_host=157.159.100.232
+   ec2_host=157.159.100.232
+   ec2_dmz_host=157.159.100.232
+   rabbit_host=157.159.100.232
+   cc_host=157.159.100.232
+   nova_url=http://157.159.100.232:8774/v1.1/
+   sql_connection=mysql://novaUser:novaPass@157.159.100.232/nova
+   ec2_url=http://157.159.100.232:8773/services/Cloud 
+   root_helper=sudo nova-rootwrap /etc/nova/rootwrap.conf
+
+   # Auth
+   use_deprecated_auth=false
+   auth_strategy=keystone
+   keystone_ec2_url=http://157.159.100.232:5000/v2.0/ec2tokens
+   # Imaging service
+   glance_api_servers=157.159.100.232:9292
+   image_service=nova.image.glance.GlanceImageService
+
+   # Vnc configuration
+   novnc_enabled=true
+   novncproxy_base_url=http://157.159.100.232:6080/vnc_auto.html
+   novncproxy_port=6080
+   vncserver_proxyclient_address=127.0.0.1
+   vncserver_listen=0.0.0.0 
+
+   # Network settings
+   network_api_class=nova.network.quantumv2.api.API
+   quantum_url=http://157.159.100.232:9696
+   quantum_auth_strategy=keystone
+   quantum_admin_tenant_name=service
+   quantum_admin_username=quantum
+   quantum_admin_password=service_pass
+   quantum_admin_auth_url=http://157.159.100.232:35357/v2.0
+   libvirt_vif_driver=nova.virt.libvirt.vif.LibvirtHybridOVSBridgeDriver
+   linuxnet_interface_driver=nova.network.linux_net.LinuxOVSInterfaceDriver
+   firewall_driver=nova.virt.libvirt.firewall.IptablesFirewallDriver
+
+   # Compute #
+   compute_driver=libvirt.LibvirtDriver
+
+   # Cinder #
+   volume_api_class=nova.volume.cinder.API
+   osapi_volume_listen_port=5900
+
+* Don't forget to update the ownership rights of the nova directory::
+
+   chown -R nova. /etc/nova
+   chmod 644 /etc/nova/nova.conf
+
+* Add this line to the sudoers file::
+
+   sudo visudo
+   #Paste this line anywhere you like:
+   nova ALL=(ALL) NOPASSWD:ALL
+
+* Synchronize your database::
+
+   nova-manage db sync
+
+* Restart nova-* services::
+
+   cd /etc/init.d/; for i in $( ls nova-* ); do sudo service $i restart; done   
+
+* Check for the smiling faces on nova-* services to confirm your installation::
+
+   nova-manage service list
+
+6. Cinder
+=================
+
+* Cinder is the newest OpenStack project and it aims at managing the volumes for VMs. Although Cinder is a replacement of the old nova-volume service, its installation is now a seperated from the nova install process.::
+
+   apt-get install cinder-api cinder-scheduler cinder-volume iscsitarget 
+   apt-get install open-iscsi iscsitarget-dkms
+
+* Prepare a Mysql database for Cinder::
+
+   mysql -u root -p
+   CREATE DATABASE cinder;
+   GRANT ALL ON cinder.* TO 'cinderUser'@'%' IDENTIFIED BY 'cinderPass';
+   quit;
+
+* Configure /etc/cinder/api-paste.init like the following::
+
+   [filter:authtoken]
+   paste.filter_factory = keystone.middleware.auth_token:filter_factory
+   service_protocol = http
+   service_host = 157.159.100.232
+   service_port = 5000
+   auth_host = 157.159.100.232
+   auth_port = 35357
+   auth_protocol = http
+   admin_tenant_name = service
+   admin_user = cinder
+   admin_password = service_pass
+
+* Edit the /etc/cinder/cinder.conf to::
+
+   [DEFAULT]
+   rootwrap_config=/etc/cinder/rootwrap.conf
+   sql_connection = mysql://cinderUser:cinderPass@157.159.100.232/cinder
+   api_paste_confg = /etc/cinder/api-paste.ini
+   iscsi_helper=ietadm
+   volume_name_template = volume-%s
+   volume_group = cinder-volumes
+   verbose = True
+   auth_strategy = keystone
+   #osapi_volume_listen_port=5900
+
+* Then, synchronize your database::
+
+   cinder-manage db sync
+
+* Finally, don't forget to create a volumegroup and name it cinder-volumes::
+
+   dd if=/dev/zero of=cinder-volumes bs=1 count=0 seek=2G
+   losetup /dev/loop2 cinder-volumes
+   fdisk /dev/loop2
+   #Type in the followings:
+   n
+   p
+   1
+   ENTER
+   ENTER
+   t
+   8e
+   write
+
+* Proceed to create the physical volume then the volume group::
+
+   pvcreate /dev/loop2
+   vgcreate cinder-volumes /dev/loop2
+
+6. Horizon
+============
+
+* Update Kind providers::
+
+   curl -X DELETE -d@put_providers.json -H 'content-type: application/occi+json' -H 'accept: application/occi+json' --user user_1:pass -v http://localhost:8090/-/
+
+* Delete Kinds::
+
+   curl -X DELETE -d@delete_kinds.json -H 'content-type: application/occi+json' -H 'accept: application/occi+json' --user user_1:pass -v http://localhost:8090/-/
+
+8. Licensing
 ============
 
 ::
 
-  Copyright (C) 2011 Houssem Medhioub - Institut Mines-Telecom
+  Copyright (C) 2012 Bilel Msekni - Institut Mines-Telecom
 
   This library is free software: you can redistribute it and/or modify
   it under the terms of the GNU Lesser General Public License as
@@ -333,11 +570,9 @@ If you want export the use of your service through OCCI, two parts should be dev
 7. Contacts
 ===========
 
-Houssem Medhioub: houssem.medhioub@it-sudparis.eu
 
 Bilel Msekni: bilel.msekni@telecom-sudparis.eu
 
-Djamal Zeghlache: djamal.zeghlache@it-sudparis.eu
 
 8. Acknowledgment
 =================
