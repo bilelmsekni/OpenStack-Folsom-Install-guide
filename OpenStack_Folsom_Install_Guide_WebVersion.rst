@@ -40,9 +40,9 @@ Table of Contents
 
 OpenStack Folsom Install Guide is an easy and tested way to create your own OpenStack plateform. 
 
-version 1.0, 10 Oct 2012
+Version 1.0, 10 Oct 2012
 
-status: Still an ongoing work
+Status: Still an ongoing work
 
 
 1. Requirements
@@ -50,7 +50,7 @@ status: Still an ongoing work
 
 :Node Role: NICs
 :Compute Node: eth0 (157.159.100.250), eth1 (157.159.100.252).
-:Controller Node: eth0 157.159.100.232, eth1 157.159.100.234
+:Compute Node: eth0 (157.159.100.232), eth1 (157.159.100.234)
 
 2. Getting Ready
 ===============
