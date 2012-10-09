@@ -597,9 +597,9 @@ Bilel Msekni: bilel.msekni@telecom-sudparis.eu
 =================
 This work has been supported by:
 
-* Emilien Machi's Folsom guide [https://github.com/EmilienM/openstack-folsom-guide]
-* OpenStack Folsom Install [http://docs.openstack.org/trunk/openstack-compute/install/apt/content/ap_installingfolsomubuntuprecise.html]
-* Quantum Install [http://docs.openstack.org/trunk/openstack-network/admin/content/ch_install.html]
+* Emilien Macchi's Folsom guide [https://github.com/EmilienM/openstack-folsom-guide]
+* OpenStack Documentation [http://docs.openstack.org/trunk/openstack-compute/install/apt/content/ap_installingfolsomubuntuprecise.html]
+* OpenStack Quantum Install [http://docs.openstack.org/trunk/openstack-network/admin/content/ch_install.html]
 
 15. Todo
 =======
