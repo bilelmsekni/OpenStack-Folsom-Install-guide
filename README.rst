@@ -37,40 +37,72 @@ Table of Contents
 
 OpenStack Folsom Install Guide is an easy and tested way to create your own OpenStack plateform. 
 
-version 0.1
+version 1.0
 
 10 Oct 2012
 
 status: Still an ongoing work
 
 
-2. API Documentation
+2. Requirements
 ====================
-the api documentation are available through this html file:
-pyOCNI/pyocni/doc/index.html
 
-3. Installation
+:Node Role: NICs
+:Controller Node: eth0 (157.159.100.232), eth1 (157.159.100.234).
+:Compute Node: eth0 (157.159.100.250), eth1 (157.159.100.252).
+
+3. Getting ready
 ===============
 
-3.1. Requirements
+3.1. Adding the Offical Folsom repositories
 -----------------
-This software needs this packages to run:
 
-* python <= 2.7
-* python-all-dev (for eventlet/greenlet install/make)
-* python-setuptools (to execute the setup.py file)
-* couchdb >= 1.2.0 (Easiest install: using build-couchdb https://github.com/iriscouch/build-couchdb )
+* Go to the sudo mode and stay in it until the end of this guide::
 
-   To test CouchDB:           http://127.0.0.1:5984
+   sudo su
 
-   To test the CouchDB GUI:   http://127.0.0.1:5984/_utils/
+* Add the OpenStack Folsom repositories to your ubuntu repositories::
 
+   echo deb http://ubuntu-cloud.archive.canonical.com/ubuntu precise-updates/folsom main >> /etc/apt/sources.list.d/folsom.list
+   apt-key adv --recv-keys --keyserver keyserver.ubuntu.com 5EDB1B62EC4926EA
 
-3.2. Install
+* Update your system::
+
+   apt-get update
+   apt-get upgrade
+   apt-get dist-upgrade
+
+3.2. MySQL & Others
 ------------
-::
 
-   sudo python setup.py install
+* Install MySQL::
+
+   apt-get install mysql-server python-mysqldb
+
+* Install RabbitMQ::
+
+   apt-get install rabbitmq-server 
+
+* Configure mysql to accept all incoming requests::
+
+   sed -i 's/127.0.0.1/0.0.0.0/g' /etc/mysql/my.cnf
+   service mysql restart
+
+* Install other services::
+
+   apt-get install vlan bridge-utils ntp
+
+* Configure the NTP server to synchronize between your compute nodes and the controller node::
+   nano /etc/ntp.conf
+    
+   #Replace server ntp.ubuntu.com with :
+    
+   ntp.ubuntu.com iburst
+   nserver 127.127.1.0
+   nfudge 127.127.1.0 stratum 10
+  
+   #Restart the service
+   service ntp restart   
 
 3.3. Configuration
 ------------------
