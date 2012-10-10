@@ -492,7 +492,7 @@ Cinder is the newest OpenStack project and it aims at managing the volumes for V
    GRANT ALL ON cinder.* TO 'cinderUser'@'%' IDENTIFIED BY 'cinderPass';
    quit;
 
-* Configure /etc/cinder/api-paste.init like the following::
+* Configure /etc/cinder/api-paste.ini like the following::
 
    [filter:authtoken]
    paste.filter_factory = keystone.middleware.auth_token:filter_factory
