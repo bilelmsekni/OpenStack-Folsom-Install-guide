@@ -11,7 +11,7 @@
 #
 
 # Host address
-HOST_IP=157.159.100.232
+HOST_IP=192.168.100.232
 
 # MySQL definitions
 MYSQL_USER=keystoneUser
