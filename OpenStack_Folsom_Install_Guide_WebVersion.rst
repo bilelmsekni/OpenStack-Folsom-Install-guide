@@ -32,10 +32,11 @@ Table of Contents
   9. Cinder
   10. Horizon
   11. Start your first VM
-  12. Licencing
-  13. Contacts
-  14. Acknowledgement
-  15. To do
+  12. Adding a compute node
+  13. Licencing
+  14. Contacts
+  15. Acknowledgement
+  16. To do
 
 0. What is it?
 ==============
@@ -44,15 +45,18 @@ OpenStack Folsom Install Guide is an easy and tested way to create your own Open
 
 Version 1.0, 10 Oct 2012
 
-Status: Still an ongoing work
+Status: Stable
 
 
 1. Requirements
 ====================
 
 :Node Role: NICs
-:Control Node: eth0 (157.159.100.232), eth1 (157.159.100.234), eth2 (157.159.100.236)
-:Compute Node: eth0 (157.159.100.250), eth1 (157.159.100.252)
+:Control Node: eth0 (192.168.100.232), eth1 (192.168.100.234), eth2 (192.168.100.236)
+:Compute Node: eth0 (192.168.100.250), eth1 (192.168.100.252)
+
+**Note 1:** You can do a single node install with this guide.
+**Note 2:** If you have only two NICs, you can also use this guide but you must ignore anypart related to eth2 and your VMs won't be internet accessible
 
 
 2. Getting Ready
@@ -61,7 +65,7 @@ Status: Still an ongoing work
 2.1. Adding the Offical Folsom repositories
 -----------------
 
-* Go to the sudo mode and stay in it until the end of this guide::
+* After you install Ubuntu 12.04 Server 64bits, Go to the sudo mode and don't leave it until the end of this guide::
 
    sudo su
 
@@ -133,7 +137,7 @@ This is how we install OpenStack's identity service:
 
 * Adapt the connection attribute in the /etc/keystone/keystone.conf to the new database::
 
-   connection = mysql://keystoneUser:keystonePass@157.159.100.232/keystone
+   connection = mysql://keystoneUser:keystonePass@192.168.100.232/keystone
 
 * Restart the identity service then synchronize the database::
 
@@ -154,14 +158,14 @@ This is how we install OpenStack's identity service:
    export OS_TENANT_NAME=admin
    export OS_USERNAME=admin
    export OS_PASSWORD=admin_pass
-   export OS_AUTH_URL="http://157.159.100.232:5000/v2.0/"
+   export OS_AUTH_URL="http://192.168.100.232:5000/v2.0/"
    # Load it:
    source creds
 
 * To test Keystone, we use a simple curl request::
 
    apt-get install curl openssl
-   curl http://157.159.100.232:35357/v2.0/endpoints -H 'x-auth-token: ADMIN'
+   curl http://192.168.100.232:35357/v2.0/endpoints -H 'x-auth-token: ADMIN'
 
 4. Glance
 =====================================================================
@@ -181,7 +185,7 @@ This is how we install OpenStack's identity service:
 
    [filter:authtoken]
    paste.filter_factory = keystone.middleware.auth_token:filter_factory
-   auth_host = 157.159.100.232
+   auth_host = 192.168.100.232
    auth_port = 35357
    auth_protocol = http
    admin_tenant_name = service
@@ -192,7 +196,7 @@ This is how we install OpenStack's identity service:
 
    [filter:authtoken]
    paste.filter_factory = keystone.middleware.auth_token:filter_factory
-   auth_host = 157.159.100.232
+   auth_host = 192.168.100.232
    auth_port = 35357
    auth_protocol = http
    admin_tenant_name = service
@@ -201,7 +205,7 @@ This is how we install OpenStack's identity service:
 
 * Update /etc/glance/glance-api.conf with::
 
-   sql_connection = mysql://glanceUser:glancePass@157.159.100.232/glance
+   sql_connection = mysql://glanceUser:glancePass@192.168.100.232/glance
 
 * And::
 
@@ -210,7 +214,7 @@ This is how we install OpenStack's identity service:
 
 * Update the /etc/glance/glance-registry.conf with::
 
-   sql_connection = mysql://glanceUser:glancePass@157.159.100.232/glance
+   sql_connection = mysql://glanceUser:glancePass@192.168.100.232/glance
 
 * And::
 
@@ -323,7 +327,7 @@ First, I am really impressed with this new project, it literaly eliminated the n
 
    #Under the database section
    [DATABASE]
-   sql_connection = mysql://quantumUser:quantumPass@157.159.100.232/quantum
+   sql_connection = mysql://quantumUser:quantumPass@192.168.100.232/quantum
 
    #Under the OVS section
    [OVS]
@@ -348,7 +352,7 @@ First, I am really impressed with this new project, it literaly eliminated the n
 
    [filter:authtoken]
    paste.filter_factory = keystone.middleware.auth_token:filter_factory
-   auth_host = 157.159.100.232
+   auth_host = 192.168.100.232
    auth_port = 35357
    auth_protocol = http
    admin_tenant_name = service
@@ -357,7 +361,7 @@ First, I am really impressed with this new project, it literaly eliminated the n
 
 * In addition, update the /etc/quantum/l3\_agent.ini::
 
-   auth_url = http://157.159.100.232:35357/v2.0
+   auth_url = http://192.168.100.232:35357/v2.0
    auth_region = RegionOne
    admin_tenant_name = service
    admin_user = quantum
@@ -388,7 +392,7 @@ First, I am really impressed with this new project, it literaly eliminated the n
 
    [filter:authtoken]
    paste.filter_factory = keystone.middleware.auth_token:filter_factory
-   auth_host = 157.159.100.232
+   auth_host = 192.168.100.232
    auth_port = 35357
    auth_protocol = http
    admin_tenant_name = service
@@ -405,39 +409,39 @@ First, I am really impressed with this new project, it literaly eliminated the n
    verbose=True
    api_paste_config=/etc/nova/api-paste.ini
    scheduler_driver=nova.scheduler.simple.SimpleScheduler
-   s3_host=157.159.100.232
-   ec2_host=157.159.100.232
-   ec2_dmz_host=157.159.100.232
-   rabbit_host=157.159.100.232
-   cc_host=157.159.100.232
-   nova_url=http://157.159.100.232:8774/v1.1/
-   sql_connection=mysql://novaUser:novaPass@157.159.100.232/nova
-   ec2_url=http://157.159.100.232:8773/services/Cloud 
+   s3_host=192.168.100.232
+   ec2_host=192.168.100.232
+   ec2_dmz_host=192.168.100.232
+   rabbit_host=192.168.100.232
+   cc_host=192.168.100.232
+   nova_url=http://192.168.100.232:8774/v1.1/
+   sql_connection=mysql://novaUser:novaPass@192.168.100.232/nova
+   ec2_url=http://192.168.100.232:8773/services/Cloud 
    root_helper=sudo nova-rootwrap /etc/nova/rootwrap.conf
 
    # Auth
    use_deprecated_auth=false
    auth_strategy=keystone
-   keystone_ec2_url=http://157.159.100.232:5000/v2.0/ec2tokens
+   keystone_ec2_url=http://192.168.100.232:5000/v2.0/ec2tokens
    # Imaging service
-   glance_api_servers=157.159.100.232:9292
+   glance_api_servers=192.168.100.232:9292
    image_service=nova.image.glance.GlanceImageService
 
    # Vnc configuration
    novnc_enabled=true
-   novncproxy_base_url=http://157.159.100.232:6080/vnc_auto.html
+   novncproxy_base_url=http://192.168.100.232:6080/vnc_auto.html
    novncproxy_port=6080
    vncserver_proxyclient_address=127.0.0.1
    vncserver_listen=0.0.0.0 
 
    # Network settings
    network_api_class=nova.network.quantumv2.api.API
-   quantum_url=http://157.159.100.232:9696
+   quantum_url=http://192.168.100.232:9696
    quantum_auth_strategy=keystone
    quantum_admin_tenant_name=service
    quantum_admin_username=quantum
    quantum_admin_password=service_pass
-   quantum_admin_auth_url=http://157.159.100.232:35357/v2.0
+   quantum_admin_auth_url=http://192.168.100.232:35357/v2.0
    libvirt_vif_driver=nova.virt.libvirt.vif.LibvirtHybridOVSBridgeDriver
    linuxnet_interface_driver=nova.network.linux_net.LinuxOVSInterfaceDriver
    firewall_driver=nova.virt.libvirt.firewall.IptablesFirewallDriver
@@ -493,9 +497,9 @@ Cinder is the newest OpenStack project and it aims at managing the volumes for V
    [filter:authtoken]
    paste.filter_factory = keystone.middleware.auth_token:filter_factory
    service_protocol = http
-   service_host = 157.159.100.232
+   service_host = 192.168.100.232
    service_port = 5000
-   auth_host = 157.159.100.232
+   auth_host = 192.168.100.232
    auth_port = 35357
    auth_protocol = http
    admin_tenant_name = service
@@ -506,7 +510,7 @@ Cinder is the newest OpenStack project and it aims at managing the volumes for V
 
    [DEFAULT]
    rootwrap_config=/etc/cinder/rootwrap.conf
-   sql_connection = mysql://cinderUser:cinderPass@157.159.100.232/cinder
+   sql_connection = mysql://cinderUser:cinderPass@192.168.100.232/cinder
    api_paste_confg = /etc/cinder/api-paste.ini
    iscsi_helper=ietadm
    volume_name_template = volume-%s
@@ -564,13 +568,62 @@ Cinder is the newest OpenStack project and it aims at managing the volumes for V
 
    service apache2 restart; service memcached restart
 
-You can now access your OpenStack @157.159.100.232/horizon with credentials admin:admin_pass.
+You can now access your OpenStack @192.168.100.232/horizon with credentials admin:admin_pass.
 
 11. Your First VM
 ============
 
+To start your first VM, you will need to create networks for it. This is easy using the new Quantum project but we first need to create a new tenant as it is not recommended to play with the admin tenant. 
 
-12. Licensing
+* Create a new tenant ::
+
+   keystone tenant-create --name project_one
+
+* Create a new user and assign the admin role to it in the new tenant::
+
+   keystone user-create --name=user_one --pass=user_one --tenant-id $put_id_of_project_one --email=user_one@domain.com
+   keystone user-role-add --tenant-id $put_id_of_project_one  --user-id $put_id_of_user_one --role-id $put_id_of_admin_role
+
+* Create a new network for the tenant::
+
+   quantum net-create --tenant-id $put_id_of_project_one net_proj_one --provider:network_type vlan --provider:physical_network physnet1 --provider:segmentation_id 1024
+
+* Create a new subnet inside the new tenant network::
+
+   quantum subnet-create --tenant-id $put_id_of_project_one net_proj_one 10.10.10.0/24
+
+* Create a router for the new tenant::
+
+   quantum router-create --tenant_id $put_id_of_project_one router_proj_one
+
+* Add the router to the subnet::
+
+   quantum router-interface-add $put_router_id_here $put_subnet_id_here
+
+You can now start creating VMs but they will not be accessible from the internet. If you like them to be so, perform the following:
+
+* Create your external network with the tenant id belonging to the service tenant::
+
+   quantum net-create ext_net --tenant-id $SERVICE_TENANT_ID --router:external=True
+
+* Create a subnet containing your floating IPs::
+
+   quantum subnet-create ext_net 192.168.100.10/28 -- --enable_dhcp=False
+
+* Set the router for the external network::
+
+   quantum router-gateway-set $ROUTER_ID $EXT_NET_ID
+
+**This is it !**, You can now login to your OpenStack dashboard and start creating internet accessible VMs.
+
+I Hope you enjoyed this guide, please if you have any suggestions, don't hesitate.
+
+14. Adding a compute node
+=========================
+
+This part is comming soon (Testing Stage)
+
+13. Licensing
 ============
 
 This work is licensed under the Creative Commons Attribution-ShareAlike 3.0 Unported License.
@@ -580,22 +633,21 @@ To view a copy of this license, visit [ http://creativecommons.org/licenses/by-s
 .. image:: licence.png
 
 
-13. Contacts
+14. Contacts
 ===========
-
-
 
 Bilel Msekni: bilel.msekni@telecom-sudparis.eu
 
-14. Acknowledgment
+15. Acknowledgment
 =================
-This work has been supported by:
+
+This work has been based on:
 
 * Emilien Macchi's Folsom guide [https://github.com/EmilienM/openstack-folsom-guide]
 * OpenStack Documentation [http://docs.openstack.org/trunk/openstack-compute/install/apt/content/ap_installingfolsomubuntuprecise.html]
 * OpenStack Quantum Install [http://docs.openstack.org/trunk/openstack-network/admin/content/ch_install.html]
 
-15. Todo
+16. Todo
 =======
 This guide is just a startup. Your suggestion are all welcomed.
 
