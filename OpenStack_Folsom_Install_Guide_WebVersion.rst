@@ -4,14 +4,14 @@
 
 :Version: 1.0
 :Source: https://github.com/mseknibilel/OpenStack-Folsom-Install-guide
-:Keywords: OpenStack, Folsom, Quantum, Nova, Keystone, Glance, Horizon, Cinder, OpenVSwitch, KVM.
+:Keywords: OpenStack, Folsom, Quantum, Nova, Keystone, Glance, Horizon, Cinder, OpenVSwitch, KVM, Ubuntu 12.04 LTE.
 
 Developers
 ==========
 
 Copyright (C) Bilel Msekni <bilel.msekni@telecom-sudparis.eu>
 
-Redistribution of this software is permitted under the terms of the **LGPL** License
+Redistribution of this Guide is permitted under the terms of the Creative Commons License
 
 Table of Contents
 =================
@@ -337,7 +337,7 @@ First, I am really impressed with this new project, it literaly eliminated the n
 
    apt-get install quantum-plugin-openvswitch-agent
 
-* Intall quantum DHCP and l3 agents::
+* Install quantum DHCP and l3 agents::
 
    apt-get -y install quantum-dhcp-agent
    apt-get -y install quantum-l3-agent
@@ -573,20 +573,7 @@ You can now access your OpenStack @157.159.100.232/horizon with credentials admi
 
 ::
 
-  Copyright (C) 2012 Bilel Msekni - Institut Mines-Telecom
-
-  This work is free software: you can redistribute it and/or modify
-  it under the terms of the GNU Lesser General Public License as
-  published by the Free Software Foundation, either version 3 of
-  the License, or (at your option) any later version.
-
-  This library is distributed in the hope that it will be useful,
-  but WITHOUT ANY WARRANTY; without even the implied warranty of
-  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-  GNU Lesser General Public License for more details.
-
-  You should have received a copy of the GNU Lesser General Public License
-  along with this library. If not, see <http://www.gnu.org/licenses/>.
+  <a rel="license" href="http://creativecommons.org/licenses/by-sa/3.0/deed.en_US"><img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by-sa/3.0/88x31.png" /></a><br /><span xmlns:dct="http://purl.org/dc/terms/" href="http://purl.org/dc/dcmitype/Text" property="dct:title" rel="dct:type">OpenStack Folsom Install Guide</span> by <span xmlns:cc="http://creativecommons.org/ns#" property="cc:attributionName">Bilel Msekni</span> is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-sa/3.0/deed.en_US">Creative Commons Attribution-ShareAlike 3.0 Unported License</a>.<br />Based on a work at <a xmlns:dct="http://purl.org/dc/terms/" href="https://github.com/mseknibilel/OpenStack-Folsom-Install-guide" rel="dct:source">https://github.com/mseknibilel/OpenStack-Folsom-Install-guide</a>.
 
 13. Contacts
 ===========
