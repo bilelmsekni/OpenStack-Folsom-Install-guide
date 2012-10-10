@@ -11,7 +11,8 @@ Developers
 
 Copyright (C) Bilel Msekni <bilel.msekni@telecom-sudparis.eu>
 
-Redistribution of this Guide is permitted under the terms of the Creative Commons License
+This work is licensed under the Creative Commons Attribution-ShareAlike 3.0 Unported License. To view a copy of this license, visit 
+[ http://creativecommons.org/licenses/by-sa/3.0/ ].
 
 Table of Contents
 =================
@@ -573,7 +574,7 @@ You can now access your OpenStack @157.159.100.232/horizon with credentials admi
 
 ::
 
-  <a rel="license" href="http://creativecommons.org/licenses/by-sa/3.0/deed.en_US"><img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by-sa/3.0/88x31.png" /></a><br /><span xmlns:dct="http://purl.org/dc/terms/" href="http://purl.org/dc/dcmitype/Text" property="dct:title" rel="dct:type">OpenStack Folsom Install Guide</span> by <span xmlns:cc="http://creativecommons.org/ns#" property="cc:attributionName">Bilel Msekni</span> is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-sa/3.0/deed.en_US">Creative Commons Attribution-ShareAlike 3.0 Unported License</a>.<br />Based on a work at <a xmlns:dct="http://purl.org/dc/terms/" href="https://github.com/mseknibilel/OpenStack-Folsom-Install-guide" rel="dct:source">https://github.com/mseknibilel/OpenStack-Folsom-Install-guide</a>.
+  This work is licensed under the Creative Commons Attribution-ShareAlike 3.0 Unported License. To view a copy of this license, visit http://creativecommons.org/licenses/by-sa/3.0/.
 
 13. Contacts
 ===========
