@@ -628,9 +628,7 @@ This part is comming soon (Testing Stage)
 
 This work is licensed under the Creative Commons Attribution-ShareAlike 3.0 Unported License.
 
-To view a copy of this license, visit [ http://creativecommons.org/licenses/by-sa/3.0/ ].
-
-`Licence <https://github.com/mseknibilel/OpenStack-Folsom-Install-guide/blob/master/licence.png>`_
+To view a copy of this license, visit [ http://creativecommons.org/licenses/by-sa/3.0/ and `Licence <https://github.com/mseknibilel/OpenStack-Folsom-Install-guide/blob/master/licence.png>`_ ].
 
 14. Contacts
 ===========
