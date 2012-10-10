@@ -11,7 +11,8 @@ Developers
 
 Copyright (C) Bilel Msekni <bilel.msekni@telecom-sudparis.eu>
 
-This work is licensed under the Creative Commons Attribution-ShareAlike 3.0 Unported License. To view a copy of this license, visit 
+This work is licensed under the Creative Commons Attribution-ShareAlike 3.0 Unported License. To view a copy of this license, visit
+ 
 [ http://creativecommons.org/licenses/by-sa/3.0/ ].
 
 Table of Contents
@@ -574,7 +575,14 @@ You can now access your OpenStack @157.159.100.232/horizon with credentials admi
 
 ::
 
-  This work is licensed under the Creative Commons Attribution-ShareAlike 3.0 Unported License. To view a copy of this license, visit http://creativecommons.org/licenses/by-sa/3.0/.
+  This work is licensed under the Creative Commons Attribution-ShareAlike 3.0 Unported License.
+  To view a copy of this license, visit http://creativecommons.org/licenses/by-sa/3.0/.
+
+.. image:: licence.png
+    :width: 200px
+    :align: center
+    :height: 100px
+    :alt: alternate text
 
 13. Contacts
 ===========
