@@ -577,7 +577,7 @@ You can now access your OpenStack @157.159.100.232/horizon with credentials admi
 
  To view a copy of this license, visit [ http://creativecommons.org/licenses/by-sa/3.0/ ].
 
-.. image:: licence.png
+.. image:: https://github.com/mseknibilel/OpenStack-Folsom-Install-guide/blob/master/licence.png
     :width: 200px
     :align: center
     :height: 100px
