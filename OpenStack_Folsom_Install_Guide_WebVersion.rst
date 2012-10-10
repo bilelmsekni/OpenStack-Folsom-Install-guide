@@ -616,9 +616,9 @@ You can now start creating VMs but they will not be accessible from the internet
 
 **This is it !**, You can now login to your OpenStack dashboard and start creating internet accessible VMs.
 
-I Hope you enjoyed this guide, please if you have any suggestions, don't hesitate.
+I Hope you enjoyed this guide, please if you have any feedbacks, don't hesitate.
 
-14. Adding a compute node
+12. Adding a compute node
 =========================
 
 This part is comming soon (Testing Stage)
@@ -630,8 +630,7 @@ This work is licensed under the Creative Commons Attribution-ShareAlike 3.0 Unpo
 
 To view a copy of this license, visit [ http://creativecommons.org/licenses/by-sa/3.0/ ].
 
-.. image:: licence.png
-
+`Licence <https://github.com/mseknibilel/OpenStack-Folsom-Install-guide/blob/master/licence.png>`_
 
 14. Contacts
 ===========
@@ -644,7 +643,7 @@ Bilel Msekni: bilel.msekni@telecom-sudparis.eu
 This work has been based on:
 
 * Emilien Macchi's Folsom guide [https://github.com/EmilienM/openstack-folsom-guide]
-* OpenStack Documentation [http://docs.openstack.org/trunk/openstack-compute/install/apt/content/ap_installingfolsomubuntuprecise.html]
+* OpenStack Documentation [http://docs.openstack.org/trunk/openstack-compute/install/apt/content/]
 * OpenStack Quantum Install [http://docs.openstack.org/trunk/openstack-network/admin/content/ch_install.html]
 
 16. Todo
