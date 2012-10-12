@@ -56,7 +56,8 @@ Status: Stable
 :Compute Node: eth0 (192.168.100.250), eth1 (192.168.100.252)
 
 **Note 1:** You can do a single node install with this guide.
-**Note 2:** If you have only two NICs, you can also use this guide but you must ignore anypart related to eth2 and your VMs won't be internet accessible
+
+**Note 2:** If you have only two NICs on the controller node, you can also use this guide but you must ignore anypart related to eth2 and your VMs won't be internet accessible.
 
 
 2. Getting Ready
@@ -144,7 +145,7 @@ This is how we install OpenStack's identity service:
    service keystone restart
    keystone-manage db_sync
 
-* Fill up the keystone database using the two scripts available.Beware that you MUST modify the HOST_IP variable before executing the scripts::
+* Fill up the keystone database using the two scripts available in the Scripts folder of this git repository. Beware that you MUST modify the HOST_IP variable before executing the scripts::
 
    chmod +x keystone_basic.sh
    chmod +x keystone_endpoints_basic.sh
