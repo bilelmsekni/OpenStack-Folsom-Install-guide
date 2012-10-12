@@ -145,7 +145,7 @@ This is how we install OpenStack's identity service:
    service keystone restart
    keystone-manage db_sync
 
-* Fill up the keystone database using the two scripts available in the Scripts folder of this git repository. Beware that you MUST modify the HOST_IP variable before executing the scripts::
+* Fill up the keystone database using the two scripts available in the `Scripts folder <https://github.com/mseknibilel/OpenStack-Folsom-Install-guide/tree/master/Scripts>`_ of this git repository. Beware that you MUST modify the HOST_IP variable before executing the scripts::
 
    chmod +x keystone_basic.sh
    chmod +x keystone_endpoints_basic.sh
