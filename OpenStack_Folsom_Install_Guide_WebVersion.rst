@@ -2,9 +2,9 @@
   OpenStack Folsom Install Guide
 ==========================================================
 
-:Version: 1.0
+:Version: 1.1
 :Source: https://github.com/mseknibilel/OpenStack-Folsom-Install-guide
-:Keywords: OpenStack, Folsom, Quantum, Nova, Keystone, Glance, Horizon, Cinder, OpenVSwitch, KVM, Ubuntu 12.04 LTE.
+:Keywords: OpenStack, Folsom, Quantum, Nova, Keystone, Glance, Horizon, Cinder, OpenVSwitch, KVM, Ubuntu Server 12.04 LTE (64 bits).
 
 Authors
 ==========
