@@ -6,7 +6,7 @@
 :Source: https://github.com/mseknibilel/OpenStack-Folsom-Install-guide
 :Keywords: OpenStack, Folsom, Quantum, Nova, Keystone, Glance, Horizon, Cinder, OpenVSwitch, KVM, Ubuntu 12.04 LTE.
 
-Developers
+Authors
 ==========
 
 Copyright (C) Bilel Msekni <bilel.msekni@telecom-sudparis.eu>
@@ -43,7 +43,7 @@ Table of Contents
 
 OpenStack Folsom Install Guide is an easy and tested way to create your own OpenStack plateform. 
 
-Version 1.0, 10 Oct 2012
+Version 1.1, 10 Oct 2012
 
 Status: Stable
 
@@ -119,6 +119,11 @@ Status: Stable
 
    nano /etc/sysctl.conf
    #Uncomment net.ipv4.ip\_forward=1
+
+* You can verify that IP_Forwarding is enabled by issuing this command::
+   
+   sysctl -p
+   # The valid response should be this: net.ipv4.ip_forward = 1
 
 3. Keystone
 =====================================================================
@@ -523,6 +528,12 @@ Cinder is the newest OpenStack project and it aims at managing the volumes for V
 * Then, synchronize your database::
 
    cinder-manage db sync
+
+* Restart the cinder services::
+
+   service cinder-volume restart
+   service cinder-api restart
+ 
 
 * Finally, don't forget to create a volumegroup and name it cinder-volumes::
 
