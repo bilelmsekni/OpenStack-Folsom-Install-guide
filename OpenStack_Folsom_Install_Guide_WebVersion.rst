@@ -581,6 +581,7 @@ Cinder is the newest OpenStack project and it aims at managing the volumes for V
    service apache2 restart; service memcached restart
 
 You can now access your OpenStack @192.168.100.232/horizon with credentials admin:admin_pass.
+**Note:** A reboot might be needed for a successful login
 
 11. Your First VM
 ============
@@ -626,7 +627,7 @@ You can now start creating VMs but they will not be accessible from the internet
 
    quantum router-gateway-set $ROUTER_ID $EXT_NET_ID
 
-**This is it !**, You can now login to your OpenStack dashboard and start creating internet accessible VMs. (A reboot might be needed for a successful login)
+**This is it !**, You can now login to your OpenStack dashboard and start creating internet accessible VMs.
 
 I Hope you enjoyed this guide, please if you have any feedbacks, don't hesitate.
 
