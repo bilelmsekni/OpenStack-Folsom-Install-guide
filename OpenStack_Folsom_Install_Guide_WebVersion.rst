@@ -626,7 +626,7 @@ You can now start creating VMs but they will not be accessible from the internet
 
    quantum router-gateway-set $ROUTER_ID $EXT_NET_ID
 
-**This is it !**, You can now login to your OpenStack dashboard and start creating internet accessible VMs.
+**This is it !**, You can now login to your OpenStack dashboard and start creating internet accessible VMs. (A reboot might be needed for a successful login)
 
 I Hope you enjoyed this guide, please if you have any feedbacks, don't hesitate.
 
