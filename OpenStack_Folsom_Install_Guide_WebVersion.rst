@@ -581,6 +581,7 @@ Cinder is the newest OpenStack project and it aims at managing the volumes for V
    service apache2 restart; service memcached restart
 
 You can now access your OpenStack @192.168.100.232/horizon with credentials admin:admin_pass.
+
 **Note:** A reboot might be needed for a successful login
 
 11. Your First VM
