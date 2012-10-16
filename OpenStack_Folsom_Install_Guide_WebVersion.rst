@@ -568,7 +568,7 @@ Cinder is the newest OpenStack project and it aims at managing the volumes for V
 
 * I had some issues with the OpenStack ubuntu theme so i disabled it to go back to the default look::
 
-   nano /etc/openstack-dashboard/localsettings.py
+   nano /etc/openstack-dashboard/local_settings.py
    #Comment these lines
    #Enable the Ubuntu theme if it is present.
    #try:
