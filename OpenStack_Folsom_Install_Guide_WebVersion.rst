@@ -18,6 +18,8 @@ To view a copy of this license, visit [ http://creativecommons.org/licenses/by-s
 Contributors
 ==========
 
+* Marco Consonni [marco_consonni@hp.com]
+
 Wana contribute ? Read the guide, send your contribution and get your name listed ;)
 
 Table of Contents
@@ -248,9 +250,9 @@ This is how we install OpenStack's identity service:
 
    mkdir images
    cd images
-   wget http://uec-images.ubuntu.com/releases/precise/release/ubuntu-12.04-server-cloudimg-amd64.tar.gz
+   wget https://launchpad.net/cirros/trunk/0.3.0/+download/cirros-0.3.0-x86_64-disk.img
    tar xzvf ubuntu-12.04-server-cloudimg-amd64.tar.gz
-   glance add name="Ubuntu" is_public=true container_format=ovf disk_format=qcow2 < precise-server-cloudimg-amd64.img
+   glance image-create --name myFirstImage --is-public true --container-format bare --disk-format qcow2 < cirros-0.3.0-x86_64-disk.img
 
 * Now list the images to see what you have just uploaded::
 
