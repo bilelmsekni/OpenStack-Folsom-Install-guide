@@ -669,7 +669,7 @@ This guide is just a startup. Your suggestion are all welcomed.
 Some of this guide's needs might be:
 
 * Find a way to automatically create a cinder-volumes volume group after system reboot.
-* Define more Quantum configurations to cover all usecases possible see `here <http://docs.openstack.org/trunk/openstack-network/admin/content/use_cases.html>`_ ]. 
+* Define more Quantum configurations to cover all usecases possible see `here <http://docs.openstack.org/trunk/openstack-network/admin/content/use_cases.html>`_. 
 
 
 
