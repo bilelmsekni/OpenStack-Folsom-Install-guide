@@ -246,7 +246,7 @@ This is how we install OpenStack's identity service:
 
    service glance-registry restart; service glance-api restart
 
-* To test Glance's well installation, we upload a new image to the store. Start by downloading an ubuntu cloud image to your node and then uploading it to Glance::
+* To test Glance's well installation, we upload a new image to the store. Start by downloading the cirros cloud image to your node and then uploading it to Glance::
 
    mkdir images
    cd images
