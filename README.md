@@ -8,5 +8,4 @@ It's easy, simple and tested.
 
 Can't wait? Go here to check it by yourself: 
 
-`OpenStack Folsom Install Guide <https://github.com/mseknibilel/OpenStack-Folsom-Install-guide/blob/master/OpenStack_Folsom_Install_Guide_WebVersion.rst>`_
-
+[ https://github.com/mseknibilel/OpenStack-Folsom-Install-guide/blob/master/OpenStack_Folsom_Install_Guide_WebVersion.rst ]
