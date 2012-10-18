@@ -15,6 +15,11 @@ This work is licensed under the Creative Commons Attribution-ShareAlike 3.0 Unpo
  
 To view a copy of this license, visit [ http://creativecommons.org/licenses/by-sa/3.0/ ].
 
+Contributors
+==========
+
+Wana contribute ? Read the guide, send your contribution and get your name listed ;)
+
 Table of Contents
 =================
 
@@ -406,7 +411,7 @@ First, I am really impressed with this new project, it literaly eliminated the n
    admin_password = service_pass
    signing_dirname = /tmp/keystone-signing-nova
 
-* Modify the nova.conf like this::
+* Modify the /etc/nova/nova.conf like this::
 
    [DEFAULT]
    logdir=/var/log/nova
@@ -529,12 +534,6 @@ Cinder is the newest OpenStack project and it aims at managing the volumes for V
 
    cinder-manage db sync
 
-* Restart the cinder services::
-
-   service cinder-volume restart
-   service cinder-api restart
- 
-
 * Finally, don't forget to create a volumegroup and name it cinder-volumes::
 
    dd if=/dev/zero of=cinder-volumes bs=1 count=0 seek=2G
@@ -554,6 +553,11 @@ Cinder is the newest OpenStack project and it aims at managing the volumes for V
 
    pvcreate /dev/loop2
    vgcreate cinder-volumes /dev/loop2
+
+* Restart the cinder services::
+
+   service cinder-volume restart
+   service cinder-api restart
 
 10. Horizon
 ============
@@ -664,7 +668,8 @@ This guide is just a startup. Your suggestion are all welcomed.
 
 Some of this guide's needs might be:
 
-*
+* Find a way to automatically create a cinder-volumes volume group after system reboot.
+* Define more Quantum configurations to cover all usecases possible see `here <http://docs.openstack.org/trunk/openstack-network/admin/content/use_cases.html>`_ ]. 
 
 
 
