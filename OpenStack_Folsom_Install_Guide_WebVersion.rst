@@ -664,7 +664,7 @@ This work has been based on:
 
 16. Todo
 =======
-This guide is just a startup. Your suggestion are all welcomed.
+This guide is just a startup. Your suggestions are always welcomed.
 
 Some of this guide's needs might be:
 
