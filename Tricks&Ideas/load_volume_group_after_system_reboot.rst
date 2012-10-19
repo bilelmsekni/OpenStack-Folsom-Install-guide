@@ -36,11 +36,11 @@ The Cinder service uses a volume group usually named cinder-volumes to provide s
    sudo su
    nano /etc/rc.local
 
-* Add the following line to the rc.local file **before the exit 0 line **::
+* Add the following line to the rc.local file **before the exit 0 line**::
    
    losetup /dev/loop2 %Your_path_to_cinder_volumes%
 
-* Exit and save.::
+* Exit and save::
 
 **That's it**, try it out by rebooting your system and then run the vgdisplay command.
 
