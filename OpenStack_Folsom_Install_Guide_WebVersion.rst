@@ -158,7 +158,7 @@ This is how we install OpenStack's identity service:
    service keystone restart
    keystone-manage db_sync
 
-* Fill up the keystone database using the two scripts available in the `Scripts folder <https://github.com/mseknibilel/OpenStack-Folsom-Install-guide/tree/master/Scripts>`_ of this git repository. Beware that you MUST modify the HOST_IP variable before executing the scripts::
+* Fill up the keystone database using the two scripts available in the `Scripts folder <https://github.com/mseknibilel/OpenStack-Folsom-Install-guide/tree/master/Keystone_Scripts>`_ of this git repository. Beware that you MUST modify the HOST_IP variable before executing the scripts::
 
    chmod +x keystone_basic.sh
    chmod +x keystone_endpoints_basic.sh
@@ -556,7 +556,7 @@ Cinder is the newest OpenStack project and it aims at managing the volumes for V
    pvcreate /dev/loop2
    vgcreate cinder-volumes /dev/loop2
 
-**Note:** Beware that this volume group gets lost after a system reboot. (Click here to know how to load it after a reboot) 
+**Note:** Beware that this volume group gets lost after a system reboot. (Click `Here <https://github.com/mseknibilel/OpenStack-Folsom-Install-guide/blob/master/Tricks%26Ideas/load_volume_group_after_system_reboot.rst>`_ to know how to load it after a reboot) 
 
 * Restart the cinder services::
 
