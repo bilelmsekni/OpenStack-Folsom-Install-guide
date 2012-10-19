@@ -2,7 +2,7 @@
   OpenStack Folsom Install Guide
 ==========================================================
 
-:Version: 1.1
+:Version: 1.2
 :Source: https://github.com/mseknibilel/OpenStack-Folsom-Install-guide
 :Keywords: OpenStack, Folsom, Quantum, Nova, Keystone, Glance, Horizon, Cinder, OpenVSwitch, KVM, Ubuntu Server 12.04 LTE (64 bits).
 
@@ -19,6 +19,7 @@ Contributors
 ==========
 
 * Marco Consonni [marco_consonni@hp.com]
+* Dennis E Miyoshi [dennis.miyoshi@hp.com]
 
 Wana contribute ? Read the guide, send your contribution and get your name listed ;)
 
@@ -251,7 +252,6 @@ This is how we install OpenStack's identity service:
    mkdir images
    cd images
    wget https://launchpad.net/cirros/trunk/0.3.0/+download/cirros-0.3.0-x86_64-disk.img
-   tar xzvf ubuntu-12.04-server-cloudimg-amd64.tar.gz
    glance image-create --name myFirstImage --is-public true --container-format bare --disk-format qcow2 < cirros-0.3.0-x86_64-disk.img
 
 * Now list the images to see what you have just uploaded::
@@ -556,6 +556,8 @@ Cinder is the newest OpenStack project and it aims at managing the volumes for V
    pvcreate /dev/loop2
    vgcreate cinder-volumes /dev/loop2
 
+**Note:** Beware that this volume group gets lost after a system reboot. (Click here to know how to load it after a reboot) 
+
 * Restart the cinder services::
 
    service cinder-volume restart
@@ -564,7 +566,7 @@ Cinder is the newest OpenStack project and it aims at managing the volumes for V
 10. Horizon
 ============
 
-* To install horizon, proceed like this :::
+* To install horizon, proceed like this ::
 
    apt-get install openstack-dashboard memcached
 
