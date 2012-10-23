@@ -51,7 +51,7 @@ Table of Contents
 
 OpenStack Folsom Install Guide is an easy and tested way to create your own OpenStack plateform. 
 
-Version 1.1, 10 Oct 2012
+Version 1.3, 10 Oct 2012
 
 Status: Stable
 
