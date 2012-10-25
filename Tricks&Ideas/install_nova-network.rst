@@ -18,6 +18,8 @@ To view a copy of this license, visit [ http://creativecommons.org/licenses/by-s
 Contributors
 ==========
 
+Bilel Msekni [bilel.msekni@telecom-sudparis.eu]
+
 **Wana contribute ? Read the idea, send your contribution and get your name listed ;)**
 
 0. What is this about?
