@@ -65,8 +65,9 @@ Status: Stable
 
 **Note 1:** You can do a single node install with this guide.
 
-**Note 2:** If you have only two NICs on the controller node, you can also use this guide but you must ignore anypart related to eth2 and your VMs won't be internet accessible.
+**Note 2:** If you have only two NICs on the controller node and you still want the Quantum, you can also use this guide but you must ignore anypart related to eth2 and your VMs won't be internet accessible.
 
+**Note 3:** If you have only two NICs on the controller node and you don't need Quantum, you can also use this guide but you must follow the nova, OpenVSwitch and Quantum sections found here instead of the one written in this guide.
 
 2. Getting Ready
 ===============
@@ -126,7 +127,7 @@ Status: Stable
 * Enable IP_Forwarding::
 
    nano /etc/sysctl.conf
-   #Uncomment net.ipv4.ip\_forward=1
+   #Uncomment net.ipv4.ip_forward=1
 
 * You can verify that IP_Forwarding is enabled by issuing this command::
    
