@@ -25,7 +25,7 @@ Contributors
 
 Many people have been complaining on how they are not being able to deploy OpenStack Folsom without having 3 NICs on the controller node. Fortunatly, there is a smart solution to install OpenStack Folsom with just two NICs on the controller node: We can use nova-network !!
 
-You can use the original gudie to deploy OpenStack Folsom found here but you **MUST** comment out everything that is quantum related (which is important because once the end-point is created, deleting it will still result in some error behavior with Horizon) in the keystone scripts.
+You can use the original gudie to deploy OpenStack Folsom found `here <https://github.com/mseknibilel/OpenStack-Folsom-Install-guide/blob/master/OpenStack_Folsom_Install_Guide_WebVersion.rst>`_ but you **MUST** comment out everything that is quantum related (which is important because once the end-point is created, deleting it will still result in some error behavior with Horizon) in the keystone scripts.
 
 1. How to do it?
 ====================
@@ -167,11 +167,11 @@ First make sure that your hardware meets these requirements:
 
    nova-manage service list
 
-*  Use the following command to create fixed network::
+* Use the following command to create fixed network::
    
    nova-manage network create private --fixed_range_v4=10.0.1.129/25 --num_networks=1 --bridge=br100 --bridge_interface=eth0 --network_size=128 --multi_host=T
 
-*  Create the floating IPs::
+* Create the floating IPs::
 
    nova-manage floating create --ip_range=192.168.1.201
 
@@ -182,7 +182,7 @@ First make sure that your hardware meets these requirements:
 
    nova-compute nova-network nova-api-metadata
 
-* Edit your /etc/nova/nova.conf, Don't forget to change vncserver_proxyclient_address and vncserver_listen to match each compute host:
+* Edit your /etc/nova/nova.conf, Don't forget to change vncserver_proxyclient_address and vncserver_listen to match each compute host::
 
    [DEFAULT]
 
