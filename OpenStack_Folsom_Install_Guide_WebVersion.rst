@@ -63,11 +63,11 @@ Status: Stable
 :Control Node: eth0 (192.168.100.232), eth1 (192.168.100.234), eth2 (192.168.100.236)
 :Compute Node: eth0 (192.168.100.250), eth1 (192.168.100.252)
 
-**Note 1:** You can do a single node install with this guide.
+**Note 1:** If you have only two NICs on the controller node and you still want the Quantum, you can also use this guide but you must ignore anypart related to eth2 and your VMs won't be internet accessible.
 
-**Note 2:** If you have only two NICs on the controller node and you still want the Quantum, you can also use this guide but you must ignore anypart related to eth2 and your VMs won't be internet accessible.
+**Note 2:** If you have only two NICs on the controller node and you don't need Quantum, you can also use this guide but you must follow the nova section found `here <https://github.com/mseknibilel/OpenStack-Folsom-Install-guide/blob/master/Tricks%26Ideas/install_nova-network.rst>`_ instead of the one written in this guide.
 
-**Note 3:** If you have only two NICs on the controller node and you don't need Quantum, you can also use this guide but you must follow the nova, OpenVSwitch and Quantum sections found here instead of the one written in this guide.
+**Note 3:** You can do a single node install with this guide.
 
 2. Getting Ready
 ===============
@@ -159,10 +159,13 @@ This is how we install OpenStack's identity service:
    service keystone restart
    keystone-manage db_sync
 
-* Fill up the keystone database using the two scripts available in the `Scripts folder <https://github.com/mseknibilel/OpenStack-Folsom-Install-guide/tree/master/Keystone_Scripts>`_ of this git repository. Beware that you MUST modify the HOST_IP variable before executing the scripts::
+* Fill up the keystone database using the two scripts available in the `Scripts folder <https://github.com/mseknibilel/OpenStack-Folsom-Install-guide/tree/master/Keystone_Scripts>`_ of this git repository. Beware that you MUST comment every part related to Quantum if you don't intend to install it otherwise you will have trouble with your dashboard later::
+
+   #Modify the HOST_IP variable before executing the scripts
 
    chmod +x keystone_basic.sh
    chmod +x keystone_endpoints_basic.sh
+
    ./keystone_basic.sh
    ./keystone_endpoints_basic.sh
 
