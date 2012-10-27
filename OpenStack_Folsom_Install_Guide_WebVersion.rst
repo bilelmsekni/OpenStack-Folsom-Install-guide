@@ -502,6 +502,15 @@ Cinder is the newest OpenStack project and it aims at managing the volumes for V
 
    apt-get install cinder-api cinder-scheduler cinder-volume iscsitarget open-iscsi iscsitarget-dkms
 
+* Configure the iscsi services::
+
+   sed -i 's/false/true/g' /etc/default/iscsitarget
+
+* Restart the services::
+   
+   service iscsitarget start
+   service open-iscsi start
+
 * Prepare a Mysql database for Cinder::
 
    mysql -u root -p
