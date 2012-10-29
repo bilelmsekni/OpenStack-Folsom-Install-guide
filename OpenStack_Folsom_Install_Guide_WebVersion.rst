@@ -4,7 +4,7 @@
 
 :Version: 1.3
 :Source: https://github.com/mseknibilel/OpenStack-Folsom-Install-guide
-:Keywords: OpenStack, Folsom, Quantum, Nova, Keystone, Glance, Horizon, Cinder, OpenVSwitch, KVM, Ubuntu Server 12.04 LTE (64 bits).
+:Keywords: OpenStack, Folsom, Quantum, Nova, Keystone, Glance, Horizon, Cinder, OpenVSwitch, KVM, Ubuntu Server 12.10 (64 bits).
 
 Authors
 ==========
@@ -75,14 +75,9 @@ Status: Stable
 2.1. Adding the Offical Folsom repositories
 -----------------
 
-* After you install Ubuntu 12.04 Server 64bits, Go to the sudo mode and don't leave it until the end of this guide::
+* After you install Ubuntu 12.10 Server 64bits, Go to the sudo mode and don't leave it until the end of this guide::
 
    sudo su
-
-* Add the OpenStack Folsom repositories to your ubuntu repositories::
-
-   echo deb http://ubuntu-cloud.archive.canonical.com/ubuntu precise-updates/folsom main >> /etc/apt/sources.list.d/folsom.list
-   apt-key adv --recv-keys --keyserver keyserver.ubuntu.com 5EDB1B62EC4926EA
 
 * Update your system::
 
@@ -311,7 +306,7 @@ This is how we install OpenStack's identity service:
 
 * Install the openVSwitch::
 
-   apt-get install -y openvswitch-switch openvswitch-datapath-dkms
+   apt-get install -y openvswitch-switch
 
 * Create the bridges::
 
