@@ -136,7 +136,7 @@ This is how we install OpenStack's identity service:
 
 * Start by the keystone packages::
 
-   apt-get install keystone python-keystone python-keystoneclient
+   apt-get install keystone
 
 * Create a new MySQL database for keystone::
 
@@ -185,7 +185,7 @@ This is how we install OpenStack's identity service:
 
 * After installing Keystone, we continue with installing image storage service a.k.a Glance::
 
-   apt-get install glance python-glance python-glanceclient
+   apt-get install glance
 
 * Create a new MySQL database for Glance::
 
@@ -326,7 +326,7 @@ First, I am really impressed with this new project, it literaly eliminated the n
 
 * Install the Quantum server and the Quantum OVS plugin::
 
-   apt-get install quantum-server python-cliff python-pyparsing quantum-plugin-openvswitch
+   apt-get install quantum-server
 
 * Create a database::
 
@@ -391,7 +391,7 @@ First, I am really impressed with this new project, it literaly eliminated the n
 
 * Start by installing nova components::
 
-   apt-get install -y nova-api nova-cert nova-common novnc nova-compute-kvm nova-consoleauth nova-scheduler nova-novncproxy
+   apt-get install -y nova-api nova-cert novnc nova-compute-kvm nova-consoleauth nova-scheduler nova-novncproxy
 
 * Prepare a Mysql database for Nova::
 
@@ -495,7 +495,7 @@ Cinder is the newest OpenStack project and it aims at managing the volumes for V
 
 * Install the required packages::
 
-   apt-get install cinder-api cinder-scheduler cinder-volume iscsitarget open-iscsi iscsitarget-dkms
+   apt-get install cinder-api cinder-scheduler cinder-volume iscsitarget iscsitarget-dkms
 
 * Configure the iscsi services::
 
@@ -557,7 +557,7 @@ Cinder is the newest OpenStack project and it aims at managing the volumes for V
    ENTER
    t
    8e
-   write
+   w
 
 * Proceed to create the physical volume then the volume group::
 
