@@ -2,9 +2,9 @@
   OpenStack Folsom Install Guide
 ==========================================================
 
-:Version: 1.3
+:Version: 2.0
 :Source: https://github.com/mseknibilel/OpenStack-Folsom-Install-guide
-:Keywords: OpenStack, Folsom, Quantum, Nova, Keystone, Glance, Horizon, Cinder, OpenVSwitch, KVM, Ubuntu Server 12.10 (64 bits).
+:Keywords: Multi node OpenStack, Folsom, Quantum, Nova, Keystone, Glance, Horizon, Cinder, OpenVSwitch, KVM, Ubuntu Server 12.10 (64 bits).
 
 Authors
 ==========
@@ -33,46 +33,41 @@ Table of Contents
   2. Getting Ready
   3. Keystone 
   4. Glance
-  5. KVM
-  6. OpenVSwitch
-  7. Quantum
-  8. Nova
-  9. Cinder
-  10. Horizon
+  5. OpenVSwitch
+  6. Quantum
+  7. Nova
+  8. Cinder
+  9. Horizon
+  10. Adding a compute node
   11. Start your first VM
-  12. Adding a compute node
-  13. Licencing
-  14. Contacts
-  15. Acknowledgement
-  16. To do
+  12. Licencing
+  13. Contacts
+  14. Acknowledgement
+  15. To do
 
 0. What is it?
 ==============
 
 OpenStack Folsom Install Guide is an easy and tested way to create your own OpenStack plateform. 
 
-Version 1.3, 10 Oct 2012
+Version 2.0, 10 Oct 2012
 
-Status: Stable
+Status: beta 
 
 
 1. Requirements
 ====================
 
 :Node Role: NICs
-:Control Node: eth0 (192.168.100.232), eth1 (192.168.100.234), eth2 (192.168.100.236)
-:Compute Node: eth0 (192.168.100.250), eth1 (192.168.100.252)
+:Control Node: eth0 (192.168.100.232), eth1 (192.168.100.234)
+:Compute Node: eth0 (192.168.100.250)
 
-**Note 1:** If you have only two NICs on the controller node and you still want the Quantum, you can also use this guide but you must ignore anypart related to eth2 and your VMs won't be internet accessible.
-
-**Note 2:** If you have only two NICs on the controller node and you don't need Quantum, you can also use this guide but you must follow the nova section found `here <https://github.com/mseknibilel/OpenStack-Folsom-Install-guide/blob/master/Tricks%26Ideas/install_nova-network.rst>`_ instead of the one written in this guide.
-
-**Note 3:** You can do a single node install with this guide.
+**Note 1:** If you are not interrested in Quantum, you can also use this guide but you must follow the nova section found `here <https://github.com/mseknibilel/OpenStack-Folsom-Install-guide/blob/master/Tricks%26Ideas/install_nova-network.rst>`_ instead of the one written in this guide.
 
 2. Getting Ready
 ===============
 
-2.1. Adding the Offical Folsom repositories
+2.1. Preparing Ubuntu 12.10
 -----------------
 
 * After you install Ubuntu 12.10 Server 64bits, Go to the sudo mode and don't leave it until the end of this guide::
@@ -123,11 +118,6 @@ Status: Stable
 
    nano /etc/sysctl.conf
    #Uncomment net.ipv4.ip_forward=1
-
-* You can verify that IP_Forwarding is enabled by issuing this command::
-   
-   sysctl -p
-   # The valid response should be this: net.ipv4.ip_forward = 1
 
 3. Keystone
 =====================================================================
@@ -257,50 +247,6 @@ This is how we install OpenStack's identity service:
 
    glance image-list
 
-5. KVM
-=====================================================================
-
-* KVM is needed as the hypervisor that will be used to create virtual machines. Before you install KVM, make sure that your hardware enables virtualization::
-
-   apt-get install cpu-checker
-   kvm-ok
-
-* Normally you would get a good response. Now, move to install kvm and configure it::
-
-   apt-get install -y kvm libvirt-bin pm-utils
-
-* Edit the /etc/libvirt/qemu.conf file and uncomment::
-
-   cgroup_device_acl = [
-   "/dev/null", "/dev/full", "/dev/zero",
-   "/dev/random", "/dev/urandom",
-   "/dev/ptmx", "/dev/kvm", "/dev/kqemu",
-   "/dev/rtc", "/dev/hpet","/dev/net/tun"
-   ]
-
-* Delete default virtual bridge ::
-
-   virsh net-destroy default
-   virsh net-undefine default
-
-* Enable live migration by updating /etc/libvirt/libvirtd.conf file::
-
-   listen_tls = 0
-   listen_tcp = 1
-   auth_tcp = "none"
-
-* Edit libvirtd_opts variable in /etc/init/libvirt-bin.conf file::
-
-   env libvirtd_opts="-d -l"
-
-* Edit /etc/default/libvirt-bin file ::
-
-   libvirtd_opts="-d -l"
-
-* Restart the libvirt service to load the new values::
-
-   service libvirt-bin restart
-
 6. OpenVSwitch
 =====================================================================
 
@@ -310,23 +256,18 @@ This is how we install OpenStack's identity service:
 
 * Create the bridges::
 
-   #br-int will be used for integration	
-   ovs-vsctl add-br br-int
-   #br-eth1 will be used for VM communication 
-   ovs-vsctl add-br br-eth1 
-   ovs-vsctl add-port br-eth1 eth1
    #br-ex will be used to ensure access to VM from the outside world (a.k.a internet)
    ovs-vsctl add-br br-ex
-   ovs-vsctl add-port br-ex eth2
+   ovs-vsctl add-port br-ex eth1
 
 7. Quantum
 =====================================================================
 
 First, I am really impressed with this new project, it literaly eliminated the network overhead i used to deal with during the nova-network era.
 
-* Install the Quantum server and the Quantum OVS plugin::
+* Install the Quantum server::
 
-   apt-get install quantum-server
+   apt-get install quantum-server quantum-plugin-openvswitch
 
 * Create a database::
 
@@ -345,20 +286,14 @@ First, I am really impressed with this new project, it literaly eliminated the n
    [OVS]
    tenant_network_type=vlan
    network_vlan_ranges = physnet1:1:4094
-   bridge_mappings = physnet1:br-eth1
 
 * Restart the quantum server::
 
    service quantum-server restart
 
-* Install the OVS plugin agent::
-
-   apt-get install quantum-plugin-openvswitch-agent
-
 * Install quantum DHCP and l3 agents::
 
-   apt-get -y install quantum-dhcp-agent
-   apt-get -y install quantum-l3-agent
+   apt-get -y install quantum-dhcp-agent quantum-l3-agent
 
 * Edit /etc/quantum/api-paste.ini ::
 
@@ -371,7 +306,7 @@ First, I am really impressed with this new project, it literaly eliminated the n
    admin_user = quantum
    admin_password = service_pass
 
-* In addition, update the /etc/quantum/l3\_agent.ini::
+* In addition, update the /etc/quantum/l3_agent.ini::
 
    auth_url = http://192.168.100.232:35357/v2.0
    auth_region = RegionOne
@@ -382,7 +317,6 @@ First, I am really impressed with this new project, it literaly eliminated the n
 * Restart all the services::
 
    service quantum-server restart
-   service quantum-plugin-openvswitch-agent restart
    service quantum-dhcp-agent restart
    service quantum-l3-agent restart
 
@@ -391,7 +325,7 @@ First, I am really impressed with this new project, it literaly eliminated the n
 
 * Start by installing nova components::
 
-   apt-get install -y nova-api nova-cert novnc nova-compute-kvm nova-consoleauth nova-scheduler nova-novncproxy
+   apt-get install -y nova-api nova-cert novnc nova-consoleauth nova-scheduler nova-novncproxy
 
 * Prepare a Mysql database for Nova::
 
@@ -578,11 +512,8 @@ Cinder is the newest OpenStack project and it aims at managing the volumes for V
 
    apt-get install openstack-dashboard memcached
 
-* Edit /etc/apache2/apache2.conf to add this line::
 
-   ServerName localhost
-
-* I had some issues with the OpenStack ubuntu theme so i disabled it to go back to the default look::
+* If you don't like the OpenStack ubuntu theme, you can disabled it and go back to the default look::
 
    nano /etc/openstack-dashboard/local_settings.py
    #Comment these lines
@@ -596,11 +527,223 @@ Cinder is the newest OpenStack project and it aims at managing the volumes for V
 
    service apache2 restart; service memcached restart
 
-You can now access your OpenStack @192.168.100.232/horizon with credentials admin:admin_pass.
+You can now access your OpenStack @**192.168.100.232/horizon** with credentials **admin:admin_pass**.
 
 **Note:** A reboot might be needed for a successful login
 
-11. Your First VM
+11. Adding a compute node
+=========================
+
+11.1. Preparing the Node
+------------------
+
+* Install ntp service::
+
+   apt-get install ntp
+
+* Configure the NTP server to follow the controller node::
+   
+   sed -i 's/server ntp.ubuntu.com/server 192.168.100.232' /etc/ntp.conf
+   service ntp restart  
+
+* Install other services::
+
+   apt-get install vlan bridge-utils
+
+* Enable IP_Forwarding::
+
+   nano /etc/sysctl.conf
+   #Uncomment net.ipv4.ip_forward=1
+
+11.2 KVM
+------------------
+
+* KVM is needed as the hypervisor that will be used to create virtual machines. Before you install KVM, make sure that your hardware enables virtualization::
+
+   apt-get install cpu-checker
+   kvm-ok
+
+* Normally you would get a good response. Now, move to install kvm and configure it::
+
+   apt-get install -y kvm libvirt-bin pm-utils
+
+* Edit the cgroup_device_acl array in the /etc/libvirt/qemu.conf file to::
+
+   cgroup_device_acl = [
+   "/dev/null", "/dev/full", "/dev/zero",
+   "/dev/random", "/dev/urandom",
+   "/dev/ptmx", "/dev/kvm", "/dev/kqemu",
+   "/dev/rtc", "/dev/hpet","/dev/net/tun"
+   ]
+
+* Delete default virtual bridge ::
+
+   virsh net-destroy default
+   virsh net-undefine default
+
+* Enable live migration by updating /etc/libvirt/libvirtd.conf file::
+
+   listen_tls = 0
+   listen_tcp = 1
+   auth_tcp = "none"
+
+* Edit libvirtd_opts variable in /etc/init/libvirt-bin.conf file::
+
+   env libvirtd_opts="-d -l"
+
+* Edit /etc/default/libvirt-bin file ::
+
+   libvirtd_opts="-d -l"
+
+* Restart the libvirt service to load the new values::
+
+   service libvirt-bin restart
+
+11.3. OpenVSwitch
+------------------
+
+* Install the openVSwitch::
+
+   apt-get install -y openvswitch-switch
+
+* Create the bridges::
+
+   #br-int will be used for integration	
+   ovs-vsctl add-br br-int
+   #br-eth1 will be used for VM communication 
+   ovs-vsctl add-br br-eth1 
+   ovs-vsctl add-port br-eth1 eth1
+
+11.4. Quantum
+------------------
+
+We don't need to install the hole quantum server here, just the our plugin's agent
+
+* Install the Quantum openvswitch agent::
+
+   apt-get -y install quantum-plugin-openvswitch-agent
+
+* Edit the OVS plugin configuration file /etc/quantum/plugins/openvswitch/ovs_quantum_plugin.ini with:: 
+
+   #Under the database section
+   [DATABASE]
+   sql_connection = mysql://quantumUser:quantumPass@192.168.100.232/quantum
+
+   #Under the OVS section
+   [OVS]
+   tenant_network_type=vlan
+   network_vlan_ranges = physnet1:1:4094
+   bridge_mappings = physnet1:br-eth1
+
+* Restart all the services::
+
+   service quantum-plugin-openvswitch-agent restart
+
+11.5. Nova
+------------------
+
+* Install nova's required components for the compute node::
+
+   apt-get install nova-api-metadata nova-compute-kvm
+
+* Now modify authtoken section in the /etc/nova/api-paste.ini file to this::
+
+   [filter:authtoken]
+   paste.filter_factory = keystone.middleware.auth_token:filter_factory
+   auth_host = 192.168.100.232
+   auth_port = 35357
+   auth_protocol = http
+   admin_tenant_name = service
+   admin_user = nova
+   admin_password = service_pass
+   signing_dirname = /tmp/keystone-signing-nova
+
+* Edit /etc/nova/nova-compute.conf file :
+   
+   [DEFAULT]
+   libvirt_type=kvm
+   libvirt_ovs_bridge=br-int
+   libvirt_vif_type=ethernet
+   libvirt_vif_driver=nova.virt.libvirt.vif.LibvirtHybridOVSBridgeDriver
+   libvirt_use_virtio_for_bridges=True
+
+* Modify the /etc/nova/nova.conf like this::
+
+   [DEFAULT]
+   logdir=/var/log/nova
+   state_path=/var/lib/nova
+   lock_path=/run/lock/nova
+   verbose=True
+   api_paste_config=/etc/nova/api-paste.ini
+   scheduler_driver=nova.scheduler.simple.SimpleScheduler
+   s3_host=192.168.100.232
+   ec2_host=192.168.100.232
+   ec2_dmz_host=192.168.100.232
+   rabbit_host=192.168.100.232
+   cc_host=192.168.100.232
+   nova_url=http://192.168.100.232:8774/v1.1/
+   sql_connection=mysql://novaUser:novaPass@192.168.100.232/nova
+   ec2_url=http://192.168.100.232:8773/services/Cloud 
+   root_helper=sudo nova-rootwrap /etc/nova/rootwrap.conf
+
+   # Auth
+   use_deprecated_auth=false
+   auth_strategy=keystone
+   keystone_ec2_url=http://192.168.100.232:5000/v2.0/ec2tokens
+   # Imaging service
+   glance_api_servers=192.168.100.232:9292
+   image_service=nova.image.glance.GlanceImageService
+
+   # Vnc configuration
+   novnc_enabled=true
+   novncproxy_base_url=http://192.168.100.232:6080/vnc_auto.html
+   novncproxy_port=6080
+   vncserver_proxyclient_address=127.0.0.1
+   vncserver_listen=0.0.0.0 
+
+   # Network settings
+   network_api_class=nova.network.quantumv2.api.API
+   quantum_url=http://192.168.100.232:9696
+   quantum_auth_strategy=keystone
+   quantum_admin_tenant_name=service
+   quantum_admin_username=quantum
+   quantum_admin_password=service_pass
+   quantum_admin_auth_url=http://192.168.100.232:35357/v2.0
+   libvirt_vif_driver=nova.virt.libvirt.vif.LibvirtHybridOVSBridgeDriver
+   linuxnet_interface_driver=nova.network.linux_net.LinuxOVSInterfaceDriver
+   firewall_driver=nova.virt.libvirt.firewall.IptablesFirewallDriver
+
+   # Compute #
+   compute_driver=libvirt.LibvirtDriver
+
+   # Cinder #
+   volume_api_class=nova.volume.cinder.API
+   osapi_volume_listen_port=5900
+
+* Don't forget to update the ownership rights of the nova directory::
+
+   chown -R nova. /etc/nova
+   chmod 644 /etc/nova/nova.conf
+
+* Add this line to the sudoers file::
+
+   sudo visudo
+   #Paste this line anywhere you like:
+   nova ALL=(ALL) NOPASSWD:ALL
+
+* Synchronize your database::
+
+   nova-manage db sync
+
+* Restart nova-* services::
+
+   cd /etc/init.d/; for i in $( ls nova-* ); do sudo service $i restart; done   
+
+* Check for the smiling faces on nova-* services to confirm your installation::
+
+   nova-manage service list
+
+12. Your First VM
 ============
 
 To start your first VM, you will need to create networks for it. This is easy using the new Quantum project but we first need to create a new tenant as it is not recommended to play with the admin tenant. 
@@ -612,7 +755,7 @@ To start your first VM, you will need to create networks for it. This is easy us
 * Create a new user and assign the admin role to it in the new tenant::
 
    keystone user-create --name=user_one --pass=user_one --tenant-id $put_id_of_project_one --email=user_one@domain.com
-   keystone user-role-add --tenant-id $put_id_of_project_one  --user-id $put_id_of_user_one --role-id $put_id_of_admin_role
+   keystone user-role-add --tenant-id $put_id_of_project_one  --user-id $put_id_of_user_one --role-id $put_id_of_member_role
 
 * Create a new network for the tenant::
 
@@ -628,30 +771,25 @@ To start your first VM, you will need to create networks for it. This is easy us
 
 * Add the router to the subnet::
 
-   quantum router-interface-add $put_router_id_here $put_subnet_id_here
+   quantum router-interface-add $put_router_proj_one_id_here $put_subnet_id_here
 
 You can now start creating VMs but they will not be accessible from the internet. If you like them to be so, perform the following:
 
-* Create your external network with the tenant id belonging to the service tenant::
+* Create your external network with the tenant id belonging to the project_one tenant::
 
-   quantum net-create ext_net --tenant-id $SERVICE_TENANT_ID --router:external=True
+   quantum net-create --tenant-id $put_id_of_project_one ext_net_proj_one --router:external=True
 
 * Create a subnet containing your floating IPs::
 
-   quantum subnet-create ext_net 192.168.100.10/28 -- --enable_dhcp=False
+   quantum subnet-create --tenant-id $put_id_of_project_one ext_net_proj_one 192.168.100.10/28 --enable_dhcp=False
 
 * Set the router for the external network::
 
-   quantum router-gateway-set $ROUTER_ID $EXT_NET_ID
+   quantum router-gateway-set $put_router_proj_one_id_here $put_id_of_ext_net_proj_one_here
 
 **This is it !**, You can now login to your OpenStack dashboard and start creating internet accessible VMs.
 
 I Hope you enjoyed this guide, please if you have any feedbacks, don't hesitate.
-
-12. Adding a compute node
-=========================
-
-This part is comming soon (Testing Stage)
 
 13. Licensing
 ============
@@ -676,11 +814,11 @@ This work has been based on:
 
 16. Todo
 =======
+
 This guide is just a startup. Your suggestions are always welcomed.
 
 Some of this guide's needs might be:
 
-* Find a way to automatically create a cinder-volumes volume group after system reboot.
 * Define more Quantum configurations to cover all usecases possible see `here <http://docs.openstack.org/trunk/openstack-network/admin/content/use_cases.html>`_. 
 
 
