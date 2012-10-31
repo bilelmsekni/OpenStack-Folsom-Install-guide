@@ -774,7 +774,6 @@ You can now start creating VMs but they will not be accessible from the internet
 **This is it !**, You can now login to your OpenStack dashboard and start creating internet accessible VMs.
 
 I Hope you enjoyed this guide, please if you have any feedbacks, don't hesitate.
-If you like this work, please don't forget to star it and share it.
 
 13. Licensing
 ============
