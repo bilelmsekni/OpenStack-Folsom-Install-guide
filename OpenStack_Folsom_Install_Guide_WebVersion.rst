@@ -52,7 +52,7 @@ OpenStack Folsom Install Guide is an easy and tested way to create your own Open
 
 Version 2.0, 10 Oct 2012
 
-Status: beta 
+Status: stable 
 
 
 1. Requirements
