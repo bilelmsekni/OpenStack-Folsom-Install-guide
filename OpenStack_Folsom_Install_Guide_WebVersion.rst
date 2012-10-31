@@ -526,6 +526,12 @@ You can now access your OpenStack @**192.168.100.232/horizon** with credentials 
 11.1. Preparing the Node
 ------------------
 
+* Update your system::
+
+   apt-get update
+   apt-get upgrade
+   apt-get dist-upgrade
+
 * Install ntp service::
 
    apt-get install ntp
@@ -600,8 +606,8 @@ You can now access your OpenStack @**192.168.100.232/horizon** with credentials 
    #br-int will be used for integration	
    ovs-vsctl add-br br-int
    #br-eth1 will be used for VM communication 
-   ovs-vsctl add-br br-eth1 
-   ovs-vsctl add-port br-eth1 eth1
+   ovs-vsctl add-br br-eth0
+   ovs-vsctl add-port br-eth0 eth0
 
 11.4. Quantum
 ------------------
@@ -622,7 +628,7 @@ We don't need to install the hole quantum server here, just the our plugin's age
    [OVS]
    tenant_network_type=vlan
    network_vlan_ranges = physnet1:1:4094
-   bridge_mappings = physnet1:br-eth1
+   bridge_mappings = physnet1:br-eth0
 
 * Restart all the services::
 
