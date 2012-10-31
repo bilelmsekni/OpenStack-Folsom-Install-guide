@@ -647,7 +647,7 @@ We don't need to install the hole quantum server here, just the our plugin's age
    admin_password = service_pass
    signing_dirname = /tmp/keystone-signing-nova
 
-* Edit /etc/nova/nova-compute.conf file :
+* Edit /etc/nova/nova-compute.conf file ::
    
    [DEFAULT]
    libvirt_type=kvm
