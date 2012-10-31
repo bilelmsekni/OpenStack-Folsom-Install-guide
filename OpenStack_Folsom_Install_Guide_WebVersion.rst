@@ -399,17 +399,6 @@ First, I am really impressed with this new project, it literaly eliminated the n
    volume_api_class=nova.volume.cinder.API
    osapi_volume_listen_port=5900
 
-* Don't forget to update the ownership rights of the nova directory::
-
-   chown -R nova. /etc/nova
-   chmod 644 /etc/nova/nova.conf
-
-* Add this line to the sudoers file::
-
-   sudo visudo
-   #Paste this line anywhere you like:
-   nova ALL=(ALL) NOPASSWD:ALL
-
 * Synchronize your database::
 
    nova-manage db sync
@@ -719,17 +708,6 @@ We don't need to install the hole quantum server here, just the our plugin's age
    # Cinder #
    volume_api_class=nova.volume.cinder.API
    osapi_volume_listen_port=5900
-
-* Don't forget to update the ownership rights of the nova directory::
-
-   chown -R nova. /etc/nova
-   chmod 644 /etc/nova/nova.conf
-
-* Add this line to the sudoers file::
-
-   sudo visudo
-   #Paste this line anywhere you like:
-   nova ALL=(ALL) NOPASSWD:ALL
 
 * Synchronize your database::
 
