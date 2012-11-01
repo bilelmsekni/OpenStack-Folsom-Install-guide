@@ -66,6 +66,8 @@ Status: stable
 
 **Note 2:** eth1 on compute node doesn't need to be internet connected.
 
+.. image:: http://i.imgur.com/GDUTr.jpg
+
 2. Getting Ready
 ===============
 
