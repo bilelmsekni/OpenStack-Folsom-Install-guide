@@ -11,17 +11,13 @@ Authors
 
 Copyright (C) Bilel Msekni <bilel.msekni@telecom-sudparis.eu>
 
-This work is licensed under the Creative Commons Attribution-ShareAlike 3.0 Unported License.
-
-.. image:: http://i.imgur.com/zqRXY.png
- 
-To view a copy of this license, visit [ http://creativecommons.org/licenses/by-sa/3.0/ ].
-
 Contributors
 ==========
 
-* Marco Consonni [marco_consonni@hp.com]
-* Dennis E Miyoshi [dennis.miyoshi@hp.com]
+* Marco Consonni <marco_consonni@hp.com>
+* Dennis E Miyoshi <dennis.miyoshi@hp.com>
+* Houssem Medhioub <houssem.medhioub@it-sudparis.eu>
+* Djamal Zeghlache <djamal.zeghlache@telecom-sudparis.eu>
 
 Wana contribute ? Read the guide, send your contribution and get your name listed ;)
 
@@ -88,7 +84,26 @@ Status: stable
    apt-get upgrade
    apt-get dist-upgrade
 
-2.2. MySQL & RabbitMQ
+2.2.Networking
+------------
+
+* Both NICs on the controller node need internet access::
+
+   #For OpenStack management
+   auto eth0
+   iface eth0 inet static
+   address 192.168.100.232
+   netmask 255.255.255.0
+   gateway 192.168.100.1
+   dns-nameservers 8.8.8.8
+
+   #For internet access
+   auto eth1
+   iface eth1 inet static
+   address 192.168.100.234
+   netmask 255.255.255.0
+  
+2.3. MySQL & RabbitMQ
 ------------
 
 * Install MySQL::
@@ -104,7 +119,7 @@ Status: stable
 
    apt-get install rabbitmq-server 
 
-2.3. Node synchronization
+2.4. Node synchronization
 ------------------
 
 * Install other services::
@@ -116,7 +131,7 @@ Status: stable
    sed -i 's/server ntp.ubuntu.com/server ntp.ubuntu.com\nserver 127.127.1.0\nfudge 127.127.1.0 stratum 10/g' /etc/ntp.conf
    service ntp restart  
 
-2.4. Others
+2.5. Others
 -------------------
 * Install other services::
 
@@ -558,7 +573,26 @@ You can now access your OpenStack **192.168.100.232/horizon** with credentials *
    nano /etc/sysctl.conf
    #Uncomment net.ipv4.ip_forward=1
 
-11.2 KVM
+11.2.Networking
+------------
+
+* It's recommended to have two NICs but only one needs to be internet connected:
+   
+   # Connected to the internet
+   auto eth0
+   iface eth0 inet static
+   address 192.168.100.250
+   netmask 255.255.255.0
+   gateway 192.168.100.1
+   dns-nameservers 8.8.8.8
+
+   # Not connected to internet
+   auto eth1
+   iface eth1 inet static
+   address 100.10.0.2
+   netmask 255.255.255.0
+
+11.3 KVM
 ------------------
 
 * KVM is needed as the hypervisor that will be used to create virtual machines. Before you install KVM, make sure that your hardware enables virtualization::
@@ -602,7 +636,7 @@ You can now access your OpenStack **192.168.100.232/horizon** with credentials *
 
    service libvirt-bin restart
 
-11.3. OpenVSwitch
+11.4. OpenVSwitch
 ------------------
 
 * Install the openVSwitch::
@@ -617,7 +651,7 @@ You can now access your OpenStack **192.168.100.232/horizon** with credentials *
    ovs-vsctl add-br br-eth1
    ovs-vsctl add-port br-eth1 eth1
 
-11.4. Quantum
+11.5. Quantum
 ------------------
 
 We don't need to install the hole quantum server here, just the our plugin's agent
@@ -646,7 +680,7 @@ We don't need to install the hole quantum server here, just the our plugin's age
 
    service quantum-plugin-openvswitch-agent restart
 
-11.5. Nova
+11.6. Nova
 ------------------
 
 * Install nova's required components for the compute node::
@@ -790,9 +824,11 @@ I Hope you enjoyed this guide, please if you have any feedbacks, don't hesitate.
 13. Licensing
 ============
 
-This work is licensed under the Creative Commons Attribution-ShareAlike 3.0 Unported License.
+OpenStack Folsom Install Guide by Bilel Msekni is licensed under a Creative Commons Attribution 3.0 Unported License.
 
-To view a copy of this license, visit [ http://creativecommons.org/licenses/by-sa/3.0/ and `Licence <https://github.com/mseknibilel/OpenStack-Folsom-Install-guide/blob/master/licence.png>`_ ].
+.. image:: http://i.imgur.com/4XWrp.png
+ 
+To view a copy of this license, visit [ http://creativecommons.org/licenses/by/3.0/deed.en_US ].
 
 14. Contacts
 ===========
