@@ -12,6 +12,8 @@ Authors
 Copyright (C) Bilel Msekni <bilel.msekni@telecom-sudparis.eu>
 
 This work is licensed under the Creative Commons Attribution-ShareAlike 3.0 Unported License.
+
+.. image:: http://i.imgur.com/zqRXY.png
  
 To view a copy of this license, visit [ http://creativecommons.org/licenses/by-sa/3.0/ ].
 
@@ -65,6 +67,8 @@ Status: stable
 **Note 1:** If you are not interrested in Quantum, you can also use this guide but you must follow the nova section found `here <https://github.com/mseknibilel/OpenStack-Folsom-Install-guide/blob/master/Tricks%26Ideas/install_nova-network.rst>`_ instead of the one written in this guide.
 
 **Note 2:** eth1 on compute node doesn't need to be internet connected.
+
+**Note 3:** This is my current network architecture, you can add as many compute node as you wish.
 
 .. image:: http://i.imgur.com/GDUTr.jpg
 
