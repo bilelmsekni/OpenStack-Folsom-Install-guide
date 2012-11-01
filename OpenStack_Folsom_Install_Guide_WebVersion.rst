@@ -576,7 +576,7 @@ You can now access your OpenStack **192.168.100.232/horizon** with credentials *
 11.2.Networking
 ------------
 
-* It's recommended to have two NICs but only one needs to be internet connected:
+* It's recommended to have two NICs but only one needs to be internet connected::
    
    # Connected to the internet
    auto eth0
@@ -782,7 +782,7 @@ To start your first VM, you will need to create networks for it. This is easy us
 
    keystone tenant-create --name project_one
 
-* Create a new user and assign the member role to it in the new tenant::
+* Create a new user and assign the member role to it in the new tenant (keystone role-list to get the appropriate id)::
 
    keystone user-create --name=user_one --pass=user_one --tenant-id $put_id_of_project_one --email=user_one@domain.com
    keystone user-role-add --tenant-id $put_id_of_project_one  --user-id $put_id_of_user_one --role-id $put_id_of_member_role
@@ -805,7 +805,7 @@ To start your first VM, you will need to create networks for it. This is easy us
 
 You can now start creating VMs but they will not be accessible from the internet. If you like them to be so, perform the following:
 
-* Create your external network with the tenant id belonging to the project_one tenant::
+* Create your external network with the tenant id belonging to the service tenant (keystone tenant-list to get the appropriate id) ::
 
    quantum net-create --tenant-id $put_id_of_project_one ext_net_proj_one --router:external=True
 
@@ -826,7 +826,7 @@ I Hope you enjoyed this guide, please if you have any feedbacks, don't hesitate.
 
 OpenStack Folsom Install Guide by Bilel Msekni is licensed under a Creative Commons Attribution 3.0 Unported License.
 
-.. image:: http://i.imgur.com/4XWrp.png
+					.. image:: http://i.imgur.com/4XWrp.png
  
 To view a copy of this license, visit [ http://creativecommons.org/licenses/by/3.0/deed.en_US ].
 
