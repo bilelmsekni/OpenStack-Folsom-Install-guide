@@ -632,7 +632,7 @@ We don't need to install the hole quantum server here, just the our plugin's age
 
 * Make sure that your rabbitMQ IP in /etc/quantum/quantum.conf is set to the controller node::
    
-  rabbit_host = 192.168.100.232
+   rabbit_host = 192.168.100.232
 
 * Restart all the services::
 
