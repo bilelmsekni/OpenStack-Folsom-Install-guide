@@ -826,8 +826,7 @@ I Hope you enjoyed this guide, please if you have any feedbacks, don't hesitate.
 
 OpenStack Folsom Install Guide by Bilel Msekni is licensed under a Creative Commons Attribution 3.0 Unported License.
 
-					.. image:: http://i.imgur.com/4XWrp.png
- 
+.. image:: http://i.imgur.com/4XWrp.png
 To view a copy of this license, visit [ http://creativecommons.org/licenses/by/3.0/deed.en_US ].
 
 14. Contacts
@@ -844,7 +843,7 @@ This work has been based on:
 * OpenStack Documentation [http://docs.openstack.org/trunk/openstack-compute/install/apt/content/]
 * OpenStack Quantum Install [http://docs.openstack.org/trunk/openstack-network/admin/content/ch_install.html]
 
-16. Todo
+16. To do
 =======
 
 This guide is just a startup. Your suggestions are always welcomed.
