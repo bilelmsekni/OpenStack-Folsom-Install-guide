@@ -63,9 +63,10 @@ Status: stable
 :Compute Node: eth0 (192.168.100.250), eth1
 
 **Note 1:** If you are not interrested in Quantum, you can also use this guide but you must follow the nova section found `here <https://github.com/mseknibilel/OpenStack-Folsom-Install-guide/blob/master/Tricks%26Ideas/install_nova-network.rst>`_ instead of the one written in this guide.
+
 **Note 2:** eth1 on compute node doesn't need to be internet connected.
 
-figure:: stars.jpg
+.. image:: Network_Architecture.jpg
 
 2. Getting Ready
 ===============
