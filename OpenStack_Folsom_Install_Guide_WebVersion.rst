@@ -807,11 +807,11 @@ You can now start creating VMs but they will not be accessible from the internet
 
 * Create your external network with the tenant id belonging to the service tenant (keystone tenant-list to get the appropriate id) ::
 
-   quantum net-create --tenant-id $put_id_of_project_one ext_net_proj_one --router:external=True
+   quantum net-create --tenant-id $put_id_of_service_tenant ext_net_proj_one --router:external=True
 
 * Create a subnet containing your floating IPs::
 
-   quantum subnet-create --tenant-id $put_id_of_project_one ext_net_proj_one 192.168.100.10/28 --enable_dhcp=False
+   quantum subnet-create --tenant-id $put_id_of_service_tenant ext_net_proj_one 192.168.100.10/28 --enable_dhcp=False
 
 * Set the router for the external network::
 
