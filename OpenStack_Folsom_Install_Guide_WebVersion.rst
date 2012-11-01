@@ -286,7 +286,7 @@ This is how we install OpenStack's identity service:
 7. Quantum
 =====================================================================
 
-First, I am really impressed with this new project, it literaly eliminated the network overhead i used to deal with during the nova-network era.
+Quantum literaly eliminated the network overhead i used to deal with during the nova-network era.
 
 * Install the Quantum server::
 
@@ -437,7 +437,7 @@ First, I am really impressed with this new project, it literaly eliminated the n
 9. Cinder
 =================
 
-Cinder is the newest OpenStack project and it aims at managing the volumes for VMs. Although Cinder is a replacement of the old nova-volume service, its installation is now a seperated from the nova install process.
+Although Cinder is a replacement of the old nova-volume service, its installation is now a seperated from the nova install process.
 
 * Install the required packages::
 
@@ -654,7 +654,7 @@ You can now access your OpenStack **192.168.100.232/horizon** with credentials *
 11.5. Quantum
 ------------------
 
-We don't need to install the hole quantum server here, just the our plugin's agent
+We don't need to install the hole quantum server here, just the openVSwitch plugin's agent
 
 * Install the Quantum openvswitch agent::
 
