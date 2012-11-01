@@ -60,7 +60,7 @@ Status: stable
 
 :Node Role: NICs
 :Control Node: eth0 (192.168.100.232), eth1 (192.168.100.234)
-:Compute Node: eth0 (192.168.100.250)
+:Compute Node: eth0 (192.168.100.250), eth1 (192.168.100.252)
 
 **Note 1:** If you are not interrested in Quantum, you can also use this guide but you must follow the nova section found `here <https://github.com/mseknibilel/OpenStack-Folsom-Install-guide/blob/master/Tricks%26Ideas/install_nova-network.rst>`_ instead of the one written in this guide.
 
@@ -606,8 +606,8 @@ You can now access your OpenStack **192.168.100.232/horizon** with credentials *
    #br-int will be used for integration	
    ovs-vsctl add-br br-int
    #br-eth1 will be used for VM communication 
-   ovs-vsctl add-br br-eth0
-   ovs-vsctl add-port br-eth0 eth0
+   ovs-vsctl add-br br-eth1
+   ovs-vsctl add-port br-eth1 eth1
 
 11.4. Quantum
 ------------------
@@ -628,7 +628,7 @@ We don't need to install the hole quantum server here, just the our plugin's age
    [OVS]
    tenant_network_type=vlan
    network_vlan_ranges = physnet1:1:4094
-   bridge_mappings = physnet1:br-eth0
+   bridge_mappings = physnet1:br-eth1
 
 * Restart all the services::
 
