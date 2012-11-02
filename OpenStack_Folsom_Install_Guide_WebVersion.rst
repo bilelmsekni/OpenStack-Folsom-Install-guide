@@ -400,7 +400,7 @@ Quantum literaly eliminated the network overhead i used to deal with during the 
    novnc_enabled=true
    novncproxy_base_url=http://192.168.100.232:6080/vnc_auto.html
    novncproxy_port=6080
-   vncserver_proxyclient_address=127.0.0.1
+   vncserver_proxyclient_address=192.168.100.232
    vncserver_listen=0.0.0.0 
 
    # Network settings
@@ -739,7 +739,7 @@ We don't need to install the hole quantum server here, just the openVSwitch plug
    novnc_enabled=true
    novncproxy_base_url=http://192.168.100.232:6080/vnc_auto.html
    novncproxy_port=6080
-   vncserver_proxyclient_address=127.0.0.1
+   vncserver_proxyclient_address=192.168.100.250
    vncserver_listen=0.0.0.0 
 
    # Network settings
