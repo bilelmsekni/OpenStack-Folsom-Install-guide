@@ -58,7 +58,7 @@ Status: stable
 
 :Node Role: NICs
 :Control Node: eth0 (192.168.100.232), eth1 (192.168.100.234)
-:Compute Node: eth0 (192.168.100.250), eth1
+:Compute Node: eth0 (192.168.100.250), eth1 (Your Choice)
 
 **Note 1:** If you are not interrested in Quantum, you can also use this guide but you must follow the nova section found `here <https://github.com/mseknibilel/OpenStack-Folsom-Install-guide/blob/master/Tricks%26Ideas/install_nova-network.rst>`_ instead of the one written in this guide.
 
@@ -589,7 +589,7 @@ You can now access your OpenStack **192.168.100.232/horizon** with credentials *
    # Not connected to internet
    auto eth1
    iface eth1 inet static
-   address 100.10.0.2
+   address 10.10.1.2
    netmask 255.255.255.0
 
 11.3 KVM
