@@ -589,7 +589,7 @@ You can now access your OpenStack **192.168.100.232/horizon** with credentials *
    # Not connected to internet
    auto eth1
    iface eth1 inet static
-   address 10.10.1.2
+   address 10.10.0.2
    netmask 255.255.255.0
 
 11.3 KVM
