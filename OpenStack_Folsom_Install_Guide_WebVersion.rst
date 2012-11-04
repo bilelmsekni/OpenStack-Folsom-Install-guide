@@ -57,8 +57,8 @@ Status: stable
 ====================
 
 :Node Role: NICs
-:Control Node: eth0 (192.168.100.232), eth1 (192.168.100.234)
-:Compute Node: eth0 (192.168.100.250), eth1
+:Control Node: eth0 (192.168.100.232), eth1(192.168.100.234) 
+:Compute Node: eth0 (192.168.100.250), eth1(yourchoice)
 
 **Note 1:** If you are not interrested in Quantum, you can also use this guide but you must follow the nova section found `here <https://github.com/mseknibilel/OpenStack-Folsom-Install-guide/blob/master/Tricks%26Ideas/install_nova-network.rst>`_ instead of the one written in this guide.
 
@@ -99,10 +99,12 @@ Status: stable
 
    #For internet access
    auto eth1
-   iface eth1 inet static
-   address 192.168.100.234
-   netmask 255.255.255.0
-  
+   iface eth2 inet manual
+   up ifconfig $IFACE 0.0.0.0 up
+   up ip link set $IFACE promisc on
+   down ip link set $IFACE promisc off
+   down ifconfig $IFACE down
+
 2.3. MySQL & RabbitMQ
 ------------
 
@@ -337,6 +339,10 @@ Quantum literaly eliminated the network overhead i used to deal with during the 
    admin_user = quantum
    admin_password = service_pass
 
+* Disable namespace use in /etc/quantum/dhcp_agent.ini::
+
+   use_namespaces = False
+
 * Restart all the services::
 
    service quantum-server restart
@@ -383,6 +389,8 @@ Quantum literaly eliminated the network overhead i used to deal with during the 
    ec2_dmz_host=192.168.100.232
    rabbit_host=192.168.100.232
    cc_host=192.168.100.232
+   metadata_host=192.168.100.232
+   metadata_listen=0.0.0.0
    nova_url=http://192.168.100.232:8774/v1.1/
    sql_connection=mysql://novaUser:novaPass@192.168.100.232/nova
    ec2_url=http://192.168.100.232:8773/services/Cloud 
@@ -722,10 +730,13 @@ We don't need to install the hole quantum server here, just the openVSwitch plug
    ec2_dmz_host=192.168.100.232
    rabbit_host=192.168.100.232
    cc_host=192.168.100.232
+   metadata_host=192.168.100.250
+   metadata_listen=0.0.0.0
    nova_url=http://192.168.100.232:8774/v1.1/
    sql_connection=mysql://novaUser:novaPass@192.168.100.232/nova
    ec2_url=http://192.168.100.232:8773/services/Cloud 
    root_helper=sudo nova-rootwrap /etc/nova/rootwrap.conf
+   
 
    # Auth
    use_deprecated_auth=false
@@ -807,17 +818,42 @@ You can now start creating VMs but they will not be accessible from the internet
 
 * Create your external network with the tenant id belonging to the service tenant (keystone tenant-list to get the appropriate id) ::
 
-   quantum net-create --tenant-id $put_id_of_service_tenant ext_net_proj_one --router:external=True
+   quantum net-create --tenant-id $put_id_of_service_tenant ext_net --router:external=True
+
+* Go back to the /etc/quantum/l3_agent.ini file and edit it::
+
+   gateway_external_net_id = $id_of_ext_net
+   router_id = $your_router_id
 
 * Create a subnet containing your floating IPs::
 
-   quantum subnet-create --tenant-id $put_id_of_service_tenant ext_net_proj_one 192.168.100.10/28 --enable_dhcp=False
+   quantum subnet-create --tenant-id $put_id_of_service_tenant --gateway 192.168.100.1 ext_net 192.168.100.10/28 --enable_dhcp=False
 
 * Set the router for the external network::
 
-   quantum router-gateway-set $put_router_proj_one_id_here $put_id_of_ext_net_proj_one_here
+   quantum router-gateway-set $put_router_proj_one_id_here $put_id_of_ext_net_here
 
-**This is it !**, You can now login to your OpenStack dashboard and start creating internet accessible VMs.
+* update your br-ex
+
+  ip addr flush dev br-ex
+  ip addr add 192.168.100.234/28 dev br-ex
+  ip link set br-ex up
+
+Unfortunatly, you can't use the dashboard to assign floating IPs to VMs so you need to get your hands a bit dirty to give your VM a public IP.
+
+* Start by allocating a floating ip::
+
+   quantum floatingip-create ext_net
+
+* pick the id of the port corresponding to your VM::
+
+   quantum port-list
+
+* Associate the floating IP to your VM::
+
+   quantum floatingip-associate $put_id_floating_ip $put_id_vm_port
+
+**This is it !**, You can now ping you VM and start administrating you OpenStack !
 
 I Hope you enjoyed this guide, please if you have any feedbacks, don't hesitate.
 
