@@ -834,11 +834,11 @@ You can now start creating VMs but they will not be accessible from the internet
 
    quantum router-gateway-set $put_router_proj_one_id_here $put_id_of_ext_net_here
 
-* update your br-ex
+* update your br-ex::
 
-  ip addr flush dev br-ex
-  ip addr add 192.168.100.234/28 dev br-ex
-  ip link set br-ex up
+   ip addr flush dev br-ex
+   ip addr add 192.168.100.234/28 dev br-ex
+   ip link set br-ex up
 
 Unfortunatly, you can't use the dashboard to assign floating IPs to VMs so you need to get your hands a bit dirty to give your VM a public IP.
 
