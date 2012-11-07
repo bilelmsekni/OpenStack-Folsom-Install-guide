@@ -57,8 +57,8 @@ Status: testing
 ====================
 
 :Node Role: NICs
-:Control Node: eth0 (192.168.100.51), eth1 (192.168.100.61)
-:Compute Node: eth0 (192.168.100.52)
+:Control Node: eth0 (192.168.100.51), eth1 (not internet connected), eth2 (internet connected)
+:Compute Node: eth0 (not internet connected)
 
 
 **Note 1:** If you are not interrested in Quantum, you can also use this guide but you must follow the nova section found `here <https://github.com/mseknibilel/OpenStack-Folsom-Install-guide/blob/master/Tricks%26Ideas/install_nova-network.rst>`_ instead of the one written in this guide.
@@ -85,42 +85,31 @@ Status: testing
 
 2.2.Networking
 ------------
-* First, take a good look at your working routing table::
-   
-   Destination     Gateway         Genmask         Flags Metric Ref    Use Iface
-   0.0.0.0         192.168.100.1   0.0.0.0         UG    0      0        0 eth0
-   192.168.100.0   0.0.0.0         255.255.255.0   U     0      0        0 eth0
-
-* Keep in your mind that it must become like this::
-   
-   Destination     Gateway         Genmask         Flags Metric Ref    Use Iface
-   0.0.0.0         192.168.100.1   0.0.0.0         UG    0      0        0 br-eth1
-   192.168.100.0   0.0.0.0         255.255.255.0   U     0      0        0 br-eth1
  
-* Both NICs on the controller node will give their IPs to the corresponding bridge::
+* Two NICs on the controller should be internet connected::
 
    auto eth0
-   iface eth0 inet manual
-   up ifconfig $IFACE 0.0.0.0 up
-   up ip link set $IFACE promisc on
-   down ip link set $IFACE promisc off
-   down ifconfig $IFACE down
-
-   auto eth1
-   iface eth1 inet manual
-   up ifconfig $IFACE 0.0.0.0 up
-   up ip link set $IFACE promisc on
-   down ip link set $IFACE promisc off
-   down ifconfig $IFACE down
-
-   auto br-eth1
-   iface br-eth1 inet static
+   iface eth0 inet static
    address 192.168.100.51
    netmask 255.255.255.0
    gateway 192.168.100.1
-   broadcast 192.168.100.255
    dns-nameservers 8.8.8.8
 
+   auto eth1
+   iface eth1 inet static
+   address 10.10.10.3
+   netmask 255.255.255.0
+
+   auto eth2
+   iface eth2 inet manual
+   up ifconfig $IFACE 0.0.0.0 up
+   up ip link set $IFACE promisc on
+   down ip link set $IFACE promisc off
+   down ifconfig $IFACE down
+
+* Restart your networking services::
+   
+   service networking restart
 
 2.3. MySQL & RabbitMQ
 ------------
@@ -297,21 +286,11 @@ This is how we install OpenStack's identity service:
    #br-int is used for VM integration.
    ovs-vsctl add-br br-int
 
-   #br-eth1 is used for VM configuration.
-   ovs-vsctl add-br br-eth1
-   ovs-vsctl add-port br-eth1 eth0
-
    #br-ex is used for accessing internet.
    ovs-vsctl add-br br-ex
-   ovs-vsctl add-port br-ex eth1
-   
+   ovs-vsctl br-set-external-id br-ex bridge-id br-ex
+   ovs-vsctl add-port br-ex eth2
 
-* **Reboot** and then re-establish your routing table::
-
-   route add default gw 192.168.100.1 br-eth1
-
-   #If there are other gateways, you must delete them using
-   #route del default gw %gateway_address dev <interface>
 
 7. Quantum
 =====================================================================
@@ -337,9 +316,12 @@ Quantum literaly eliminated the network overhead i used to deal with during the 
 
    #Under the OVS section
    [OVS]
-   tenant_network_type=vlan
-   network_vlan_ranges = physnet1:1:4094
-   bridge_mappings = physnet1:br-eth1
+   tenant_network_type = gre
+   tunnel_id_ranges = 1:1000
+   integration_bridge = br-int
+   tunnel_bridge = br-tun
+   local_ip = 10.10.10.3
+   enable_tunneling = True
 
 * Install quantum DHCP and l3 agents::
 
@@ -363,6 +345,12 @@ Quantum literaly eliminated the network overhead i used to deal with during the 
    admin_tenant_name = service
    admin_user = quantum
    admin_password = service_pass
+   metadata_ip = 192.168.100.51
+   use_namespaces = False
+
+* Edit /etc/quantum/dhcp_agent.ini
+
+   use_namespaces = False
 
 * Restart all the services::
 
@@ -608,21 +596,18 @@ You can now access your OpenStack **192.168.100.51/horizon** with credentials **
 
 * It's recommended to have two NICs but only one needs to be internet connected::
    
-   #1G NIC
    auto eth0
-   iface eth0 inet manual
-   up ifconfig $IFACE 0.0.0.0 up
-   up ip link set $IFACE promisc on
-   down ip link set $IFACE promisc off
-   down ifconfig $IFACE down
-
-   auto br-eth1
-   iface br-eth1 inet static
-   address 192.168.100.52
+   iface eth0 inet static
+   address 192.168.100.51
    netmask 255.255.255.0
    gateway 192.168.100.1
-   broadcast 192.168.100.255
    dns-nameservers 8.8.8.8
+
+   auto eth1
+   iface eth1 inet static
+   address 10.10.10.4
+   netmask 255.255.255.0
+
 
 11.3 KVM
 ------------------
@@ -680,17 +665,6 @@ You can now access your OpenStack **192.168.100.51/horizon** with credentials **
    #br-int is used for VM integration	
    ovs-vsctl add-br br-int
 
-   #br-eth1 is used for VM configuration 
-   ovs-vsctl add-br br-eth1
-   ovs-vsctl add-port br-eth1 eth0
-
-* **Reboot** and then re-establish your routing table::
-
-   route add default gw 192.168.100.1 br-eth1
-
-   #If there are other gateways, you must delete them using
-   #route del default gw %gateway_address dev <interface>
-
 11.5. Quantum
 ------------------
 
@@ -708,9 +682,13 @@ We don't need to install the hole quantum server here, just the openVSwitch plug
 
    #Under the OVS section
    [OVS]
-   tenant_network_type=vlan
-   network_vlan_ranges = physnet1:1:4094
-   bridge_mappings = physnet1:br-eth1
+   tenant_network_type = gre
+   tunnel_id_ranges = 1:1000
+   integration_bridge = br-int
+   tunnel_bridge = br-tun
+   local_ip = 10.10.10.4
+   enable_tunneling = True
+
 
 * Make sure that your rabbitMQ IP in /etc/quantum/quantum.conf is set to the controller node::
    
