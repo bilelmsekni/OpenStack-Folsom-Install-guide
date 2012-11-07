@@ -14,6 +14,7 @@ Copyright (C) Bilel Msekni <bilel.msekni@telecom-sudparis.eu>
 Contributors
 ==========
 
+* Roy Sowa <Roy.Sowa@ssc-spc.gc.ca>
 * Marco Consonni <marco_consonni@hp.com>
 * Dennis E Miyoshi <dennis.miyoshi@hp.com>
 * Houssem Medhioub <houssem.medhioub@it-sudparis.eu>
@@ -828,7 +829,7 @@ You can now start creating VMs but they will not be accessible from the internet
 
 * Create a subnet containing your floating IPs::
 
-   quantum subnet-create --tenant-id $put_id_of_service_tenant --gateway 192.168.100.1 ext_net 192.168.100.10/28 --enable_dhcp=False
+   quantum subnet-create --tenant-id $put_id_of_service_tenant --gateway 192.168.100.1 ext_net 192.168.100.234/28 --enable_dhcp=False
 
 * Set the router for the external network::
 
