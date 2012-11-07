@@ -57,7 +57,7 @@ Status: testing
 ====================
 
 :Node Role: NICs
-:Control Node: eth0 (192.168.100.51), eth1 (internet Connected)
+:Control Node: eth0 (192.168.100.51), eth1 (192.168.100.61)
 :Compute Node: eth0 (192.168.100.52)
 
 
@@ -65,7 +65,7 @@ Status: testing
 
 **Note 2:** This is my current network architecture, you can add as many compute node as you wish.
 
-.. image:: http://i.imgur.com/GDUTr.jpg
+.. image:: Comming Soon
 
 2. Getting Ready
 ===============
@@ -97,7 +97,7 @@ Status: testing
    0.0.0.0         192.168.100.1   0.0.0.0         UG    0      0        0 br-eth1
    192.168.100.0   0.0.0.0         255.255.255.0   U     0      0        0 br-eth1
  
-* Both NICs on the controller node need internet access::
+* Both NICs on the controller node will give their IPs to the corresponding bridge::
 
    auto eth0
    iface eth0 inet manual
@@ -294,16 +294,22 @@ This is how we install OpenStack's identity service:
 
 * Create the bridges::
 
-   #br-ex will be used to ensure access to VM from the outside world (a.k.a internet)
-   ovs-vsctl add-br br-eth
-   ovs-vsctl add-port br-eth eth0
+   #br-int is used for VM integration.
+   ovs-vsctl add-br br-int
+
+   #br-eth1 is used for VM configuration.
+   ovs-vsctl add-br br-eth1
+   ovs-vsctl add-port br-eth1 eth0
+
+   #br-ex is used for accessing internet.
    ovs-vsctl add-br br-ex
    ovs-vsctl add-port br-ex eth1
-   ovs-vsctl add-br br-int
+   
 
 * **Reboot** and then re-establish your routing table::
 
-   route add default gw 192.168.100.1 br-eth
+   route add default gw 192.168.100.1 br-eth1
+
    #If there are other gateways, you must delete them using
    #route del default gw %gateway_address dev <interface>
 
@@ -671,15 +677,17 @@ You can now access your OpenStack **192.168.100.51/horizon** with credentials **
 
 * Create the bridges::
 
-   #br-int will be used for integration	
+   #br-int is used for VM integration	
    ovs-vsctl add-br br-int
-   #br-eth1 will be used for VM communication 
+
+   #br-eth1 is used for VM configuration 
    ovs-vsctl add-br br-eth1
    ovs-vsctl add-port br-eth1 eth0
 
 * **Reboot** and then re-establish your routing table::
 
-   route add default gw 192.168.100.1 br-eth
+   route add default gw 192.168.100.1 br-eth1
+
    #If there are other gateways, you must delete them using
    #route del default gw %gateway_address dev <interface>
 
