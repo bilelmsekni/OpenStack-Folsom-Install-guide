@@ -348,7 +348,7 @@ Quantum literaly eliminated the network overhead i used to deal with during the 
    metadata_ip = 192.168.100.51
    use_namespaces = False
 
-* Edit /etc/quantum/dhcp_agent.ini
+* Edit /etc/quantum/dhcp_agent.ini::
 
    use_namespaces = False
 
@@ -598,7 +598,7 @@ You can now access your OpenStack **192.168.100.51/horizon** with credentials **
    
    auto eth0
    iface eth0 inet static
-   address 192.168.100.51
+   address 192.168.100.52
    netmask 255.255.255.0
    gateway 192.168.100.1
    dns-nameservers 8.8.8.8
@@ -832,7 +832,7 @@ You can now start creating VMs but they will not be accessible from the internet
 
 * Create a subnet containing your floating IPs::
 
-   quantum subnet-create --tenant-id $put_id_of_service_tenant --gateway 192.168.100.1 ext_net 192.168.100.10/28 --enable_dhcp=False
+   quantum subnet-create --tenant-id $put_id_of_service_tenant --gateway 192.168.100.1 ext_net 192.168.100.234/28 --enable_dhcp=False
 
 * Set the router for the external network::
 
