@@ -64,7 +64,7 @@ Status: stable
 
 **Note 1:** If you are not interrested in Quantum, you can also use this guide but you must follow the nova section found `here <https://github.com/mseknibilel/OpenStack-Folsom-Install-guide/blob/master/Tricks%26Ideas/install_nova-network.rst>`_ instead of the one written in this guide.
 
-**Note 2:** eth1 on controller&compute node don't need to be internet connected but they must be able to talk to each others.
+**Note 2:** If you don't have 2 NICs on controller node, you can check the milestone branch for 2 NIC installation.
 
 **Note 3:** This is my current network architecture, you can add as many compute node as you wish.
 
