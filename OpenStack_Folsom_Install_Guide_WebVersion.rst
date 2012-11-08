@@ -796,7 +796,7 @@ We don't need to install the hole quantum server here, just the openVSwitch plug
 12. Your First VM
 ============
 
-To start your first VM, we first need to create a new tenant, user, internal and external network. SSH to your controller node and perform the following:: 
+To start your first VM, we first need to create a new tenant, user, internal and external network. SSH to your controller node and perform the following.
 
 * Create a new tenant ::
 
