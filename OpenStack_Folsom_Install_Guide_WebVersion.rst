@@ -14,6 +14,7 @@ Copyright (C) Bilel Msekni <bilel.msekni@telecom-sudparis.eu>
 Contributors
 ==========
 
+* Roy Sowa <Roy.Sowa@ssc-spc.gc.ca>
 * Marco Consonni <marco_consonni@hp.com>
 * Dennis E Miyoshi <dennis.miyoshi@hp.com>
 * Houssem Medhioub <houssem.medhioub@it-sudparis.eu>
