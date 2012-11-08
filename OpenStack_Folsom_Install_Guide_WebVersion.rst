@@ -57,8 +57,8 @@ Status: testing
 ====================
 
 :Node Role: NICs
-:Control Node: eth0 (192.168.100.51), eth1 (192.168.100.61)
-:Compute Node: eth0 (192.168.100.52)
+:Control Node: eth0 (192.168.100.51), eth1 (100.10.10.51)
+:Compute Node: eth0 (192.168.100.52), eth1 (100.10.10.52)
 
 
 **Note 1:** If you are not interrested in Quantum, you can also use this guide but you must follow the nova section found `here <https://github.com/mseknibilel/OpenStack-Folsom-Install-guide/blob/master/Tricks%26Ideas/install_nova-network.rst>`_ instead of the one written in this guide.
@@ -94,8 +94,8 @@ Status: testing
 * Keep in your mind that it must become like this::
    
    Destination     Gateway         Genmask         Flags Metric Ref    Use Iface
-   0.0.0.0         192.168.100.1   0.0.0.0         UG    0      0        0 br-eth1
-   192.168.100.0   0.0.0.0         255.255.255.0   U     0      0        0 br-eth1
+   0.0.0.0         192.168.100.1   0.0.0.0         UG    0      0        0 br-ex
+   192.168.100.0   0.0.0.0         255.255.255.0   U     0      0        0 br-ex
  
 * Both NICs on the controller node will give their IPs to the corresponding bridge::
 
@@ -107,14 +107,12 @@ Status: testing
    down ifconfig $IFACE down
 
    auto eth1
-   iface eth1 inet manual
-   up ifconfig $IFACE 0.0.0.0 up
-   up ip link set $IFACE promisc on
-   down ip link set $IFACE promisc off
-   down ifconfig $IFACE down
+   iface eth1 inet static
+   address 100.10.10.51
+   netmask 255.255.255.0
 
-   auto br-eth1
-   iface br-eth1 inet static
+   auto br-ex
+   iface br-ex inet static
    address 192.168.100.51
    netmask 255.255.255.0
    gateway 192.168.100.1
@@ -299,16 +297,16 @@ This is how we install OpenStack's identity service:
 
    #br-eth1 is used for VM configuration.
    ovs-vsctl add-br br-eth1
-   ovs-vsctl add-port br-eth1 eth0
+   ovs-vsctl add-port br-eth1 eth1
 
    #br-ex is used for accessing internet.
    ovs-vsctl add-br br-ex
-   ovs-vsctl add-port br-ex eth1
+   ovs-vsctl add-port br-ex eth0
    
 
 * **Reboot** and then re-establish your routing table::
 
-   route add default gw 192.168.100.1 br-eth1
+   route add default gw 192.168.100.1 br-ex
 
    #If there are other gateways, you must delete them using
    #route del default gw %gateway_address dev <interface>
@@ -608,21 +606,18 @@ You can now access your OpenStack **192.168.100.51/horizon** with credentials **
 
 * It's recommended to have two NICs but only one needs to be internet connected::
    
-   #1G NIC
    auto eth0
-   iface eth0 inet manual
-   up ifconfig $IFACE 0.0.0.0 up
-   up ip link set $IFACE promisc on
-   down ip link set $IFACE promisc off
-   down ifconfig $IFACE down
-
-   auto br-eth1
-   iface br-eth1 inet static
+   iface eth0 inet static
    address 192.168.100.52
    netmask 255.255.255.0
    gateway 192.168.100.1
    broadcast 192.168.100.255
    dns-nameservers 8.8.8.8
+
+   auto eth1
+   iface eth1 inet static
+   address 100.10.10.52
+   netmask 255.255.255.0
 
 11.3 KVM
 ------------------
@@ -682,14 +677,7 @@ You can now access your OpenStack **192.168.100.51/horizon** with credentials **
 
    #br-eth1 is used for VM configuration 
    ovs-vsctl add-br br-eth1
-   ovs-vsctl add-port br-eth1 eth0
-
-* **Reboot** and then re-establish your routing table::
-
-   route add default gw 192.168.100.1 br-eth1
-
-   #If there are other gateways, you must delete them using
-   #route del default gw %gateway_address dev <interface>
+   ovs-vsctl add-port br-eth1 eth1
 
 11.5. Quantum
 ------------------
@@ -854,17 +842,12 @@ You can now start creating VMs but they will not be accessible from the internet
 
 * Create a subnet containing your floating IPs::
 
-   quantum subnet-create --tenant-id $put_id_of_service_tenant --gateway 192.168.100.1 ext_net 192.168.100.10/28 --enable_dhcp=False
+   quantum subnet-create --tenant-id $put_id_of_service_tenant --gateway 192.168.100.1 ext_net 192.168.100.232/28 --enable_dhcp=False
 
 * Set the router for the external network::
 
    quantum router-gateway-set $put_router_proj_one_id_here $put_id_of_ext_net_here
 
-* update your br-ex::
-
-   ip addr flush dev br-ex
-   ip addr add 192.168.100.234/28 dev br-ex
-   ip link set br-ex up
 
 Unfortunatly, you can't use the dashboard to assign floating IPs to VMs so you need to get your hands a bit dirty to give your VM a public IP.
 
