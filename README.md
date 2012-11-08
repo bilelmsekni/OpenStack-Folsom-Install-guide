@@ -12,5 +12,5 @@ It's easy, simple and tested. Can't wait? Go here to check it by yourself:
 
 Note: Quantum on GRE-Tunneling is available through GRE-Tunneling branch
 
-Note: Quantum on VLAN is available through milestone branch
+Note: Quantum on VLAN is available through master and milestone branches
 
