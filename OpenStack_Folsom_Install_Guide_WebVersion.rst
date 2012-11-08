@@ -457,7 +457,7 @@ Although Cinder is a replacement of the old nova-volume service, its installatio
 
 * Install the required packages::
 
-   apt-get install cinder-api cinder-scheduler cinder-volume iscsitarget iscsitarget-dkms
+   apt-get install cinder-api cinder-scheduler cinder-volume iscsitarget open-iscsi iscsitarget-dkms
 
 * Configure the iscsi services::
 
