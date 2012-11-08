@@ -57,13 +57,14 @@ Status: testing
 ====================
 
 :Node Role: NICs
-:Control Node: eth0 (192.168.100.51), eth1 (not internet connected), eth2 (internet connected)
-:Compute Node: eth0 (not internet connected)
+:Control Node: eth0 (192.168.100.51), eth1 (100.10.10.51), eth2 (internet connected)
+:Compute Node: eth0 (192.168.100.52), eth1 (100.10.10.52)
 
+Note 1: If you don't have 2 NICs on controller node, you can check the milestone branch for 2 NIC installation.
 
-**Note 1:** If you are not interrested in Quantum, you can also use this guide but you must follow the nova section found `here <https://github.com/mseknibilel/OpenStack-Folsom-Install-guide/blob/master/Tricks%26Ideas/install_nova-network.rst>`_ instead of the one written in this guide.
+**Note 2:** If you are not interrested in Quantum, you can also use this guide but you must follow the nova section found `here <https://github.com/mseknibilel/OpenStack-Folsom-Install-guide/blob/master/Tricks%26Ideas/install_nova-network.rst>`_ instead of the one written in this guide.
 
-**Note 2:** This is my current network architecture, you can add as many compute node as you wish.
+**Note 3:** This is my current network architecture, you can add as many compute node as you wish.
 
 .. image:: http://i.imgur.com/1jCFC.jpg
 
@@ -97,7 +98,7 @@ Status: testing
 
    auto eth1
    iface eth1 inet static
-   address 10.10.10.3
+   address 100.10.10.51
    netmask 255.255.255.0
 
    auto eth2
@@ -320,7 +321,7 @@ Quantum literaly eliminated the network overhead i used to deal with during the 
    tunnel_id_ranges = 1:1000
    integration_bridge = br-int
    tunnel_bridge = br-tun
-   local_ip = 10.10.10.3
+   local_ip = 100.10.10.51
    enable_tunneling = True
 
 * Install quantum DHCP and l3 agents::
@@ -605,7 +606,7 @@ You can now access your OpenStack **192.168.100.51/horizon** with credentials **
 
    auto eth1
    iface eth1 inet static
-   address 10.10.10.4
+   address 100.10.10.52
    netmask 255.255.255.0
 
 
@@ -686,7 +687,7 @@ We don't need to install the hole quantum server here, just the openVSwitch plug
    tunnel_id_ranges = 1:1000
    integration_bridge = br-int
    tunnel_bridge = br-tun
-   local_ip = 10.10.10.4
+   local_ip = 100.10.10.52
    enable_tunneling = True
 
 
