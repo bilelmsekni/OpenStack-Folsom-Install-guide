@@ -97,7 +97,7 @@ Status: testing
    0.0.0.0         192.168.100.1   0.0.0.0         UG    0      0        0 br-ex
    192.168.100.0   0.0.0.0         255.255.255.0   U     0      0        0 br-ex
  
-* Both NICs on the controller node will give their IPs to the corresponding bridge::
+* eth0 NIC on the controller node will give its IPs to the br-ex::
 
    auto eth0
    iface eth0 inet manual
@@ -892,7 +892,7 @@ This work has been based on:
 16. To do
 =======
 
-This guide is just a startup. Your suggestions are always welcomed.
+This guide is under testing. Your suggestions are always welcomed.
 
 Some of this guide's needs might be:
 
