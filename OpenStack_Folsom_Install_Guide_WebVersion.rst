@@ -58,17 +58,17 @@ Status: stable
 ====================
 
 :Node Role: NICs
-:Control Node: eth0 (192.168.100.232), eth1 (192.168.100.234)
-:Compute Node: eth0 (192.168.100.250), eth1 (Your Choice)
+:Control Node: eth0 (192.168.100.232), eth1 (100.10.10.232), eth2(Must be internet connected)
+:Compute Node: eth0 (192.168.100.233), eth1 (100.10.10.233)
 
 
 **Note 1:** If you are not interrested in Quantum, you can also use this guide but you must follow the nova section found `here <https://github.com/mseknibilel/OpenStack-Folsom-Install-guide/blob/master/Tricks%26Ideas/install_nova-network.rst>`_ instead of the one written in this guide.
 
-**Note 2:** eth1 on compute node doesn't need to be internet connected.
+**Note 2:** eth1 on controller&compute node don't need to be internet connected but they must be able to talk to each others.
 
 **Note 3:** This is my current network architecture, you can add as many compute node as you wish.
 
-.. image:: http://i.imgur.com/GDUTr.jpg
+.. image:: Comming Soon
 
 2. Getting Ready
 ===============
@@ -99,8 +99,14 @@ Status: stable
    gateway 192.168.100.1
    dns-nameservers 8.8.8.8
 
-   #For internet access
+   #Not internet connected(used for VM configuration)
    auto eth1
+   iface eth1 inet static
+   address 100.10.10.232
+   netmask 255.255.255.0
+
+   #Will generously be bridged to the br-ex later:
+   auto eth2
    iface eth2 inet manual
    up ifconfig $IFACE 0.0.0.0 up
    up ip link set $IFACE promisc on
@@ -283,9 +289,16 @@ This is how we install OpenStack's identity service:
 
 * Create the bridges::
 
-   #br-ex will be used to ensure access to VM from the outside world (a.k.a internet)
+   #br-ex is used to make to VM accessible from the internet
    ovs-vsctl add-br br-ex
-   ovs-vsctl add-port br-ex eth1
+   ovs-vsctl add-port br-ex eth2
+   
+   #br-int is used for VM integration 
+   ovs-vsctl add-br br-int
+
+   #Used for VM configuration
+   ovs-vsctl add-br br-eth1
+   ovs-vsctl add-port br-eth1 eth1
 
 7. Quantum
 =====================================================================
@@ -340,10 +353,6 @@ Quantum literaly eliminated the network overhead i used to deal with during the 
    admin_tenant_name = service
    admin_user = quantum
    admin_password = service_pass
-
-* Disable namespace use in /etc/quantum/dhcp_agent.ini::
-
-   use_namespaces = False
 
 * Restart all the services::
 
@@ -591,7 +600,7 @@ You can now access your OpenStack **192.168.100.232/horizon** with credentials *
    # Connected to the internet
    auto eth0
    iface eth0 inet static
-   address 192.168.100.250
+   address 192.168.100.233
    netmask 255.255.255.0
    gateway 192.168.100.1
    dns-nameservers 8.8.8.8
@@ -599,7 +608,7 @@ You can now access your OpenStack **192.168.100.232/horizon** with credentials *
    # Not connected to internet
    auto eth1
    iface eth1 inet static
-   address 10.10.0.2
+   address 100.10.10.233
    netmask 255.255.255.0
 
 11.3 KVM
@@ -655,9 +664,10 @@ You can now access your OpenStack **192.168.100.232/horizon** with credentials *
 
 * Create the bridges::
 
-   #br-int will be used for integration	
+   #br-int will be used for VM integration	
    ovs-vsctl add-br br-int
-   #br-eth1 will be used for VM communication 
+
+   #br-eth1 will be used for VM configuration 
    ovs-vsctl add-br br-eth1
    ovs-vsctl add-port br-eth1 eth1
 
@@ -732,7 +742,7 @@ We don't need to install the hole quantum server here, just the openVSwitch plug
    ec2_dmz_host=192.168.100.232
    rabbit_host=192.168.100.232
    cc_host=192.168.100.232
-   metadata_host=192.168.100.250
+   metadata_host=192.168.100.233
    metadata_listen=0.0.0.0
    nova_url=http://192.168.100.232:8774/v1.1/
    sql_connection=mysql://novaUser:novaPass@192.168.100.232/nova
@@ -752,7 +762,7 @@ We don't need to install the hole quantum server here, just the openVSwitch plug
    novnc_enabled=true
    novncproxy_base_url=http://192.168.100.232:6080/vnc_auto.html
    novncproxy_port=6080
-   vncserver_proxyclient_address=192.168.100.250
+   vncserver_proxyclient_address=192.168.100.233
    vncserver_listen=0.0.0.0 
 
    # Network settings
@@ -829,7 +839,7 @@ You can now start creating VMs but they will not be accessible from the internet
 
 * Create a subnet containing your floating IPs::
 
-   quantum subnet-create --tenant-id $put_id_of_service_tenant --gateway 192.168.100.1 ext_net 192.168.100.234/28 --enable_dhcp=False
+   quantum subnet-create --tenant-id $put_id_of_service_tenant --gateway 192.168.100.1 ext_net 192.168.100.100/28 --enable_dhcp=False
 
 * Set the router for the external network::
 
@@ -838,7 +848,7 @@ You can now start creating VMs but they will not be accessible from the internet
 * update your br-ex::
 
    ip addr flush dev br-ex
-   ip addr add 192.168.100.234/28 dev br-ex
+   ip addr add 192.168.100.100/28 dev br-ex
    ip link set br-ex up
 
 Unfortunatly, you can't use the dashboard to assign floating IPs to VMs so you need to get your hands a bit dirty to give your VM a public IP.
