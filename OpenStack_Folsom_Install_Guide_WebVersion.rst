@@ -577,7 +577,7 @@ You can now access your OpenStack **192.168.100.232/horizon** with credentials *
 
 * Configure the NTP server to follow the controller node::
    
-   sed -i 's/server ntp.ubuntu.com/server 192.168.100.232' /etc/ntp.conf
+   sed -i 's/server ntp.ubuntu.com/server 192.168.100.232/g' /etc/ntp.conf
    service ntp restart  
 
 * Install other services::
@@ -796,7 +796,7 @@ We don't need to install the hole quantum server here, just the openVSwitch plug
 12. Your First VM
 ============
 
-To start your first VM, you will need to create networks for it. This is easy using the new Quantum project but we first need to create a new tenant as it is not recommended to play with the admin tenant. 
+To start your first VM, we first need to create a new tenant, user, internal and external network. SSH to your controller node and perform the following:: 
 
 * Create a new tenant ::
 
@@ -817,7 +817,7 @@ To start your first VM, you will need to create networks for it. This is easy us
 
 * Create a router for the new tenant::
 
-   quantum router-create --tenant_id $put_id_of_project_one router_proj_one
+   quantum router-create --tenant-id $put_id_of_project_one router_proj_one
 
 * Add the router to the subnet::
 
@@ -833,6 +833,10 @@ You can now start creating VMs but they will not be accessible from the internet
 
    gateway_external_net_id = $id_of_ext_net
    router_id = $your_router_id
+
+* Restart l3-agent::
+
+   service quantum-l3-agent restart
 
 * Create a subnet containing your floating IPs::
 
