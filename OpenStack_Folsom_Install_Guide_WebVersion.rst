@@ -2,7 +2,7 @@
   OpenStack Folsom Install Guide
 ==========================================================
 
-:Version: 2.0
+:Version: 2.5
 :Source: https://github.com/mseknibilel/OpenStack-Folsom-Install-guide
 :Keywords: Multi node OpenStack, Folsom, Quantum, Nova, Keystone, Glance, Horizon, Cinder, OpenVSwitch, KVM, Ubuntu Server 12.10 (64 bits).
 
@@ -49,7 +49,7 @@ Table of Contents
 
 OpenStack Folsom Install Guide is an easy and tested way to create your own OpenStack plateform. 
 
-Version 2.0
+Version 2.5
 
 Status: stable 
 
@@ -61,10 +61,9 @@ Status: stable
 :Control Node: eth0 (192.168.100.232), eth1 (100.10.10.232), eth2(Must be internet connected)
 :Compute Node: eth0 (192.168.100.233), eth1 (100.10.10.233)
 
+**Note 1:** If you don't have 2 NICs on controller node, you can check the milestone branch for 2 NIC installation.
 
-**Note 1:** If you are not interrested in Quantum, you can also use this guide but you must follow the nova section found `here <https://github.com/mseknibilel/OpenStack-Folsom-Install-guide/blob/master/Tricks%26Ideas/install_nova-network.rst>`_ instead of the one written in this guide.
-
-**Note 2:** If you don't have 2 NICs on controller node, you can check the milestone branch for 2 NIC installation.
+**Note 2:** If you are not interrested in Quantum, you can also use this guide but you must follow the nova section found `here <https://github.com/mseknibilel/OpenStack-Folsom-Install-guide/blob/master/Tricks%26Ideas/install_nova-network.rst>`_ instead of the one written in this guide.
 
 **Note 3:** This is my current network architecture, you can add as many compute node as you wish.
 
@@ -307,7 +306,7 @@ Quantum literaly eliminated the network overhead i used to deal with during the 
 
 * Install the Quantum server::
 
-   apt-get install quantum-server quantum-plugin-openvswitch
+   apt-get install quantum-server quantum-plugin-openvswitch quantum-plugin-openvswitch-agent
 
 * Create a database::
 
@@ -326,10 +325,7 @@ Quantum literaly eliminated the network overhead i used to deal with during the 
    [OVS]
    tenant_network_type=vlan
    network_vlan_ranges = physnet1:1:4094
-
-* Restart the quantum server::
-
-   service quantum-server restart
+   bridge_mappings = physnet1:br-eth1
 
 * Install quantum DHCP and l3 agents::
 
@@ -359,6 +355,7 @@ Quantum literaly eliminated the network overhead i used to deal with during the 
    service quantum-server restart
    service quantum-dhcp-agent restart
    service quantum-l3-agent restart
+   service quantum-plugin-openvswitch-agent restart
 
 8. Nova
 =================
