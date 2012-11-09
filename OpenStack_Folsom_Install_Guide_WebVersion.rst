@@ -158,7 +158,9 @@ Status: testing
 * Enable IP_Forwarding::
 
    nano /etc/sysctl.conf
-   #Uncomment net.ipv4.ip_forward=1
+   # Uncomment net.ipv4.ip_forward=1, to save you from rebooting, do this:
+   echo 1 > /proc/sys/net/ipv4/ip_forward
+
 
 3. Keystone
 =====================================================================
