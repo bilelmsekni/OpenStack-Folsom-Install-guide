@@ -588,7 +588,8 @@ You can now access your OpenStack **192.168.100.232/horizon** with credentials *
 * Enable IP_Forwarding::
 
    nano /etc/sysctl.conf
-   #Uncomment net.ipv4.ip_forward=1
+   # Uncomment net.ipv4.ip_forward=1, to save you from rebooting, perform the following
+   sysctl net.ipv4.ip_forward=1
 
 11.2.Networking
 ------------
