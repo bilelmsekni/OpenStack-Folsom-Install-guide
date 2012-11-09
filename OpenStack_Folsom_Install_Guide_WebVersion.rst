@@ -150,7 +150,8 @@ Note 1: If you don't have 2 NICs on controller node, you can check the milestone
 * Enable IP_Forwarding::
 
    nano /etc/sysctl.conf
-   #Uncomment net.ipv4.ip_forward=1
+   # Uncomment net.ipv4.ip_forward=1, to save you from rebooting, perform the following
+   echo 1 > /proc/sys/net/ipv4/ip_forward
 
 3. Keystone
 =====================================================================
