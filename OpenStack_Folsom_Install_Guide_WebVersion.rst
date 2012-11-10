@@ -854,9 +854,9 @@ You can now start creating VMs but they will not be accessible from the internet
 
 Unfortunatly, you can't use the dashboard to assign floating IPs to VMs so you need to get your hands a bit dirty to give your VM a public IP.
 
-* Start by allocating a floating ip::
+* Start by allocating a floating ip to the project one tenant::
 
-   quantum floatingip-create ext_net
+   quantum floatingip-create --tenant-id $put_id_of_project_one ext_net
 
 * pick the id of the port corresponding to your VM::
 
