@@ -757,7 +757,7 @@ We don't need to install the hole quantum server here, just the openVSwitch plug
    metadata_host=192.168.100.52
    metadata_listen=0.0.0.0
    nova_url=http://192.168.100.51:8774/v1.1/
-   sql_connection=mysql://novaUser:novaPass@localhost/nova
+   sql_connection=mysql://novaUser:novaPass@192.168.100.51/nova
    ec2_url=http://192.168.100.51:8773/services/Cloud 
    root_helper=sudo nova-rootwrap /etc/nova/rootwrap.conf
    
