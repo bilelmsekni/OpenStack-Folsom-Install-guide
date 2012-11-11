@@ -18,6 +18,6 @@ https://github.com/mseknibilel/OpenStack-Folsom-Install-guide/blob/GRE-Tunneling
  
 https://github.com/mseknibilel/OpenStack-Folsom-Install-guide/blob/master/OpenStack_Folsom_Install_Guide_WebVersion.rst
 
-**Note:** Quantum on VLAN with 2 NICs is available through milestone branch:
+**Note:** Quantum on VLAN with 2 NICs is available through VLAN/2NICs branch:
 
-https://github.com/mseknibilel/OpenStack-Folsom-Install-guide/blob/milestone/OpenStack_Folsom_Install_Guide_WebVersion.rst
+https://github.com/mseknibilel/OpenStack-Folsom-Install-guide/blob/VLAN/2NICs/OpenStack_Folsom_Install_Guide_WebVersion.rst
