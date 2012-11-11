@@ -407,7 +407,7 @@ Quantum literaly eliminated the network overhead i used to deal with during the 
    metadata_host=192.168.100.51
    metadata_listen=0.0.0.0
    nova_url=http://192.168.100.51:8774/v1.1/
-   sql_connection=mysql://novaUser:novaPass@localhost/nova
+   sql_connection=mysql://novaUser:novaPass@192.168.100.51/nova
    ec2_url=http://192.168.100.51:8773/services/Cloud 
    root_helper=sudo nova-rootwrap /etc/nova/rootwrap.conf
 
@@ -594,7 +594,8 @@ You can now access your OpenStack **192.168.100.51/horizon** with credentials **
 * Enable IP_Forwarding::
 
    nano /etc/sysctl.conf
-   #Uncomment net.ipv4.ip_forward=1
+   # Uncomment net.ipv4.ip_forward=1, to save you from rebooting, perform the following
+   sysctl net.ipv4.ip_forward=1
 
 11.2.Networking
 ------------
@@ -748,7 +749,7 @@ We don't need to install the hole quantum server here, just the openVSwitch plug
    metadata_host=192.168.100.52
    metadata_listen=0.0.0.0
    nova_url=http://192.168.100.51:8774/v1.1/
-   sql_connection=mysql://novaUser:novaPass@localhost/nova
+   sql_connection=mysql://novaUser:novaPass@192.168.100.51/nova
    ec2_url=http://192.168.100.51:8773/services/Cloud 
    root_helper=sudo nova-rootwrap /etc/nova/rootwrap.conf
    
@@ -810,7 +811,7 @@ To start your first VM, we first need to create a new tenant, user, internal and
 
 * Create a new network for the tenant::
 
-   quantum net-create --tenant-id $put_id_of_project_one net_proj_one --provider:network_type vlan --provider:physical_network physnet1 --provider:segmentation_id 1024
+   quantum net-create --tenant-id $put_id_of_project_one net_proj_one 
 
 * Create a new subnet inside the new tenant network::
 
@@ -855,9 +856,9 @@ You can now start creating VMs but they will not be accessible from the internet
 
 Unfortunatly, you can't use the dashboard to assign floating IPs to VMs so you need to get your hands a bit dirty to give your VM a public IP.
 
-* Start by allocating a floating ip::
+* Start by allocating a floating ip to the project one tenant::
 
-   quantum floatingip-create ext_net
+   quantum floatingip-create --tenant-id $put_id_of_project_one ext_net
 
 * pick the id of the port corresponding to your VM::
 
