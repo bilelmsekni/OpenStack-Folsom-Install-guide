@@ -51,7 +51,7 @@ OpenStack Folsom Install Guide is an easy and tested way to create your own Open
 
 Version 3.0
 
-Status: testing 
+Status: Stable
 
 
 1. Requirements
@@ -361,6 +361,8 @@ Quantum literaly eliminated the network overhead i used to deal with during the 
    service quantum-dhcp-agent restart
    service quantum-l3-agent restart
    service quantum-plugin-openvswitch-agent restart
+
+* To get the l3_agent to function properly, you need to undergo a special operation described here.
 
 8. Nova
 =================
