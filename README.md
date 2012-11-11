@@ -11,7 +11,7 @@ It's easy, simple and tested. Can't wait? Go check it by yourself:
 
 **Note:** Quantum on GRE-Tunneling : is available through GRE-Tunneling branch:
 
-https://github.com/mseknibilel/OpenStack-Folsom-Install-guide/blob/stable\GRE/OpenStack_Folsom_Install_Guide_WebVersion.rst
+https://github.com/mseknibilel/OpenStack-Folsom-Install-guide/blob/stable/GRE/OpenStack_Folsom_Install_Guide_WebVersion.rst
 
 **Note:** Quantum on VLAN with 3 NICs is available through master branch:
  
