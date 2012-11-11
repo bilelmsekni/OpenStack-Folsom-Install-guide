@@ -839,15 +839,6 @@ You can now start creating VMs but they will not be accessible from the internet
 
    quantum net-create --tenant-id $put_id_of_service_tenant ext_net --router:external=True
 
-* Go back to the /etc/quantum/l3_agent.ini file and edit it::
-
-   gateway_external_net_id = $id_of_ext_net
-   router_id = $your_router_id
-
-* Restart l3-agent::
-
-   service quantum-l3-agent restart
-
 * Create a subnet containing your floating IPs::
 
    quantum subnet-create --tenant-id $put_id_of_service_tenant --gateway 192.168.100.1 ext_net 192.168.100.232/28 --enable_dhcp=False
@@ -859,9 +850,9 @@ You can now start creating VMs but they will not be accessible from the internet
 
 Unfortunatly, you can't use the dashboard to assign floating IPs to VMs so you need to get your hands a bit dirty to give your VM a public IP.
 
-* Start by allocating a floating ip::
+* Start by allocating a floating ip to the project one tenant::
 
-   quantum floatingip-create ext_net
+   quantum floatingip-create --tenant-id $put_id_of_project_one ext_net
 
 * pick the id of the port corresponding to your VM::
 
