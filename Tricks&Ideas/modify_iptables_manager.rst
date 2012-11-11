@@ -28,16 +28,13 @@ When you aim at using a single router for all of your tenants, you have to set r
 1. How to fix it?
 ====================
 
-* Dive inside OpenStack code at cd /usr/lib/python2.7/dist-packages/quantum/agent/linux/iptables_manager.py
-::
+* Dive inside OpenStack code at cd /usr/lib/python2.7/dist-packages/quantum/agent/linux/iptables_manager.py::
 
-   sudo su
-   nano /usr/lib/python2.7/dist-packages/quantum/agent/linux/iptables_manager.py
+   sudo nano /usr/lib/python2.7/dist-packages/quantum/agent/linux/iptables_manager.py
 
 * Get to the line 272 (use Ctrl+c to check your position)::
    
-   # Replace this line : s = [('/sbin/iptables', self.ipv4)] with
-   # s = [('iptables', self.ipv4)]
+   # Replace this line : s = [('/sbin/iptables', self.ipv4)] with s = [('iptables', self.ipv4)]
 
 * Exit, save and restart the l3_agent::
 

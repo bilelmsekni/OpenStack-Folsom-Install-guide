@@ -362,7 +362,7 @@ Quantum literaly eliminated the network overhead i used to deal with during the 
    service quantum-l3-agent restart
    service quantum-plugin-openvswitch-agent restart
 
-* To get the l3_agent to function properly, you need to undergo a special operation described here.
+* To get the l3_agent to function properly, you need to undergo a special operation described `here <https://github.com/mseknibilel/OpenStack-Folsom-Install-guide/blob/GRE-Tunneling/Tricks%26Ideas/modify_iptables_manager.rst>`_. 
 
 8. Nova
 =================
