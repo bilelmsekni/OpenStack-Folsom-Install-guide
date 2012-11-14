@@ -277,7 +277,7 @@ This is how we install OpenStack's identity service:
 
    glance image-list
 
-6. OpenVSwitch
+5. OpenVSwitch
 =====================================================================
 
 * Install the openVSwitch::
@@ -295,7 +295,7 @@ This is how we install OpenStack's identity service:
    ovs-vsctl add-port br-ex eth2
 
 
-7. Quantum
+6. Quantum
 =====================================================================
 
 Quantum literaly eliminated the network overhead i used to deal with during the nova-network era.
@@ -364,7 +364,7 @@ Quantum literaly eliminated the network overhead i used to deal with during the 
 
 * To get the l3_agent to function properly, you need to undergo a special operation described `here <https://github.com/mseknibilel/OpenStack-Folsom-Install-guide/blob/GRE-Tunneling/Tricks%26Ideas/modify_iptables_manager.rst>`_. 
 
-8. Nova
+7. Nova
 =================
 
 * Start by installing nova components::
@@ -457,7 +457,7 @@ Quantum literaly eliminated the network overhead i used to deal with during the 
 
    nova-manage service list
 
-9. Cinder
+8. Cinder
 =================
 
 Although Cinder is a replacement of the old nova-volume service, its installation is now a seperated from the nova install process.
@@ -540,7 +540,7 @@ Although Cinder is a replacement of the old nova-volume service, its installatio
    service cinder-volume restart
    service cinder-api restart
 
-10. Horizon
+9. Horizon
 ============
 
 * To install horizon, proceed like this ::
@@ -566,10 +566,10 @@ You can now access your OpenStack **192.168.100.51/horizon** with credentials **
 
 **Note:** A reboot might be needed for a successful login
 
-11. Adding a compute node
+10. Adding a compute node
 =========================
 
-11.1. Preparing the Node
+10.1. Preparing the Node
 ------------------
 
 * Update your system::
@@ -597,7 +597,7 @@ You can now access your OpenStack **192.168.100.51/horizon** with credentials **
    # Uncomment net.ipv4.ip_forward=1, to save you from rebooting, perform the following
    sysctl net.ipv4.ip_forward=1
 
-11.2.Networking
+10.2.Networking
 ------------
 
 * It's recommended to have two NICs but only one needs to be internet connected::
@@ -615,7 +615,7 @@ You can now access your OpenStack **192.168.100.51/horizon** with credentials **
    netmask 255.255.255.0
 
 
-11.3 KVM
+10.3 KVM
 ------------------
 
 * KVM is needed as the hypervisor that will be used to create virtual machines. Before you install KVM, make sure that your hardware enables virtualization::
@@ -659,7 +659,7 @@ You can now access your OpenStack **192.168.100.51/horizon** with credentials **
 
    service libvirt-bin restart
 
-11.4. OpenVSwitch
+10.4. OpenVSwitch
 ------------------
 
 * Install the openVSwitch::
@@ -671,7 +671,7 @@ You can now access your OpenStack **192.168.100.51/horizon** with credentials **
    #br-int is used for VM integration	
    ovs-vsctl add-br br-int
 
-11.5. Quantum
+10.5. Quantum
 ------------------
 
 We don't need to install the hole quantum server here, just the openVSwitch plugin's agent
@@ -704,7 +704,7 @@ We don't need to install the hole quantum server here, just the openVSwitch plug
 
    service quantum-plugin-openvswitch-agent restart
 
-11.6. Nova
+10.6. Nova
 ------------------
 
 * Install nova's required components for the compute node::
@@ -795,7 +795,7 @@ We don't need to install the hole quantum server here, just the openVSwitch plug
 
    nova-manage service list
 
-12. Your First VM
+11. Your First VM
 ============
 
 To start your first VM, we first need to create a new tenant, user, internal and external network. SSH to your controller node and perform the following.
@@ -872,7 +872,7 @@ Unfortunatly, you can't use the dashboard to assign floating IPs to VMs so you n
 
 I Hope you enjoyed this guide, please if you have any feedbacks, don't hesitate.
 
-13. Licensing
+12. Licensing
 ============
 
 OpenStack Folsom Install Guide by Bilel Msekni is licensed under a Creative Commons Attribution 3.0 Unported License.
@@ -880,12 +880,12 @@ OpenStack Folsom Install Guide by Bilel Msekni is licensed under a Creative Comm
 .. image:: http://i.imgur.com/4XWrp.png
 To view a copy of this license, visit [ http://creativecommons.org/licenses/by/3.0/deed.en_US ].
 
-14. Contacts
+13. Contacts
 ===========
 
 Bilel Msekni: bilel.msekni@telecom-sudparis.eu
 
-15. Acknowledgment
+14. Acknowledgment
 =================
 
 This work has been based on:
@@ -894,7 +894,7 @@ This work has been based on:
 * OpenStack Documentation [http://docs.openstack.org/trunk/openstack-compute/install/apt/content/]
 * OpenStack Quantum Install [http://docs.openstack.org/trunk/openstack-network/admin/content/ch_install.html]
 
-16. To do
+15. To do
 =======
 
 This guide is just a startup. Your suggestions are always welcomed.
