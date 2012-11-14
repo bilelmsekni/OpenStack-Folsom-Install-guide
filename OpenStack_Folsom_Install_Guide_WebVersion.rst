@@ -280,7 +280,7 @@ This is how we install OpenStack's identity service:
 
    glance image-list
 
-6. OpenVSwitch
+5. OpenVSwitch
 =====================================================================
 
 * Install the openVSwitch::
@@ -300,7 +300,7 @@ This is how we install OpenStack's identity service:
    ovs-vsctl add-br br-eth1
    ovs-vsctl add-port br-eth1 eth1
 
-7. Quantum
+6. Quantum
 =====================================================================
 
 Quantum literaly eliminated the network overhead i used to deal with during the nova-network era.
@@ -358,7 +358,7 @@ Quantum literaly eliminated the network overhead i used to deal with during the 
    service quantum-l3-agent restart
    service quantum-plugin-openvswitch-agent restart
 
-8. Nova
+7. Nova
 =================
 
 * Start by installing nova components::
@@ -451,7 +451,7 @@ Quantum literaly eliminated the network overhead i used to deal with during the 
 
    nova-manage service list
 
-9. Cinder
+8. Cinder
 =================
 
 Although Cinder is a replacement of the old nova-volume service, its installation is now a seperated from the nova install process.
@@ -534,7 +534,7 @@ Although Cinder is a replacement of the old nova-volume service, its installatio
    service cinder-volume restart
    service cinder-api restart
 
-10. Horizon
+9. Horizon
 ============
 
 * To install horizon, proceed like this ::
