@@ -560,10 +560,10 @@ You can now access your OpenStack **192.168.100.232/horizon** with credentials *
 
 **Note:** A reboot might be needed for a successful login
 
-11. Adding a compute node
+10. Adding a compute node
 =========================
 
-11.1. Preparing the Node
+10.1. Preparing the Node
 ------------------
 
 * Update your system::
@@ -591,7 +591,7 @@ You can now access your OpenStack **192.168.100.232/horizon** with credentials *
    # Uncomment net.ipv4.ip_forward=1, to save you from rebooting, perform the following
    sysctl net.ipv4.ip_forward=1
 
-11.2.Networking
+10.2.Networking
 ------------
 
 * It's recommended to have two NICs but only one needs to be internet connected::
@@ -610,7 +610,7 @@ You can now access your OpenStack **192.168.100.232/horizon** with credentials *
    address 100.10.10.233
    netmask 255.255.255.0
 
-11.3 KVM
+10.3 KVM
 ------------------
 
 * KVM is needed as the hypervisor that will be used to create virtual machines. Before you install KVM, make sure that your hardware enables virtualization::
@@ -654,7 +654,7 @@ You can now access your OpenStack **192.168.100.232/horizon** with credentials *
 
    service libvirt-bin restart
 
-11.4. OpenVSwitch
+10.4. OpenVSwitch
 ------------------
 
 * Install the openVSwitch::
@@ -670,7 +670,7 @@ You can now access your OpenStack **192.168.100.232/horizon** with credentials *
    ovs-vsctl add-br br-eth1
    ovs-vsctl add-port br-eth1 eth1
 
-11.5. Quantum
+10.5. Quantum
 ------------------
 
 We don't need to install the hole quantum server here, just the openVSwitch plugin's agent
@@ -699,7 +699,7 @@ We don't need to install the hole quantum server here, just the openVSwitch plug
 
    service quantum-plugin-openvswitch-agent restart
 
-11.6. Nova
+10.6. Nova
 ------------------
 
 * Install nova's required components for the compute node::
@@ -795,7 +795,7 @@ We don't need to install the hole quantum server here, just the openVSwitch plug
 
    nova-manage service list
 
-12. Your First VM
+11. Your First VM
 ============
 
 To start your first VM, we first need to create a new tenant, user, internal and external network. SSH to your controller node and perform the following.
@@ -863,7 +863,7 @@ Unfortunatly, you can't use the dashboard to assign floating IPs to VMs so you n
 
 I Hope you enjoyed this guide, please if you have any feedbacks, don't hesitate.
 
-13. Licensing
+12. Licensing
 ============
 
 OpenStack Folsom Install Guide by Bilel Msekni is licensed under a Creative Commons Attribution 3.0 Unported License.
@@ -871,12 +871,12 @@ OpenStack Folsom Install Guide by Bilel Msekni is licensed under a Creative Comm
 .. image:: http://i.imgur.com/4XWrp.png
 To view a copy of this license, visit [ http://creativecommons.org/licenses/by/3.0/deed.en_US ].
 
-14. Contacts
+13. Contacts
 ===========
 
 Bilel Msekni: bilel.msekni@telecom-sudparis.eu
 
-15. Acknowledgment
+14. Acknowledgment
 =================
 
 This work has been based on:
@@ -885,7 +885,7 @@ This work has been based on:
 * OpenStack Documentation [http://docs.openstack.org/trunk/openstack-compute/install/apt/content/]
 * OpenStack Quantum Install [http://docs.openstack.org/trunk/openstack-network/admin/content/ch_install.html]
 
-16. To do
+15. To do
 =======
 
 This guide is just a startup. Your suggestions are always welcomed.
