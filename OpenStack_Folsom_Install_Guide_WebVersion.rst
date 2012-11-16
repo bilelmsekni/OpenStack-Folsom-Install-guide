@@ -42,8 +42,8 @@ Table of Contents
   12. Licencing
   13. Contacts
   14. Acknowledgement
-  14. Credits
-  15. To do
+  15. Credits
+  16. To do
 
 0. What is it?
 ==============
