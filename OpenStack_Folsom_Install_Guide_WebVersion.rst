@@ -42,7 +42,8 @@ Table of Contents
   12. Licencing
   13. Contacts
   14. Acknowledgement
-  15. To do
+  15. Credits
+  16. To do
 
 0. What is it?
 ==============
@@ -882,13 +883,21 @@ Bilel Msekni: bilel.msekni@telecom-sudparis.eu
 14. Acknowledgment
 =================
 
+This work has been supported by:
+
+* CompatibleOne Project (French FUI project) [http://compatibleone.org/]
+* Easi-Clouds (ITEA2 project) [http://easi-clouds.eu/]
+
+15. Credits
+=================
+
 This work has been based on:
 
 * Emilien Macchi's Folsom guide [https://github.com/EmilienM/openstack-folsom-guide]
 * OpenStack Documentation [http://docs.openstack.org/trunk/openstack-compute/install/apt/content/]
 * OpenStack Quantum Install [http://docs.openstack.org/trunk/openstack-network/admin/content/ch_install.html]
 
-15. To do
+16. To do
 =======
 
 This guide is under testing. Your suggestions are always welcomed.
