@@ -16,7 +16,7 @@ HOST_IP=192.168.100.232
 # MySQL definitions
 MYSQL_USER=keystoneUser
 MYSQL_DATABASE=keystone
-MYSQL_HOST=${HOST_IP}
+MYSQL_HOST=localhost
 MYSQL_PASSWORD=keystonePass
 
 # Keystone definitions
