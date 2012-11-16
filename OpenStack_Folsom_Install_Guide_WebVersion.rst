@@ -62,7 +62,7 @@ Status: Stable
 :Control Node: eth0 (192.168.100.51), eth1 (100.10.10.51), eth2 (internet connected)
 :Compute Node: eth0 (192.168.100.52), eth1 (100.10.10.52)
 
-Note 1: If you don't have 2 NICs on controller node, you can check the milestone branch for 2 NIC installation.
+**Note 1:** If you don't have 2 NICs on controller node, you can check the milestone branch for 2 NIC installation.
 
 **Note 2:** If you are not interrested in Quantum, you can also use this guide but you must follow the nova section found `here <https://github.com/mseknibilel/OpenStack-Folsom-Install-guide/blob/master/Tricks%26Ideas/install_nova-network.rst>`_ instead of the one written in this guide.
 
