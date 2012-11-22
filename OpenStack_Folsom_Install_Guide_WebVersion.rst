@@ -292,7 +292,7 @@ This is how we install OpenStack's identity service:
 
 * Install the openVSwitch::
 
-   apt-get install -y openvswitch-switch
+   apt-get install -y openvswitch-switch openvswitch-datapath-dkms
 
 * Create the bridges::
 
