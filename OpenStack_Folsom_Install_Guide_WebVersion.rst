@@ -660,7 +660,7 @@ You can now access your OpenStack **192.168.100.232/horizon** with credentials *
 
 * Install the openVSwitch::
 
-   apt-get install -y openvswitch-switch
+   apt-get install -y openvswitch-switch openvswitch-datapath-dkms
 
 * Create the bridges::
 
