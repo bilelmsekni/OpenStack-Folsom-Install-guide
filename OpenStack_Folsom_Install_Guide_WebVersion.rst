@@ -784,10 +784,6 @@ We don't need to install the hole quantum server here, just the openVSwitch plug
    volume_api_class=nova.volume.cinder.API
    osapi_volume_listen_port=5900
 
-* Synchronize your database::
-
-   nova-manage db sync
-
 * Restart nova-* services::
 
    cd /etc/init.d/; for i in $( ls nova-* ); do sudo service $i restart; done   
