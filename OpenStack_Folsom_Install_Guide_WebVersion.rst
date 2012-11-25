@@ -2,7 +2,7 @@
   OpenStack Folsom Install Guide
 ==========================================================
 
-:Version: 3.0
+:Version: 1.0
 :Source: https://github.com/mseknibilel/OpenStack-Folsom-Install-guide
 :Keywords: Multi node OpenStack, Folsom, Quantum, Nova, Keystone, Glance, Horizon, Cinder, OpenVSwitch, KVM, Ubuntu Server 12.10 (64 bits).
 
@@ -34,41 +34,40 @@ Table of Contents
   4. Glance
   5. OpenVSwitch
   6. Quantum
-  7. Nova
-  8. Cinder
-  9. Horizon
-  10. Adding a compute node
-  11. Start your first VM
-  12. Licencing
-  13. Contacts
-  14. Acknowledgement
-  15. Credits
-  16. To do
+  7. KVM
+  8. Nova
+  9. Cinder
+  10. Horizon
+  11. Network node
+  12. Start your first VM
+  13. Licencing
+  14. Contacts
+  15. Acknowledgement
+  16. Credits
+  17. To do
 
 0. What is it?
 ==============
 
 OpenStack Folsom Install Guide is an easy and tested way to create your own OpenStack plateform. 
 
-Version 3.0
+Version 1.0
 
-Status: Stable
+Status: Testing
 
 
 1. Requirements
 ====================
 
 :Node Role: NICs
-:Control Node: eth0 (192.168.100.51), eth1 (100.10.10.51), eth2 (internet connected)
-:Compute Node: eth0 (192.168.100.52), eth1 (100.10.10.52)
+:Cont/Comp Node: eth0 (192.168.100.51), eth1 (100.10.10.51)
+:Network Node: eth0 (192.168.100.52), eth1 (100.10.10.52)
 
-**Note 1:** If you don't have 2 NICs on controller node, you can check the milestone branch for 2 NIC installation.
+**Note 1:** If you are not interrested in Quantum, you can also use this guide but you must follow the nova section found `here <https://github.com/mseknibilel/OpenStack-Folsom-Install-guide/blob/master/Tricks%26Ideas/install_nova-network.rst>`_ instead of the one written in this guide.
 
-**Note 2:** If you are not interrested in Quantum, you can also use this guide but you must follow the nova section found `here <https://github.com/mseknibilel/OpenStack-Folsom-Install-guide/blob/master/Tricks%26Ideas/install_nova-network.rst>`_ instead of the one written in this guide.
+**Note 2:** This is my current network architecture, you can add as many compute node as you wish.
 
-**Note 3:** This is my current network architecture, you can add as many compute node as you wish.
-
-.. image:: http://i.imgur.com/1jCFC.jpg
+.. image::
 
 2. Getting Ready
 ===============
@@ -98,17 +97,11 @@ Status: Stable
    gateway 192.168.100.1
    dns-nameservers 8.8.8.8
 
+   #Management & network configuration
    auto eth1
    iface eth1 inet static
    address 100.10.10.51
    netmask 255.255.255.0
-
-   auto eth2
-   iface eth2 inet manual
-   up ifconfig $IFACE 0.0.0.0 up
-   up ip link set $IFACE promisc on
-   down ip link set $IFACE promisc off
-   down ifconfig $IFACE down
 
 * Restart your networking services::
    
@@ -181,7 +174,7 @@ This is how we install OpenStack's identity service:
 
 * Fill up the keystone database using the two scripts available in the `Scripts folder <https://github.com/mseknibilel/OpenStack-Folsom-Install-guide/tree/master/Keystone_Scripts>`_ of this git repository. Beware that you MUST comment every part related to Quantum if you don't intend to install it otherwise you will have trouble with your dashboard later::
 
-   #Modify the HOST_IP variable before executing the scripts
+   #Modify the HOST_IP and HOST_IP_EXT variable before executing the scripts
 
    chmod +x keystone_basic.sh
    chmod +x keystone_endpoints_basic.sh
@@ -203,7 +196,7 @@ This is how we install OpenStack's identity service:
 * To test Keystone, we use a simple curl request::
 
    apt-get install curl openssl
-   curl http://192.168.100.51:35357/v2.0/endpoints -H 'x-auth-token: ADMIN'
+   curl http://192.168.100.51:5000/v2.0/endpoints -H 'x-auth-token: ADMIN'
 
 4. Glance
 =====================================================================
@@ -223,7 +216,7 @@ This is how we install OpenStack's identity service:
 
    [filter:authtoken]
    paste.filter_factory = keystone.middleware.auth_token:filter_factory
-   auth_host = 192.168.100.51
+   auth_host = 192.168.100.511
    auth_port = 35357
    auth_protocol = http
    admin_tenant_name = service
@@ -234,7 +227,7 @@ This is how we install OpenStack's identity service:
 
    [filter:authtoken]
    paste.filter_factory = keystone.middleware.auth_token:filter_factory
-   auth_host = 192.168.100.51
+   auth_host = 192.168.100.511
    auth_port = 35357
    auth_protocol = http
    admin_tenant_name = service
@@ -290,12 +283,6 @@ This is how we install OpenStack's identity service:
    #br-int is used for VM integration.
    ovs-vsctl add-br br-int
 
-   #br-ex is used for accessing internet.
-   ovs-vsctl add-br br-ex
-   ovs-vsctl br-set-external-id br-ex bridge-id br-ex
-   ovs-vsctl add-port br-ex eth2
-
-
 6. Quantum
 =====================================================================
 
@@ -327,45 +314,66 @@ Quantum literaly eliminated the network overhead i used to deal with during the 
    local_ip = 100.10.10.51
    enable_tunneling = True
 
-* Install quantum DHCP and l3 agents::
-
-   apt-get -y install quantum-dhcp-agent quantum-l3-agent
-
 * Edit /etc/quantum/api-paste.ini ::
 
    [filter:authtoken]
    paste.filter_factory = keystone.middleware.auth_token:filter_factory
-   auth_host = 192.168.100.51
+   auth_host = 192.168.100.511
    auth_port = 35357
    auth_protocol = http
    admin_tenant_name = service
    admin_user = quantum
    admin_password = service_pass
 
-* In addition, update the /etc/quantum/l3_agent.ini::
-
-   auth_url = http://192.168.100.51:35357/v2.0
-   auth_region = RegionOne
-   admin_tenant_name = service
-   admin_user = quantum
-   admin_password = service_pass
-   metadata_ip = 192.168.100.51
-   use_namespaces = False
-
-* Edit /etc/quantum/dhcp_agent.ini::
-
-   use_namespaces = False
-
-* Restart all the services::
+* Restart all the quantum server::
 
    service quantum-server restart
-   service quantum-dhcp-agent restart
-   service quantum-l3-agent restart
-   service quantum-plugin-openvswitch-agent restart
 
-* To get the l3_agent to function properly, you need to undergo a special operation described `here <https://github.com/mseknibilel/OpenStack-Folsom-Install-guide/blob/stable/GRE/Tricks%26Ideas/modify_iptables_manager.rst>`_. 
+7. KVM
+=====================================================================
 
-7. Nova
+* KVM is needed as the hypervisor that will be used to create virtual machines. Before you install KVM, make sure that your hardware enables virtualization::
+
+   apt-get install cpu-checker
+   kvm-ok
+
+* Normally you would get a good response. Now, move to install kvm and configure it::
+
+   apt-get install -y kvm libvirt-bin pm-utils
+
+* Edit the cgroup_device_acl array in the /etc/libvirt/qemu.conf file to::
+
+   cgroup_device_acl = [
+   "/dev/null", "/dev/full", "/dev/zero",
+   "/dev/random", "/dev/urandom",
+   "/dev/ptmx", "/dev/kvm", "/dev/kqemu",
+   "/dev/rtc", "/dev/hpet","/dev/net/tun"
+   ]
+
+* Delete default virtual bridge ::
+
+   virsh net-destroy default
+   virsh net-undefine default
+
+* Enable live migration by updating /etc/libvirt/libvirtd.conf file::
+
+   listen_tls = 0
+   listen_tcp = 1
+   auth_tcp = "none"
+
+* Edit libvirtd_opts variable in /etc/init/libvirt-bin.conf file::
+
+   env libvirtd_opts="-d -l"
+
+* Edit /etc/default/libvirt-bin file ::
+
+   libvirtd_opts="-d -l"
+
+* Restart the libvirt service to load the new values::
+
+   service libvirt-bin restart
+
+8. Nova
 =================
 
 * Start by installing nova components::
@@ -383,7 +391,7 @@ Quantum literaly eliminated the network overhead i used to deal with during the 
 
    [filter:authtoken]
    paste.filter_factory = keystone.middleware.auth_token:filter_factory
-   auth_host = 192.168.100.51
+   auth_host = 192.168.100.511
    auth_port = 35357
    auth_protocol = http
    admin_tenant_name = service
@@ -400,24 +408,24 @@ Quantum literaly eliminated the network overhead i used to deal with during the 
    verbose=True
    api_paste_config=/etc/nova/api-paste.ini
    scheduler_driver=nova.scheduler.simple.SimpleScheduler
-   s3_host=192.168.100.51
-   ec2_host=192.168.100.51
-   ec2_dmz_host=192.168.100.51
-   rabbit_host=192.168.100.51
-   cc_host=192.168.100.51
-   metadata_host=192.168.100.51
+   s3_host=192.168.100.511
+   ec2_host=192.168.100.511
+   ec2_dmz_host=192.168.100.511
+   rabbit_host=192.168.100.511
+   cc_host=192.168.100.511
+   metadata_host=192.168.100.511
    metadata_listen=0.0.0.0
    nova_url=http://192.168.100.51:8774/v1.1/
-   sql_connection=mysql://novaUser:novaPass@192.168.100.51/nova
+   sql_connection=mysql://novaUser:novaPass@192.168.100.511/nova
    ec2_url=http://192.168.100.51:8773/services/Cloud 
    root_helper=sudo nova-rootwrap /etc/nova/rootwrap.conf
 
    # Auth
    use_deprecated_auth=false
    auth_strategy=keystone
-   keystone_ec2_url=http://192.168.100.51:5000/v2.0/ec2tokens
+   keystone_ec2_url=http://192.168.100.511:5000/v2.0/ec2tokens
    # Imaging service
-   glance_api_servers=192.168.100.51:9292
+   glance_api_servers=192.168.100.511:9292
    image_service=nova.image.glance.GlanceImageService
 
    # Vnc configuration
@@ -429,12 +437,12 @@ Quantum literaly eliminated the network overhead i used to deal with during the 
 
    # Network settings
    network_api_class=nova.network.quantumv2.api.API
-   quantum_url=http://192.168.100.51:9696
+   quantum_url=http://192.168.100.511:9696
    quantum_auth_strategy=keystone
    quantum_admin_tenant_name=service
    quantum_admin_username=quantum
    quantum_admin_password=service_pass
-   quantum_admin_auth_url=http://192.168.100.51:35357/v2.0
+   quantum_admin_auth_url=http://192.168.100.511:35357/v2.0
    libvirt_vif_driver=nova.virt.libvirt.vif.LibvirtHybridOVSBridgeDriver
    linuxnet_interface_driver=nova.network.linux_net.LinuxOVSInterfaceDriver
    firewall_driver=nova.virt.libvirt.firewall.IptablesFirewallDriver
@@ -458,7 +466,7 @@ Quantum literaly eliminated the network overhead i used to deal with during the 
 
    nova-manage service list
 
-8. Cinder
+9. Cinder
 =================
 
 Although Cinder is a replacement of the old nova-volume service, its installation is now a seperated from the nova install process.
@@ -490,7 +498,7 @@ Although Cinder is a replacement of the old nova-volume service, its installatio
    service_protocol = http
    service_host = 192.168.100.51
    service_port = 5000
-   auth_host = 192.168.100.51
+   auth_host = 192.168.100.511
    auth_port = 35357
    auth_protocol = http
    admin_tenant_name = service
@@ -541,7 +549,7 @@ Although Cinder is a replacement of the old nova-volume service, its installatio
    service cinder-volume restart
    service cinder-api restart
 
-9. Horizon
+10. Horizon
 ============
 
 * To install horizon, proceed like this ::
@@ -567,10 +575,10 @@ You can now access your OpenStack **192.168.100.51/horizon** with credentials **
 
 **Note:** A reboot might be needed for a successful login
 
-10. Adding a compute node
+11. Network node
 =========================
 
-10.1. Preparing the Node
+11.1. Preparing the Node
 ------------------
 
 * Update your system::
@@ -604,61 +612,16 @@ You can now access your OpenStack **192.168.100.51/horizon** with credentials **
 * It's recommended to have two NICs but only one needs to be internet connected::
    
    auto eth0
-   iface eth0 inet static
-   address 192.168.100.52
-   netmask 255.255.255.0
-   gateway 192.168.100.1
-   dns-nameservers 8.8.8.8
+   iface eth0 inet manual
+   up ifconfig $IFACE 0.0.0.0 up
+   up ip link set $IFACE promisc on
+   down ip link set $IFACE promisc off
+   down ifconfig $IFACE down
 
    auto eth1
    iface eth1 inet static
    address 100.10.10.52
    netmask 255.255.255.0
-
-
-10.3 KVM
-------------------
-
-* KVM is needed as the hypervisor that will be used to create virtual machines. Before you install KVM, make sure that your hardware enables virtualization::
-
-   apt-get install cpu-checker
-   kvm-ok
-
-* Normally you would get a good response. Now, move to install kvm and configure it::
-
-   apt-get install -y kvm libvirt-bin pm-utils
-
-* Edit the cgroup_device_acl array in the /etc/libvirt/qemu.conf file to::
-
-   cgroup_device_acl = [
-   "/dev/null", "/dev/full", "/dev/zero",
-   "/dev/random", "/dev/urandom",
-   "/dev/ptmx", "/dev/kvm", "/dev/kqemu",
-   "/dev/rtc", "/dev/hpet","/dev/net/tun"
-   ]
-
-* Delete default virtual bridge ::
-
-   virsh net-destroy default
-   virsh net-undefine default
-
-* Enable live migration by updating /etc/libvirt/libvirtd.conf file::
-
-   listen_tls = 0
-   listen_tcp = 1
-   auth_tcp = "none"
-
-* Edit libvirtd_opts variable in /etc/init/libvirt-bin.conf file::
-
-   env libvirtd_opts="-d -l"
-
-* Edit /etc/default/libvirt-bin file ::
-
-   libvirtd_opts="-d -l"
-
-* Restart the libvirt service to load the new values::
-
-   service libvirt-bin restart
 
 10.4. OpenVSwitch
 ------------------
@@ -672,10 +635,33 @@ You can now access your OpenStack **192.168.100.51/horizon** with credentials **
    #br-int is used for VM integration	
    ovs-vsctl add-br br-int
 
+   #br-ex is used for accessing internet.
+   ovs-vsctl add-br br-ex
+   ovs-vsctl br-set-external-id br-ex bridge-id br-ex
+   ovs-vsctl add-port br-ex eth2
+
 10.5. Quantum
 ------------------
 
-We don't need to install the hole quantum server here, just the openVSwitch plugin's agent
+We need to install the l3 agent, dhcp agent and the openVSwitch plugin agent
+
+* Install quantum DHCP and l3 agents::
+
+   apt-get -y install quantum-dhcp-agent quantum-l3-agent
+
+* In addition, update the /etc/quantum/l3_agent.ini::
+
+   auth_url = http://192.168.100.511:35357/v2.0
+   auth_region = RegionOne
+   admin_tenant_name = service
+   admin_user = quantum
+   admin_password = service_pass
+   metadata_ip = 192.168.100.511
+   use_namespaces = False
+
+* Edit /etc/quantum/dhcp_agent.ini::
+
+   use_namespaces = False
 
 * Install the Quantum openvswitch agent::
 
@@ -699,102 +685,16 @@ We don't need to install the hole quantum server here, just the openVSwitch plug
 
 * Make sure that your rabbitMQ IP in /etc/quantum/quantum.conf is set to the controller node::
    
-   rabbit_host = 192.168.100.51
+   rabbit_host = 192.168.100.511
+
+
+* To get the l3_agent to function properly, you need to undergo a special operation described `here <https://github.com/mseknibilel/OpenStack-Folsom-Install-guide/blob/stable/GRE/Tricks%26Ideas/modify_iptables_manager.rst>`_. 
 
 * Restart all the services::
 
+   service quantum-dhcp-agent restart
+   service quantum-l3-agent restart
    service quantum-plugin-openvswitch-agent restart
-
-10.6. Nova
-------------------
-
-* Install nova's required components for the compute node::
-
-   apt-get install nova-api-metadata nova-compute-kvm
-
-* Now modify authtoken section in the /etc/nova/api-paste.ini file to this::
-
-   [filter:authtoken]
-   paste.filter_factory = keystone.middleware.auth_token:filter_factory
-   auth_host = 192.168.100.51
-   auth_port = 35357
-   auth_protocol = http
-   admin_tenant_name = service
-   admin_user = nova
-   admin_password = service_pass
-   signing_dirname = /tmp/keystone-signing-nova
-
-* Edit /etc/nova/nova-compute.conf file ::
-   
-   [DEFAULT]
-   libvirt_type=kvm
-   libvirt_ovs_bridge=br-int
-   libvirt_vif_type=ethernet
-   libvirt_vif_driver=nova.virt.libvirt.vif.LibvirtHybridOVSBridgeDriver
-   libvirt_use_virtio_for_bridges=True
-
-* Modify the /etc/nova/nova.conf like this::
-
-   [DEFAULT]
-   logdir=/var/log/nova
-   state_path=/var/lib/nova
-   lock_path=/run/lock/nova
-   verbose=True
-   api_paste_config=/etc/nova/api-paste.ini
-   scheduler_driver=nova.scheduler.simple.SimpleScheduler
-   s3_host=192.168.100.51
-   ec2_host=192.168.100.51
-   ec2_dmz_host=192.168.100.51
-   rabbit_host=192.168.100.51
-   cc_host=192.168.100.51
-   metadata_host=192.168.100.52
-   metadata_listen=0.0.0.0
-   nova_url=http://192.168.100.51:8774/v1.1/
-   sql_connection=mysql://novaUser:novaPass@192.168.100.51/nova
-   ec2_url=http://192.168.100.51:8773/services/Cloud 
-   root_helper=sudo nova-rootwrap /etc/nova/rootwrap.conf
-   
-   # Auth
-   use_deprecated_auth=false
-   auth_strategy=keystone
-   keystone_ec2_url=http://192.168.100.51:5000/v2.0/ec2tokens
-   # Imaging service
-   glance_api_servers=192.168.100.51:9292
-   image_service=nova.image.glance.GlanceImageService
-
-   # Vnc configuration
-   novnc_enabled=true
-   novncproxy_base_url=http://192.168.100.51:6080/vnc_auto.html
-   novncproxy_port=6080
-   vncserver_proxyclient_address=192.168.100.52
-   vncserver_listen=0.0.0.0 
-
-   # Network settings
-   network_api_class=nova.network.quantumv2.api.API
-   quantum_url=http://192.168.100.51:9696
-   quantum_auth_strategy=keystone
-   quantum_admin_tenant_name=service
-   quantum_admin_username=quantum
-   quantum_admin_password=service_pass
-   quantum_admin_auth_url=http://192.168.100.51:35357/v2.0
-   libvirt_vif_driver=nova.virt.libvirt.vif.LibvirtHybridOVSBridgeDriver
-   linuxnet_interface_driver=nova.network.linux_net.LinuxOVSInterfaceDriver
-   firewall_driver=nova.virt.libvirt.firewall.IptablesFirewallDriver
-
-   # Compute #
-   compute_driver=libvirt.LibvirtDriver
-
-   # Cinder #
-   volume_api_class=nova.volume.cinder.API
-   osapi_volume_listen_port=5900
-
-* Restart nova-* services::
-
-   cd /etc/init.d/; for i in $( ls nova-* ); do sudo service $i restart; done   
-
-* Check for the smiling faces on nova-* services to confirm your installation::
-
-   nova-manage service list
 
 11. Your First VM
 ============
@@ -843,7 +743,7 @@ You can now start creating VMs but they will not be accessible from the internet
 
 * Create a subnet containing your floating IPs::
 
-   quantum subnet-create --tenant-id $put_id_of_service_tenant --gateway 192.168.100.1 ext_net 192.168.101.234/24 --enable_dhcp=False
+   quantum subnet-create --tenant-id $put_id_of_service_tenant --gateway 192.168.100.1 ext_net 192.168.100.234/24 --enable_dhcp=False
 
 * Set the router for the external network::
 
@@ -852,7 +752,7 @@ You can now start creating VMs but they will not be accessible from the internet
 * update your br-ex::
 
    ip addr flush dev br-ex
-   ip addr add 192.168.101.53/24 dev br-ex
+   ip addr add 192.168.100.52/24 dev br-ex
    ip link set br-ex up
 
 Unfortunatly, you can't use the dashboard to assign floating IPs to VMs so you need to get your hands a bit dirty to give your VM a public IP.
