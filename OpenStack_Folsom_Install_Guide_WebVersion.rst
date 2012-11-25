@@ -90,6 +90,7 @@ Status: Testing
  
 * Two NICs on the controller should be internet connected::
 
+   #Exposes OpenStack API to the internet 
    auto eth0
    iface eth0 inet static
    address 192.168.100.51
@@ -328,6 +329,7 @@ Quantum literaly eliminated the network overhead i used to deal with during the 
 * Restart all the quantum server::
 
    service quantum-server restart
+   service quantum-plugin-openvswitch-agent restart
 
 7. KVM
 =====================================================================
@@ -378,7 +380,7 @@ Quantum literaly eliminated the network overhead i used to deal with during the 
 
 * Start by installing nova components::
 
-   apt-get install -y nova-api nova-cert novnc nova-consoleauth nova-scheduler nova-novncproxy
+   apt-get install -y nova-api nova-cert novnc nova-consoleauth nova-scheduler nova-novncproxy nova-api-metadata nova-compute-kvm
 
 * Prepare a Mysql database for Nova::
 
@@ -453,6 +455,15 @@ Quantum literaly eliminated the network overhead i used to deal with during the 
    # Cinder #
    volume_api_class=nova.volume.cinder.API
    osapi_volume_listen_port=5900
+
+* Edit /etc/nova/nova-compute.conf file
+
+   [DEFAULT]
+   libvirt_type=kvm
+   libvirt_ovs_bridge=br-int
+   libvirt_vif_type=ethernet
+   libvirt_vif_driver=nova.virt.libvirt.vif.LibvirtHybridOVSBridgeDriver
+   libvirt_use_virtio_for_bridges=True
 
 * Synchronize your database::
 
@@ -593,7 +604,7 @@ You can now access your OpenStack **192.168.100.51/horizon** with credentials **
 
 * Configure the NTP server to follow the controller node::
    
-   sed -i 's/server ntp.ubuntu.com/server 192.168.100.51/g' /etc/ntp.conf
+   sed -i 's/server ntp.ubuntu.com/server 100.10.10.51/g' /etc/ntp.conf
    service ntp restart  
 
 * Install other services::
