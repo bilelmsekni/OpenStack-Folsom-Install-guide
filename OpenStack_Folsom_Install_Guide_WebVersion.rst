@@ -216,7 +216,7 @@ This is how we install OpenStack's identity service:
 
    [filter:authtoken]
    paste.filter_factory = keystone.middleware.auth_token:filter_factory
-   auth_host = 192.168.100.511
+   auth_host = 100.10.10.51
    auth_port = 35357
    auth_protocol = http
    admin_tenant_name = service
@@ -227,7 +227,7 @@ This is how we install OpenStack's identity service:
 
    [filter:authtoken]
    paste.filter_factory = keystone.middleware.auth_token:filter_factory
-   auth_host = 192.168.100.511
+   auth_host = 100.10.10.51
    auth_port = 35357
    auth_protocol = http
    admin_tenant_name = service
@@ -318,7 +318,7 @@ Quantum literaly eliminated the network overhead i used to deal with during the 
 
    [filter:authtoken]
    paste.filter_factory = keystone.middleware.auth_token:filter_factory
-   auth_host = 192.168.100.511
+   auth_host = 100.10.10.51
    auth_port = 35357
    auth_protocol = http
    admin_tenant_name = service
@@ -391,7 +391,7 @@ Quantum literaly eliminated the network overhead i used to deal with during the 
 
    [filter:authtoken]
    paste.filter_factory = keystone.middleware.auth_token:filter_factory
-   auth_host = 192.168.100.511
+   auth_host = 100.10.10.51
    auth_port = 35357
    auth_protocol = http
    admin_tenant_name = service
@@ -408,24 +408,24 @@ Quantum literaly eliminated the network overhead i used to deal with during the 
    verbose=True
    api_paste_config=/etc/nova/api-paste.ini
    scheduler_driver=nova.scheduler.simple.SimpleScheduler
-   s3_host=192.168.100.511
-   ec2_host=192.168.100.511
-   ec2_dmz_host=192.168.100.511
-   rabbit_host=192.168.100.511
-   cc_host=192.168.100.511
-   metadata_host=192.168.100.511
+   s3_host=100.10.10.51
+   ec2_host=100.10.10.51
+   ec2_dmz_host=100.10.10.51
+   rabbit_host=100.10.10.51
+   cc_host=100.10.10.51
+   metadata_host=100.10.10.51
    metadata_listen=0.0.0.0
    nova_url=http://192.168.100.51:8774/v1.1/
-   sql_connection=mysql://novaUser:novaPass@192.168.100.511/nova
+   sql_connection=mysql://novaUser:novaPass@100.10.10.51/nova
    ec2_url=http://192.168.100.51:8773/services/Cloud 
    root_helper=sudo nova-rootwrap /etc/nova/rootwrap.conf
 
    # Auth
    use_deprecated_auth=false
    auth_strategy=keystone
-   keystone_ec2_url=http://192.168.100.511:5000/v2.0/ec2tokens
+   keystone_ec2_url=http://100.10.10.51:5000/v2.0/ec2tokens
    # Imaging service
-   glance_api_servers=192.168.100.511:9292
+   glance_api_servers=100.10.10.51:9292
    image_service=nova.image.glance.GlanceImageService
 
    # Vnc configuration
@@ -437,12 +437,12 @@ Quantum literaly eliminated the network overhead i used to deal with during the 
 
    # Network settings
    network_api_class=nova.network.quantumv2.api.API
-   quantum_url=http://192.168.100.511:9696
+   quantum_url=http://100.10.10.51:9696
    quantum_auth_strategy=keystone
    quantum_admin_tenant_name=service
    quantum_admin_username=quantum
    quantum_admin_password=service_pass
-   quantum_admin_auth_url=http://192.168.100.511:35357/v2.0
+   quantum_admin_auth_url=http://100.10.10.51:35357/v2.0
    libvirt_vif_driver=nova.virt.libvirt.vif.LibvirtHybridOVSBridgeDriver
    linuxnet_interface_driver=nova.network.linux_net.LinuxOVSInterfaceDriver
    firewall_driver=nova.virt.libvirt.firewall.IptablesFirewallDriver
@@ -498,7 +498,7 @@ Although Cinder is a replacement of the old nova-volume service, its installatio
    service_protocol = http
    service_host = 192.168.100.51
    service_port = 5000
-   auth_host = 192.168.100.511
+   auth_host = 100.10.10.51
    auth_port = 35357
    auth_protocol = http
    admin_tenant_name = service
@@ -651,12 +651,12 @@ We need to install the l3 agent, dhcp agent and the openVSwitch plugin agent
 
 * In addition, update the /etc/quantum/l3_agent.ini::
 
-   auth_url = http://192.168.100.511:35357/v2.0
+   auth_url = http://100.10.10.51:35357/v2.0
    auth_region = RegionOne
    admin_tenant_name = service
    admin_user = quantum
    admin_password = service_pass
-   metadata_ip = 192.168.100.511
+   metadata_ip = 100.10.10.51
    use_namespaces = False
 
 * Edit /etc/quantum/dhcp_agent.ini::
@@ -685,7 +685,7 @@ We need to install the l3 agent, dhcp agent and the openVSwitch plugin agent
 
 * Make sure that your rabbitMQ IP in /etc/quantum/quantum.conf is set to the controller node::
    
-   rabbit_host = 192.168.100.511
+   rabbit_host = 100.10.10.51
 
 
 * To get the l3_agent to function properly, you need to undergo a special operation described `here <https://github.com/mseknibilel/OpenStack-Folsom-Install-guide/blob/stable/GRE/Tricks%26Ideas/modify_iptables_manager.rst>`_. 
