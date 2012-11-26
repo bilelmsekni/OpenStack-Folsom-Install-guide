@@ -351,6 +351,9 @@ Quantum literaly eliminated the network overhead i used to deal with during the 
    admin_tenant_name = service
    admin_user = quantum
    admin_password = service_pass
+   metadata_ip = 192.168.100.232
+   metadata_port = 8775
+
 
 * Restart all the services::
 
@@ -399,6 +402,7 @@ Quantum literaly eliminated the network overhead i used to deal with during the 
    ec2_dmz_host=192.168.100.232
    rabbit_host=192.168.100.232
    cc_host=192.168.100.232
+   dmz_cidr=169.254.169.254/32
    metadata_host=192.168.100.232
    metadata_listen=0.0.0.0
    nova_url=http://192.168.100.232:8774/v1.1/
@@ -705,7 +709,7 @@ We don't need to install the hole quantum server here, just the openVSwitch plug
 
 * Install nova's required components for the compute node::
 
-   apt-get install nova-api-metadata nova-compute-kvm
+   apt-get install nova-compute-kvm
 
 * Now modify authtoken section in the /etc/nova/api-paste.ini file to this::
 
@@ -742,7 +746,8 @@ We don't need to install the hole quantum server here, just the openVSwitch plug
    ec2_dmz_host=192.168.100.232
    rabbit_host=192.168.100.232
    cc_host=192.168.100.232
-   metadata_host=192.168.100.233
+   dmz_cidr=169.254.169.254/32
+   metadata_host=192.168.100.232
    metadata_listen=0.0.0.0
    nova_url=http://192.168.100.232:8774/v1.1/
    sql_connection=mysql://novaUser:novaPass@192.168.100.232/nova
@@ -822,25 +827,27 @@ To start your first VM, we first need to create a new tenant, user, internal and
 
    quantum router-interface-add $put_router_proj_one_id_here $put_subnet_id_here
 
-You can now start creating VMs but they will not be accessible from the internet. If you like them to be so, perform the following:
-
 * Create your external network with the tenant id belonging to the service tenant (keystone tenant-list to get the appropriate id) ::
 
    quantum net-create --tenant-id $put_id_of_service_tenant ext_net --router:external=True
 
 * Create a subnet containing your floating IPs::
 
-   quantum subnet-create --tenant-id $put_id_of_service_tenant --allocation-pool start=192.168.100.102,end=192.168.100.126 --gateway 192.168.100.1 ext_net 192.168.100.100/24 --enable_dhcp=False
+   quantum subnet-create --tenant-id $put_id_of_service_tenant --allocation-pool start=192.168.50.102,end=192.168.50.126 --gateway 192.168.50.1 ext_net 192.168.50.100/24 --enable_dhcp=False
 
 * Set the router for the external network::
 
    quantum router-gateway-set $put_router_proj_one_id_here $put_id_of_ext_net_here
 
-* update your br-ex::
+VMs gain access to the metadata server locally present in the controller node via the external network. To create that necessary connection perform the following:
 
-   ip addr flush dev br-ex
-   ip addr add 192.168.100.100/24 dev br-ex
-   ip link set br-ex up
+* Get the id of IP address of router proj one::
+
+   quantum port-list -- --device_id <router_proj_one_id> --device_owner network:router_gateway
+
+* Add the following route on controller node only::
+
+   route add -net 10.10.10.0/24 gw $router_proj_one_IP
 
 Unfortunatly, you can't use the dashboard to assign floating IPs to VMs so you need to get your hands a bit dirty to give your VM a public IP.
 
