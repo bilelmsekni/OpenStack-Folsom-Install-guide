@@ -754,7 +754,7 @@ You can now start creating VMs but they will not be accessible from the internet
 
 * Create a subnet containing your floating IPs::
 
-   quantum subnet-create --tenant-id $put_id_of_service_tenant --allocation-pool start=192.168.100.102,end=192.168.100.126 --gateway 192.168.100.1 ext_net 192.168.100.234/24 --enable_dhcp=False
+   quantum subnet-create --tenant-id $put_id_of_service_tenant --allocation-pool start=192.168.100.102,end=192.168.100.126 --gateway 192.168.100.1 ext_net 192.168.100.100/24 --enable_dhcp=False
 
 * Set the router for the external network::
 
@@ -766,7 +766,7 @@ VMs gain access to the metadata server locally present in the controller node vi
 
    quantum port-list -- --device_id <router_proj_one_id> --device_owner network:router_gateway
 
-* Add the following route on controller node only:
+* Add the following route on controller node only::
 
    route add -net 10.10.10.0/24 gw $router_proj_one_IP
 
