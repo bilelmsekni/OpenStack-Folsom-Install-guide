@@ -14,11 +14,15 @@ Copyright (C) Bilel Msekni <bilel.msekni@telecom-sudparis.eu>
 Contributors
 ==========
 
-* Roy Sowa <Roy.Sowa@ssc-spc.gc.ca>
-* Marco Consonni <marco_consonni@hp.com>
-* Dennis E Miyoshi <dennis.miyoshi@hp.com>
-* Houssem Medhioub <houssem.medhioub@it-sudparis.eu>
-* Djamal Zeghlache <djamal.zeghlache@telecom-sudparis.eu>
+=================================================== =======================================================
+
+ Roy Sowa <Roy.Sowa@ssc-spc.gc.ca>                  Stephen gran <stephen.gran@guardian.co.uk> 
+
+ Dennis E Miyoshi <dennis.miyoshi@hp.com>            Marco Consonni <marco_consonni@hp.com>
+
+ Houssem Medhioub <houssem.medhioub@it-sudparis.eu> Djamal Zeghlache <djamal.zeghlache@telecom-sudparis.eu>
+
+=================================================== =======================================================
 
 Wana contribute ? Read the guide, send your contribution and get your name listed ;)
 
