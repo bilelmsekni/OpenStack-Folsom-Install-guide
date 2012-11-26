@@ -415,6 +415,7 @@ Quantum literaly eliminated the network overhead i used to deal with during the 
    ec2_dmz_host=100.10.10.51
    rabbit_host=100.10.10.51
    cc_host=100.10.10.51
+   dmz_cidr=169.254.169.254/32
    metadata_host=100.10.10.51
    metadata_listen=0.0.0.0
    nova_url=http://192.168.100.51:8774/v1.1/
@@ -668,6 +669,7 @@ We need to install the l3 agent, dhcp agent and the openVSwitch plugin agent
    admin_user = quantum
    admin_password = service_pass
    metadata_ip = 100.10.10.51
+   metadata_port = 8775
    use_namespaces = False
 
 * Edit /etc/quantum/dhcp_agent.ini::
@@ -693,11 +695,9 @@ We need to install the l3 agent, dhcp agent and the openVSwitch plugin agent
    local_ip = 100.10.10.52
    enable_tunneling = True
 
-
 * Make sure that your rabbitMQ IP in /etc/quantum/quantum.conf is set to the controller node::
    
    rabbit_host = 100.10.10.51
-
 
 * To get the l3_agent to function properly, you need to undergo a special operation described `here <https://github.com/mseknibilel/OpenStack-Folsom-Install-guide/blob/stable/GRE/Tricks%26Ideas/modify_iptables_manager.rst>`_. 
 
@@ -754,17 +754,21 @@ You can now start creating VMs but they will not be accessible from the internet
 
 * Create a subnet containing your floating IPs::
 
-   quantum subnet-create --tenant-id $put_id_of_service_tenant --gateway 192.168.100.1 ext_net 192.168.100.234/24 --enable_dhcp=False
+   quantum subnet-create --tenant-id $put_id_of_service_tenant --allocation-pool start=192.168.100.102,end=192.168.100.126 --gateway 192.168.100.1 ext_net 192.168.100.234/24 --enable_dhcp=False
 
 * Set the router for the external network::
 
    quantum router-gateway-set $put_router_proj_one_id_here $put_id_of_ext_net_here
 
-* update your br-ex::
+VMs gain access to the metadata server locally present in the controller node via the external network. To create that necessary connection perform the following:
 
-   ip addr flush dev br-ex
-   ip addr add 192.168.100.52/24 dev br-ex
-   ip link set br-ex up
+* Get the id of IP address of router proj one::
+
+   quantum port-list -- --device_id <router_proj_one_id> --device_owner network:router_gateway
+
+* Add the following route on controller node only:
+
+   route add -net 10.10.10.0/24 gw $router_proj_one_IP
 
 Unfortunatly, you can't use the dashboard to assign floating IPs to VMs so you need to get your hands a bit dirty to give your VM a public IP.
 
