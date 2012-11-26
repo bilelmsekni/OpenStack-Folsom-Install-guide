@@ -456,7 +456,7 @@ Quantum literaly eliminated the network overhead i used to deal with during the 
    volume_api_class=nova.volume.cinder.API
    osapi_volume_listen_port=5900
 
-* Edit /etc/nova/nova-compute.conf file
+* Edit /etc/nova/nova-compute.conf file::
 
    [DEFAULT]
    libvirt_type=kvm
