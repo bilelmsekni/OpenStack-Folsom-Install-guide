@@ -365,6 +365,8 @@ Quantum literaly eliminated the network overhead i used to deal with during the 
    admin_tenant_name = service
    admin_user = quantum
    admin_password = service_pass
+   metadata_ip = 192.168.100.51
+   metadata_port = 8775
 
 * Restart all the services::
 
@@ -755,7 +757,7 @@ We don't need to install the hole quantum server here, just the openVSwitch plug
    ec2_dmz_host=192.168.100.51
    rabbit_host=192.168.100.51
    cc_host=192.168.100.51
-   metadata_host=192.168.100.52
+   metadata_host=192.168.100.51
    metadata_listen=0.0.0.0
    nova_url=http://192.168.100.51:8774/v1.1/
    sql_connection=mysql://novaUser:novaPass@192.168.100.51/nova
@@ -848,6 +850,15 @@ You can now start creating VMs but they will not be accessible from the internet
 
    quantum router-gateway-set $put_router_proj_one_id_here $put_id_of_ext_net_here
 
+VMs gain access to the metadata server locally present in the controller node via the external network. To create that necessary connection perform the following:
+
+* Get the IP address of router proj one::
+
+   quantum port-list -- --device_id <router_proj_one_id> --device_owner network:router_gateway
+
+* Add the following route on controller node only:
+
+   route add -net 10.10.10.0/24 gw $router_proj_one_IP
 
 Unfortunatly, you can't use the dashboard to assign floating IPs to VMs so you need to get your hands a bit dirty to give your VM a public IP.
 
