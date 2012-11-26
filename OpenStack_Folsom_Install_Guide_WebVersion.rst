@@ -762,7 +762,7 @@ You can now start creating VMs but they will not be accessible from the internet
 
 VMs gain access to the metadata server locally present in the controller node via the external network. To create that necessary connection perform the following:
 
-* Get the id of IP address of router proj one::
+* Get the IP address of router proj one::
 
    quantum port-list -- --device_id <router_proj_one_id> --device_owner network:router_gateway
 
