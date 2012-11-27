@@ -600,7 +600,7 @@ You can now access your OpenStack **192.168.100.51/horizon** with credentials **
 
    apt-get -y install quantum-plugin-openvswitch-agent quantum-dhcp-agent quantum-l3-agent
 
-* Edit /etc/quantum/api-paste.ini
+* Edit /etc/quantum/api-paste.ini::
 
    [filter:authtoken]
    paste.filter_factory = keystone.middleware.auth_token:filter_factory
@@ -623,7 +623,7 @@ You can now access your OpenStack **192.168.100.51/horizon** with credentials **
    network_vlan_ranges = physnet1:1:4094
    bridge_mappings = physnet1:br-eth1
 
-* In addition, update the /etc/quantum/l3_agent.ini:
+* In addition, update the /etc/quantum/l3_agent.ini::
 
    auth_url = http://100.10.10.51:35357/v2.0
    auth_region = RegionOne
@@ -809,7 +809,7 @@ You can now access your OpenStack **192.168.100.51/horizon** with credentials **
 
 * Modify the /etc/nova/nova.conf like this::
 
-  [DEFAULT]
+   [DEFAULT]
    logdir=/var/log/nova
    state_path=/var/lib/nova
    lock_path=/run/lock/nova
