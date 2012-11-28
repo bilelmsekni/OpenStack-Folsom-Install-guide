@@ -71,7 +71,7 @@ Status: testing
 
 **Note 2:** This is my current network architecture, you can add as many compute node as you wish.
 
-.. image:: http://i.imgur.com/RK6X7.jpg
+.. image:: http://i.imgur.com/Qtee3.jpg
 
 2. Getting Ready
 ===============
