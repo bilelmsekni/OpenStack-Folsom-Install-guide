@@ -616,7 +616,7 @@ You can now access your OpenStack **192.168.100.51/horizon** with credentials **
    tunnel_id_ranges = 1:1000
    integration_bridge = br-int
    tunnel_bridge = br-tun
-   local_ip = 100.10.10.52
+   local_ip = 100.20.20.52
    enable_tunneling = True
 
 * In addition, update the /etc/quantum/l3_agent.ini::
@@ -767,7 +767,7 @@ You can now access your OpenStack **192.168.100.51/horizon** with credentials **
    tunnel_id_ranges = 1:1000
    integration_bridge = br-int
    tunnel_bridge = br-tun
-   local_ip = 100.10.10.53
+   local_ip = 100.20.20.53
    enable_tunneling = True
 
 * Make sure that your rabbitMQ IP in /etc/quantum/quantum.conf is set to the controller node::
