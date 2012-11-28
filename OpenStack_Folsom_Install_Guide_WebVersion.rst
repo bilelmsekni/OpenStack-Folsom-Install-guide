@@ -90,7 +90,7 @@ Status: stable
 2.2.Networking
 ------------
  
-* Two NICs on the controller should be internet connected::
+* Only one NICs on the controller should be internet connected::
 
    auto eth0
    iface eth0 inet static
