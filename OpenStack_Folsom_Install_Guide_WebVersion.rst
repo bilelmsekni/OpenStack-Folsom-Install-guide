@@ -72,7 +72,7 @@ Status: Stable
 
 **Note 3:** This is my current network architecture, you can add as many compute node as you wish.
 
-.. image:: http://i.imgur.com/1jCFC.jpg
+.. image:: http://i.imgur.com/J9kQS.jpg
 
 2. Getting Ready
 ===============
