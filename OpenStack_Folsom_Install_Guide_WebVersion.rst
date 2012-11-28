@@ -630,6 +630,8 @@ You can now access your OpenStack **192.168.100.51/horizon** with credentials **
    metadata_port = 8775
    use_namespaces = False
 
+* To get the l3_agent to function properly, you need to undergo a special operation described `here <https://github.com/mseknibilel/OpenStack-Folsom-Install-guide/blob/stable/GRE/Tricks%26Ideas/modify_iptables_manager.rst>`_. 
+
 * Edit /etc/quantum/dhcp_agent.ini::
 
    use_namespaces = False
