@@ -90,7 +90,7 @@ Status: stable
 2.2.Networking
 ------------
 
-* Both NICs on the controller node need internet access::
+* Only one NIC on the controller node need internet access::
 
    #For Exposing OpenStack API over the internet
    auto eth1
