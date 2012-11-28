@@ -33,29 +33,22 @@ Table of Contents
 
   0. What is it?
   1. Requirements
-  2. Getting Ready
-  3. Keystone 
-  4. Glance
-  5. OpenVSwitch
-  6. Quantum
-  7. KVM
-  8. Nova
-  9. Cinder
-  10. Horizon
-  11. Network node
-  12. Start your first VM
-  13. Licencing
-  14. Contacts
-  15. Acknowledgement
-  16. Credits
-  17. To do
+  2. Controller Node
+  3. Network Node
+  4. Compute Node
+  5. Start your first VM
+  6. Licencing
+  7. Contacts
+  8. Acknowledgement
+  9. Credits
+  10. To do
 
 0. What is it?
 ==============
 
 OpenStack Folsom Install Guide is an easy and tested way to create your own OpenStack plateform. 
 
-Version 1.0
+Version 3.0
 
 Status: Testing
 
@@ -64,16 +57,21 @@ Status: Testing
 ====================
 
 :Node Role: NICs
-:Cont/Comp Node: eth0 (192.168.100.51), eth1 (100.10.10.51)
-:Network Node: eth0 (192.168.100.52), eth1 (100.10.10.52)
+:Control Node: eth0 (192.168.100.51), eth1 (100.10.10.51)
+:Network Node: eth0 (192.168.100.52), eth1(100.10.10.52)
+:Compute Node: eth0 (100.10.10.53)
 
-**Note 1:** If you are not interrested in Quantum, you can also use this guide but you must follow the nova section found `here <https://github.com/mseknibilel/OpenStack-Folsom-Install-guide/blob/master/Tricks%26Ideas/install_nova-network.rst>`_ instead of the one written in this guide.
+**Note 1:** If you don't have 2 NICs on controller node, you can check other branches for 2 NIC installation.
 
-**Note 2:** This is my current network architecture, you can add as many compute node as you wish.
+**Note 2:** Compute and Controller nodes can be merged into one node.
+
+**Note 3:** If you are not interrested in Quantum, you can also use this guide but you must follow the nova section found `here <https://github.com/mseknibilel/OpenStack-Folsom-Install-guide/blob/master/Tricks%26Ideas/install_nova-network.rst>`_ instead of the one written in this guide.
+
+**Note 4:** This is my current network architecture, you can add as many compute node as you wish.
 
 .. image:: http://i.imgur.com/4D51h.jpg
 
-2. Getting Ready
+2. Controller Node
 ===============
 
 2.1. Preparing Ubuntu 12.10
@@ -152,8 +150,8 @@ Status: Testing
    # Uncomment net.ipv4.ip_forward=1, to save you from rebooting, perform the following
    sysctl net.ipv4.ip_forward=1
 
-3. Keystone
-=====================================================================
+2.6. Keystone
+-------------------
 
 This is how we install OpenStack's identity service:
 
@@ -165,12 +163,12 @@ This is how we install OpenStack's identity service:
 
    mysql -u root -p
    CREATE DATABASE keystone;
-   GRANT ALL ON keystone.* TO 'keystoneUser'@'localhost' IDENTIFIED BY 'keystonePass';
+   GRANT ALL ON keystone.* TO 'keystoneUser'@'%' IDENTIFIED BY 'keystonePass';
    quit;
 
 * Adapt the connection attribute in the /etc/keystone/keystone.conf to the new database::
 
-   connection = mysql://keystoneUser:keystonePass@localhost/keystone
+   connection = mysql://keystoneUser:keystonePass@100.10.10.51/keystone
 
 * Restart the identity service then synchronize the database::
 
@@ -203,8 +201,8 @@ This is how we install OpenStack's identity service:
    apt-get install curl openssl
    curl http://192.168.100.51:5000/v2.0/endpoints -H 'x-auth-token: ADMIN'
 
-4. Glance
-=====================================================================
+2.7. Glance
+-------------------
 
 * After installing Keystone, we continue with installing image storage service a.k.a Glance::
 
@@ -214,7 +212,7 @@ This is how we install OpenStack's identity service:
 
    mysql -u root -p
    CREATE DATABASE glance;
-   GRANT ALL ON glance.* TO 'glanceUser'@'localhost' IDENTIFIED BY 'glancePass';
+   GRANT ALL ON glance.* TO 'glanceUser'@'%' IDENTIFIED BY 'glancePass';
    quit;
 
 * Update /etc/glance/glance-api-paste.ini with::
@@ -241,7 +239,7 @@ This is how we install OpenStack's identity service:
 
 * Update /etc/glance/glance-api.conf with::
 
-   sql_connection = mysql://glanceUser:glancePass@localhost/glance
+   sql_connection = mysql://glanceUser:glancePass@100.10.10.51/glance
 
 * And::
 
@@ -250,7 +248,7 @@ This is how we install OpenStack's identity service:
 
 * Update the /etc/glance/glance-registry.conf with::
 
-   sql_connection = mysql://glanceUser:glancePass@localhost/glance
+   sql_connection = mysql://glanceUser:glancePass@100.10.10.51/glance
 
 * And::
 
@@ -276,22 +274,8 @@ This is how we install OpenStack's identity service:
 
    glance image-list
 
-5. OpenVSwitch
-=====================================================================
-
-* Install the openVSwitch::
-
-   apt-get install -y openvswitch-switch openvswitch-datapath-dkms
-
-* Create the bridges::
-
-   #br-int is used for VM integration.
-   ovs-vsctl add-br br-int
-
-6. Quantum
-=====================================================================
-
-Quantum literaly eliminated the network overhead i used to deal with during the nova-network era.
+2.8. Quantum
+-------------------
 
 * Install the Quantum server and the OpenVSwitch package collection::
 
@@ -308,15 +292,12 @@ Quantum literaly eliminated the network overhead i used to deal with during the 
 
    #Under the database section
    [DATABASE]
-   sql_connection = mysql://quantumUser:quantumPass@localhost/quantum
+   sql_connection = mysql://quantumUser:quantumPass@100.10.10.51/quantum
 
    #Under the OVS section
    [OVS]
    tenant_network_type = gre
    tunnel_id_ranges = 1:1000
-   integration_bridge = br-int
-   tunnel_bridge = br-tun
-   local_ip = 100.10.10.51
    enable_tunneling = True
 
 * Edit /etc/quantum/api-paste.ini ::
@@ -330,15 +311,373 @@ Quantum literaly eliminated the network overhead i used to deal with during the 
    admin_user = quantum
    admin_password = service_pass
 
-* Restart all the quantum server::
+* Restart the quantum server::
 
    service quantum-server restart
+
+2.9. Nova
+-------------------
+
+* Start by installing nova components::
+
+   apt-get install -y nova-api nova-cert novnc nova-consoleauth nova-scheduler nova-novncproxy
+
+* Prepare a Mysql database for Nova::
+
+   mysql -u root -p
+   CREATE DATABASE nova;
+   GRANT ALL ON nova.* TO 'novaUser'@'%' IDENTIFIED BY 'novaPass';
+   quit;
+
+* Now modify authtoken section in the /etc/nova/api-paste.ini file to this::
+
+   [filter:authtoken]
+   paste.filter_factory = keystone.middleware.auth_token:filter_factory
+   auth_host = 100.10.10.51
+   auth_port = 35357
+   auth_protocol = http
+   admin_tenant_name = service
+   admin_user = nova
+   admin_password = service_pass
+   signing_dirname = /tmp/keystone-signing-nova
+
+* Modify the /etc/nova/nova.conf like this::
+
+   [DEFAULT]
+   logdir=/var/log/nova
+   state_path=/var/lib/nova
+   lock_path=/run/lock/nova
+   verbose=True
+   api_paste_config=/etc/nova/api-paste.ini
+   scheduler_driver=nova.scheduler.simple.SimpleScheduler
+   s3_host=100.10.10.51
+   ec2_host=100.10.10.51
+   ec2_dmz_host=100.10.10.51
+   rabbit_host=100.10.10.51
+   cc_host=100.10.10.51
+   dmz_cidr=169.254.169.254/32
+   metadata_host=100.10.10.51
+   metadata_listen=0.0.0.0
+   nova_url=http://100.10.10.51:8774/v1.1/
+   sql_connection=mysql://novaUser:novaPass@100.10.10.51/nova
+   ec2_url=http://100.10.10.51:8773/services/Cloud 
+   root_helper=sudo nova-rootwrap /etc/nova/rootwrap.conf
+
+   # Auth
+   use_deprecated_auth=false
+   auth_strategy=keystone
+   keystone_ec2_url=http://100.10.10.51:5000/v2.0/ec2tokens
+   # Imaging service
+   glance_api_servers=100.10.10.51:9292
+   image_service=nova.image.glance.GlanceImageService
+
+   # Vnc configuration
+   novnc_enabled=true
+   novncproxy_base_url=http://192.168.100.51:6080/vnc_auto.html
+   novncproxy_port=6080
+   vncserver_proxyclient_address=192.168.100.51
+   vncserver_listen=0.0.0.0 
+
+   # Network settings
+   network_api_class=nova.network.quantumv2.api.API
+   quantum_url=http://100.10.10.51:9696
+   quantum_auth_strategy=keystone
+   quantum_admin_tenant_name=service
+   quantum_admin_username=quantum
+   quantum_admin_password=service_pass
+   quantum_admin_auth_url=http://100.10.10.51:35357/v2.0
+   libvirt_vif_driver=nova.virt.libvirt.vif.LibvirtHybridOVSBridgeDriver
+   linuxnet_interface_driver=nova.network.linux_net.LinuxOVSInterfaceDriver
+   firewall_driver=nova.virt.libvirt.firewall.IptablesFirewallDriver
+
+   # Compute #
+   compute_driver=libvirt.LibvirtDriver
+
+   # Cinder #
+   volume_api_class=nova.volume.cinder.API
+   osapi_volume_listen_port=5900
+
+* Synchronize your database::
+
+   nova-manage db sync
+
+* Restart nova-* services::
+
+   cd /etc/init.d/; for i in $( ls nova-* ); do sudo service $i restart; done   
+
+* Check for the smiling faces on nova-* services to confirm your installation::
+
+   nova-manage service list
+
+2.10. Cinder
+-------------------
+
+* Install the required packages::
+
+   apt-get install cinder-api cinder-scheduler cinder-volume iscsitarget open-iscsi iscsitarget-dkms
+
+* Configure the iscsi services::
+
+   sed -i 's/false/true/g' /etc/default/iscsitarget
+
+* Restart the services::
+   
+   service iscsitarget start
+   service open-iscsi start
+
+* Prepare a Mysql database for Cinder::
+
+   mysql -u root -p
+   CREATE DATABASE cinder;
+   GRANT ALL ON cinder.* TO 'cinderUser'@'%' IDENTIFIED BY 'cinderPass';
+   quit;
+
+* Configure /etc/cinder/api-paste.ini like the following::
+
+   [filter:authtoken]
+   paste.filter_factory = keystone.middleware.auth_token:filter_factory
+   service_protocol = http
+   service_host = 192.168.100.51
+   service_port = 5000
+   auth_host = 100.10.10.51
+   auth_port = 35357
+   auth_protocol = http
+   admin_tenant_name = service
+   admin_user = cinder
+   admin_password = service_pass
+
+* Edit the /etc/cinder/cinder.conf to::
+
+   [DEFAULT]
+   rootwrap_config=/etc/cinder/rootwrap.conf
+   sql_connection = mysql://cinderUser:cinderPass@100.10.10.51/cinder
+   api_paste_confg = /etc/cinder/api-paste.ini
+   iscsi_helper=ietadm
+   volume_name_template = volume-%s
+   volume_group = cinder-volumes
+   verbose = True
+   auth_strategy = keystone
+   #osapi_volume_listen_port=5900
+
+* Then, synchronize your database::
+
+   cinder-manage db sync
+
+* Finally, don't forget to create a volumegroup and name it cinder-volumes::
+
+   dd if=/dev/zero of=cinder-volumes bs=1 count=0 seek=2G
+   losetup /dev/loop2 cinder-volumes
+   fdisk /dev/loop2
+   #Type in the followings:
+   n
+   p
+   1
+   ENTER
+   ENTER
+   t
+   8e
+   w
+
+* Proceed to create the physical volume then the volume group::
+
+   pvcreate /dev/loop2
+   vgcreate cinder-volumes /dev/loop2
+
+**Note:** Beware that this volume group gets lost after a system reboot. (Click `Here <https://github.com/mseknibilel/OpenStack-Folsom-Install-guide/blob/master/Tricks%26Ideas/load_volume_group_after_system_reboot.rst>`_ to know how to load it after a reboot) 
+
+* Restart the cinder services::
+
+   service cinder-volume restart
+   service cinder-api restart
+
+2.11. Horizon
+-------------------
+
+* To install horizon, proceed like this ::
+
+   apt-get install openstack-dashboard memcached
+
+
+* If you don't like the OpenStack ubuntu theme, you can disabled it and go back to the default look::
+
+   nano /etc/openstack-dashboard/local_settings.py
+   #Comment these lines
+   #Enable the Ubuntu theme if it is present.
+   #try:
+   #    from ubuntu_theme import *
+   #except ImportError:
+   #    pass
+
+* Reload Apache and memcached::
+
+   service apache2 restart; service memcached restart
+
+You can now access your OpenStack **192.168.100.51/horizon** with credentials **admin:admin_pass**.
+
+**Note:** A reboot might be needed for a successful login
+
+3. Network node
+=========================
+
+3.1. Preparing the Node
+------------------
+
+* Update your system::
+
+   apt-get update
+   apt-get upgrade
+   apt-get dist-upgrade
+
+* Install ntp service::
+
+   apt-get install ntp
+
+* Configure the NTP server to follow the controller node::
+   
+   sed -i 's/server ntp.ubuntu.com/server 100.10.10.51/g' /etc/ntp.conf
+   service ntp restart  
+
+* Install other services::
+
+   apt-get install vlan bridge-utils
+
+* Enable IP_Forwarding::
+
+   nano /etc/sysctl.conf
+   # Uncomment net.ipv4.ip_forward=1, to save you from rebooting, perform the following
+   sysctl net.ipv4.ip_forward=1
+
+3.2.Networking
+------------
+
+* Only one NIC needs to be internet connected::
+   
+   auto eth0
+   iface eth0 inet static
+   address 192.168.100.52
+   netmask 255.255.255.0
+   gateway 192.168.100.1
+   dns-nameservers 8.8.8.8
+
+   auto eth1
+   iface eth1 inet static
+   address 100.10.10.52
+   netmask 255.255.255.0
+
+3.3. OpenVSwitch
+------------------
+
+* Install the openVSwitch::
+
+   apt-get install -y openvswitch-switch openvswitch-datapath-dkms
+
+* Create the bridges::
+
+   #br-int is used for VM integration	
+   ovs-vsctl add-br br-int
+
+   #br-ex is used for accessing internet.
+   ovs-vsctl add-br br-ex
+   ovs-vsctl br-set-external-id br-ex bridge-id br-ex
+   ovs-vsctl add-port br-ex eth1
+
+3.4. Quantum
+------------------
+
+We need to install the l3 agent, dhcp agent and the openVSwitch plugin agent
+
+* Install quantum DHCP and l3 agents::
+
+   apt-get -y install quantum-dhcp-agent quantum-l3-agent quantum-plugin-openvswitch-agent
+
+* Edit the OVS plugin configuration file /etc/quantum/plugins/openvswitch/ovs_quantum_plugin.ini with:: 
+
+   #Under the database section
+   [DATABASE]
+   sql_connection = mysql://quantumUser:quantumPass@100.10.10.51/quantum
+
+   #Under the OVS section
+   [OVS]
+   tenant_network_type = gre
+   tunnel_id_ranges = 1:1000
+   integration_bridge = br-int
+   tunnel_bridge = br-tun
+   local_ip = 100.10.10.52
+   enable_tunneling = True
+
+* In addition, update the /etc/quantum/l3_agent.ini::
+
+   auth_url = http://100.10.10.51:35357/v2.0
+   auth_region = RegionOne
+   admin_tenant_name = service
+   admin_user = quantum
+   admin_password = service_pass
+   metadata_ip = 192.168.100.51
+   metadata_port = 8775
+   use_namespaces = False
+
+* Edit /etc/quantum/dhcp_agent.ini::
+
+   use_namespaces = False
+
+* Make sure that your rabbitMQ IP in /etc/quantum/quantum.conf is set to the controller node::
+   
+   rabbit_host = 100.10.10.51
+
+* To get the l3_agent to function properly, you need to undergo a special operation described `here <https://github.com/mseknibilel/OpenStack-Folsom-Install-guide/blob/stable/GRE/Tricks%26Ideas/modify_iptables_manager.rst>`_. 
+
+* Restart all the services::
+
+   service quantum-dhcp-agent restart
+   service quantum-l3-agent restart
    service quantum-plugin-openvswitch-agent restart
 
-7. KVM
-=====================================================================
+4. Compute Node
+=========================
 
-* KVM is needed as the hypervisor that will be used to create virtual machines. Before you install KVM, make sure that your hardware enables virtualization::
+4.1. Preparing the Node
+------------------
+
+* Update your system::
+
+   apt-get update
+   apt-get upgrade
+   apt-get dist-upgrade
+
+* Install ntp service::
+
+   apt-get install ntp
+
+* Configure the NTP server to follow the controller node::
+   
+   sed -i 's/server ntp.ubuntu.com/server 100.10.10.51/g' /etc/ntp.conf
+   service ntp restart  
+
+* Install other services::
+
+   apt-get install vlan bridge-utils
+
+* Enable IP_Forwarding::
+
+   nano /etc/sysctl.conf
+   # Uncomment net.ipv4.ip_forward=1, to save you from rebooting, perform the following
+   sysctl net.ipv4.ip_forward=1
+
+4.2.Networking
+------------
+
+* Perform the following::
+   
+   # OpenStack management
+   auto eth0
+   iface eth0 inet static
+   address 100.10.10.53
+   netmask 255.255.255.0
+
+4.3 KVM
+------------------
+
+* make sure that your hardware enables virtualization::
 
    apt-get install cpu-checker
    kvm-ok
@@ -379,19 +718,54 @@ Quantum literaly eliminated the network overhead i used to deal with during the 
 
    service libvirt-bin restart
 
-8. Nova
-=================
+4.4. OpenVSwitch
+------------------
 
-* Start by installing nova components::
+* Install the openVSwitch::
 
-   apt-get install -y nova-api nova-cert novnc nova-consoleauth nova-scheduler nova-novncproxy nova-api-metadata nova-compute-kvm
+   apt-get install -y openvswitch-switch openvswitch-datapath-dkms
 
-* Prepare a Mysql database for Nova::
+* Create the bridges::
 
-   mysql -u root -p
-   CREATE DATABASE nova;
-   GRANT ALL ON nova.* TO 'novaUser'@'%' IDENTIFIED BY 'novaPass';
-   quit;
+   #br-int will be used for VM integration	
+   ovs-vsctl add-br br-int
+
+4.5. Quantum
+------------------
+
+* Install the Quantum openvswitch agent::
+
+   apt-get -y install quantum-plugin-openvswitch-agent
+
+* Edit the OVS plugin configuration file /etc/quantum/plugins/openvswitch/ovs_quantum_plugin.ini with:: 
+
+   #Under the database section
+   [DATABASE]
+   sql_connection = mysql://quantumUser:quantumPass@100.10.10.51/quantum
+
+   #Under the OVS section
+   [OVS]
+   tenant_network_type = gre
+   tunnel_id_ranges = 1:1000
+   integration_bridge = br-int
+   tunnel_bridge = br-tun
+   local_ip = 100.10.10.53
+   enable_tunneling = True
+
+* Make sure that your rabbitMQ IP in /etc/quantum/quantum.conf is set to the controller node::
+   
+   rabbit_host = 100.10.10.51
+
+* Restart all the services::
+
+   service quantum-plugin-openvswitch-agent restart
+
+4.6. Nova
+------------------
+
+* Install nova's required components for the compute node::
+
+   apt-get install nova-compute-kvm
 
 * Now modify authtoken section in the /etc/nova/api-paste.ini file to this::
 
@@ -404,6 +778,15 @@ Quantum literaly eliminated the network overhead i used to deal with during the 
    admin_user = nova
    admin_password = service_pass
    signing_dirname = /tmp/keystone-signing-nova
+
+* Edit /etc/nova/nova-compute.conf file ::
+   
+   [DEFAULT]
+   libvirt_type=kvm
+   libvirt_ovs_bridge=br-int
+   libvirt_vif_type=ethernet
+   libvirt_vif_driver=nova.virt.libvirt.vif.LibvirtHybridOVSBridgeDriver
+   libvirt_use_virtio_for_bridges=True
 
 * Modify the /etc/nova/nova.conf like this::
 
@@ -422,9 +805,9 @@ Quantum literaly eliminated the network overhead i used to deal with during the 
    dmz_cidr=169.254.169.254/32
    metadata_host=100.10.10.51
    metadata_listen=0.0.0.0
-   nova_url=http://192.168.100.51:8774/v1.1/
+   nova_url=http://100.10.10.51:8774/v1.1/
    sql_connection=mysql://novaUser:novaPass@100.10.10.51/nova
-   ec2_url=http://192.168.100.51:8773/services/Cloud 
+   ec2_url=http://100.10.10.51:8773/services/Cloud 
    root_helper=sudo nova-rootwrap /etc/nova/rootwrap.conf
 
    # Auth
@@ -439,7 +822,7 @@ Quantum literaly eliminated the network overhead i used to deal with during the 
    novnc_enabled=true
    novncproxy_base_url=http://192.168.100.51:6080/vnc_auto.html
    novncproxy_port=6080
-   vncserver_proxyclient_address=192.168.100.51
+   vncserver_proxyclient_address=100.10.10.53
    vncserver_listen=0.0.0.0 
 
    # Network settings
@@ -461,19 +844,6 @@ Quantum literaly eliminated the network overhead i used to deal with during the 
    volume_api_class=nova.volume.cinder.API
    osapi_volume_listen_port=5900
 
-* Edit /etc/nova/nova-compute.conf file::
-
-   [DEFAULT]
-   libvirt_type=kvm
-   libvirt_ovs_bridge=br-int
-   libvirt_vif_type=ethernet
-   libvirt_vif_driver=nova.virt.libvirt.vif.LibvirtHybridOVSBridgeDriver
-   libvirt_use_virtio_for_bridges=True
-
-* Synchronize your database::
-
-   nova-manage db sync
-
 * Restart nova-* services::
 
    cd /etc/init.d/; for i in $( ls nova-* ); do sudo service $i restart; done   
@@ -482,236 +852,7 @@ Quantum literaly eliminated the network overhead i used to deal with during the 
 
    nova-manage service list
 
-9. Cinder
-=================
-
-Although Cinder is a replacement of the old nova-volume service, its installation is now a seperated from the nova install process.
-
-* Install the required packages::
-
-   apt-get install cinder-api cinder-scheduler cinder-volume iscsitarget open-iscsi iscsitarget-dkms
-
-* Configure the iscsi services::
-
-   sed -i 's/false/true/g' /etc/default/iscsitarget
-
-* Restart the services::
-   
-   service iscsitarget start
-   service open-iscsi start
-
-* Prepare a Mysql database for Cinder::
-
-   mysql -u root -p
-   CREATE DATABASE cinder;
-   GRANT ALL ON cinder.* TO 'cinderUser'@'localhost' IDENTIFIED BY 'cinderPass';
-   quit;
-
-* Configure /etc/cinder/api-paste.ini like the following::
-
-   [filter:authtoken]
-   paste.filter_factory = keystone.middleware.auth_token:filter_factory
-   service_protocol = http
-   service_host = 192.168.100.51
-   service_port = 5000
-   auth_host = 100.10.10.51
-   auth_port = 35357
-   auth_protocol = http
-   admin_tenant_name = service
-   admin_user = cinder
-   admin_password = service_pass
-
-* Edit the /etc/cinder/cinder.conf to::
-
-   [DEFAULT]
-   rootwrap_config=/etc/cinder/rootwrap.conf
-   sql_connection = mysql://cinderUser:cinderPass@localhost/cinder
-   api_paste_confg = /etc/cinder/api-paste.ini
-   iscsi_helper=ietadm
-   volume_name_template = volume-%s
-   volume_group = cinder-volumes
-   verbose = True
-   auth_strategy = keystone
-   #osapi_volume_listen_port=5900
-
-* Then, synchronize your database::
-
-   cinder-manage db sync
-
-* Finally, don't forget to create a volumegroup and name it cinder-volumes::
-
-   dd if=/dev/zero of=cinder-volumes bs=1 count=0 seek=2G
-   losetup /dev/loop2 cinder-volumes
-   fdisk /dev/loop2
-   #Type in the followings:
-   n
-   p
-   1
-   ENTER
-   ENTER
-   t
-   8e
-   w
-
-* Proceed to create the physical volume then the volume group::
-
-   pvcreate /dev/loop2
-   vgcreate cinder-volumes /dev/loop2
-
-**Note:** Beware that this volume group gets lost after a system reboot. (Click `Here <https://github.com/mseknibilel/OpenStack-Folsom-Install-guide/blob/master/Tricks%26Ideas/load_volume_group_after_system_reboot.rst>`_ to know how to load it after a reboot) 
-
-* Restart the cinder services::
-
-   service cinder-volume restart
-   service cinder-api restart
-
-10. Horizon
-============
-
-* To install horizon, proceed like this ::
-
-   apt-get install openstack-dashboard memcached
-
-
-* If you don't like the OpenStack ubuntu theme, you can disabled it and go back to the default look::
-
-   nano /etc/openstack-dashboard/local_settings.py
-   #Comment these lines
-   #Enable the Ubuntu theme if it is present.
-   #try:
-   #    from ubuntu_theme import *
-   #except ImportError:
-   #    pass
-
-* Reload Apache and memcached::
-
-   service apache2 restart; service memcached restart
-
-You can now access your OpenStack **192.168.100.51/horizon** with credentials **admin:admin_pass**.
-
-**Note:** A reboot might be needed for a successful login
-
-11. Network node
-=========================
-
-11.1. Preparing the Node
-------------------
-
-* Update your system::
-
-   apt-get update
-   apt-get upgrade
-   apt-get dist-upgrade
-
-* Install ntp service::
-
-   apt-get install ntp
-
-* Configure the NTP server to follow the controller node::
-   
-   sed -i 's/server ntp.ubuntu.com/server 100.10.10.51/g' /etc/ntp.conf
-   service ntp restart  
-
-* Install other services::
-
-   apt-get install vlan bridge-utils
-
-* Enable IP_Forwarding::
-
-   nano /etc/sysctl.conf
-   # Uncomment net.ipv4.ip_forward=1, to save you from rebooting, perform the following
-   sysctl net.ipv4.ip_forward=1
-
-11.2.Networking
-------------
-
-* It's recommended to have two NICs but only one needs to be internet connected::
-   
-   auto eth0
-   iface eth0 inet manual
-   up ifconfig $IFACE 0.0.0.0 up
-   up ip link set $IFACE promisc on
-   down ip link set $IFACE promisc off
-   down ifconfig $IFACE down
-
-   auto eth1
-   iface eth1 inet static
-   address 100.10.10.52
-   netmask 255.255.255.0
-
-11.3. OpenVSwitch
-------------------
-
-* Install the openVSwitch::
-
-   apt-get install -y openvswitch-switch openvswitch-datapath-dkms
-
-* Create the bridges::
-
-   #br-int is used for VM integration	
-   ovs-vsctl add-br br-int
-
-   #br-ex is used for accessing internet.
-   ovs-vsctl add-br br-ex
-   ovs-vsctl br-set-external-id br-ex bridge-id br-ex
-   ovs-vsctl add-port br-ex eth2
-
-11.4. Quantum
-------------------
-
-We need to install the l3 agent, dhcp agent and the openVSwitch plugin agent
-
-* Install quantum DHCP and l3 agents::
-
-   apt-get -y install quantum-dhcp-agent quantum-l3-agent
-
-* In addition, update the /etc/quantum/l3_agent.ini::
-
-   auth_url = http://100.10.10.51:35357/v2.0
-   auth_region = RegionOne
-   admin_tenant_name = service
-   admin_user = quantum
-   admin_password = service_pass
-   metadata_ip = 100.10.10.51
-   metadata_port = 8775
-   use_namespaces = False
-
-* Edit /etc/quantum/dhcp_agent.ini::
-
-   use_namespaces = False
-
-* Install the Quantum openvswitch agent::
-
-   apt-get -y install quantum-plugin-openvswitch-agent
-
-* Edit the OVS plugin configuration file /etc/quantum/plugins/openvswitch/ovs_quantum_plugin.ini with:: 
-
-   #Under the database section
-   [DATABASE]
-   sql_connection = mysql://quantumUser:quantumPass@192.168.100.51/quantum
-
-   #Under the OVS section
-   [OVS]
-   tenant_network_type = gre
-   tunnel_id_ranges = 1:1000
-   integration_bridge = br-int
-   tunnel_bridge = br-tun
-   local_ip = 100.10.10.52
-   enable_tunneling = True
-
-* Make sure that your rabbitMQ IP in /etc/quantum/quantum.conf is set to the controller node::
-   
-   rabbit_host = 100.10.10.51
-
-* To get the l3_agent to function properly, you need to undergo a special operation described `here <https://github.com/mseknibilel/OpenStack-Folsom-Install-guide/blob/stable/GRE/Tricks%26Ideas/modify_iptables_manager.rst>`_. 
-
-* Restart all the services::
-
-   service quantum-dhcp-agent restart
-   service quantum-l3-agent restart
-   service quantum-plugin-openvswitch-agent restart
-
-12. Your First VM
+5. Your First VM
 ============
 
 To start your first VM, we first need to create a new tenant, user, internal and external network. SSH to your controller node and perform the following.
@@ -731,7 +872,7 @@ To start your first VM, we first need to create a new tenant, user, internal and
 
 * Create a new subnet inside the new tenant network::
 
-   quantum subnet-create --tenant-id $put_id_of_project_one net_proj_one 10.10.10.0/24
+   quantum subnet-create --tenant-id $put_id_of_project_one net_proj_one 50.50.1.0/24
 
 * Create a router for the new tenant::
 
@@ -772,7 +913,7 @@ VMs gain access to the metadata server locally present in the controller node vi
 
 * Add the following route on controller node only::
 
-   route add -net 10.10.10.0/24 gw $router_proj_one_IP
+   route add -net 50.50.1.0/24 gw $router_proj_one_IP
 
 Unfortunatly, you can't use the dashboard to assign floating IPs to VMs so you need to get your hands a bit dirty to give your VM a public IP.
 
@@ -792,7 +933,7 @@ Unfortunatly, you can't use the dashboard to assign floating IPs to VMs so you n
 
 I Hope you enjoyed this guide, please if you have any feedbacks, don't hesitate.
 
-13. Licensing
+6. Licensing
 ============
 
 OpenStack Folsom Install Guide by Bilel Msekni is licensed under a Creative Commons Attribution 3.0 Unported License.
@@ -800,12 +941,12 @@ OpenStack Folsom Install Guide by Bilel Msekni is licensed under a Creative Comm
 .. image:: http://i.imgur.com/4XWrp.png
 To view a copy of this license, visit [ http://creativecommons.org/licenses/by/3.0/deed.en_US ].
 
-14. Contacts
+7. Contacts
 ===========
 
 Bilel Msekni: bilel.msekni@telecom-sudparis.eu
 
-15. Acknowledgment
+8. Acknowledgment
 =================
 
 This work has been supported by:
@@ -813,7 +954,7 @@ This work has been supported by:
 * CompatibleOne Project (French FUI project) [http://compatibleone.org/]
 * Easi-Clouds (ITEA2 project) [http://easi-clouds.eu/]
 
-16. Credits
+9. Credits
 =================
 
 This work has been based on:
@@ -822,12 +963,16 @@ This work has been based on:
 * OpenStack Documentation [http://docs.openstack.org/trunk/openstack-compute/install/apt/content/]
 * OpenStack Quantum Install [http://docs.openstack.org/trunk/openstack-network/admin/content/ch_install.html]
 
-17. To do
+10. To do
 =======
 
 This guide is just a startup. Your suggestions are always welcomed.
 
 Some of this guide's needs might be:
+
+* Define more Quantum configurations to cover all usecases possible see `here <http://docs.openstack.org/trunk/openstack-network/admin/content/use_cases.html>`_. 
+
+
 
 * Define more Quantum configurations to cover all usecases possible see `here <http://docs.openstack.org/trunk/openstack-network/admin/content/use_cases.html>`_. 
 
