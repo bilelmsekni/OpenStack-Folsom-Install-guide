@@ -33,21 +33,15 @@ Table of Contents
 
   0. What is it?
   1. Requirements
-  2. Getting Ready
-  3. Keystone 
-  4. Glance
-  5. OpenVSwitch
-  6. Quantum
-  7. Nova
-  8. Cinder
-  9. Horizon
-  10. Adding a compute node
-  11. Start your first VM
-  12. Licencing
-  13. Contacts
-  14. Acknowledgement
-  15. Credits
-  16. To do
+  2. Controller Node
+  3. Network Node
+  4. Compute Node
+  5. Start your first VM
+  6. Licencing
+  7. Contacts
+  8. Acknowledgement
+  9. Credits
+  10. To do
 
 0. What is it?
 ==============
@@ -56,20 +50,22 @@ OpenStack Folsom Install Guide is an easy and tested way to create your own Open
 
 Version 3.0
 
-Status: testing 
+Status: Experimental (Deprecated unless you are a skilled networking person)
 
 
 1. Requirements
 ====================
 
 :Node Role: NICs
-:Control Node: eth0 (192.168.100.51), eth1 (100.10.10.51)
-:Compute Node: eth0 (192.168.100.52), eth1 (100.10.10.52)
+:Control Node: eth0 (100.10.10.51), eth1 (192.168.100.51)
+:Network Node: eth0 (100.10.10.52), eth2 (192.168.100.52)
+:Compute Node: eth0 (100.20.20.53) 
 
+**Note 1:** Compute and Controller nodes can be merged into one node.
 
-**Note 1:** If you are not interrested in Quantum, you can also use this guide but you must follow the nova section found `here <https://github.com/mseknibilel/OpenStack-Folsom-Install-guide/blob/master/Tricks%26Ideas/install_nova-network.rst>`_ instead of the one written in this guide.
+**Note 2:** If you are not interrested in Quantum, you can also use this guide but you must follow the nova section found `here <https://github.com/mseknibilel/OpenStack-Folsom-Install-guide/blob/master/Tricks%26Ideas/install_nova-network.rst>`_ instead of the one written in this guide.
 
-**Note 2:** This is my current network architecture, you can add as many compute node as you wish.
+**Note 3:** This is my current network architecture, you can add as many compute node as you wish.
 
 .. image:: http://i.imgur.com/Qtee3.jpg
 
@@ -91,39 +87,22 @@ Status: testing
 
 2.2.Networking
 ------------
-* First, take a good look at your working routing table::
-   
-   Destination     Gateway         Genmask         Flags Metric Ref    Use Iface
-   0.0.0.0         192.168.100.1   0.0.0.0         UG    0      0        0 eth0
-   192.168.100.0   0.0.0.0         255.255.255.0   U     0      0        0 eth0
 
-* Keep in your mind that it must become like this::
-   
-   Destination     Gateway         Genmask         Flags Metric Ref    Use Iface
-   0.0.0.0         192.168.100.1   0.0.0.0         UG    0      0        0 br-ex
-   192.168.100.0   0.0.0.0         255.255.255.0   U     0      0        0 br-ex
- 
-* eth0 NIC on the controller node will give its IPs to the br-ex::
+* Only one NIC on the controller node need internet access::
 
-   auto eth0
-   iface eth0 inet manual
-   up ifconfig $IFACE 0.0.0.0 up
-   up ip link set $IFACE promisc on
-   down ip link set $IFACE promisc off
-   down ifconfig $IFACE down
-
+   #For Exposing OpenStack API over the internet
    auto eth1
    iface eth1 inet static
-   address 100.10.10.51
-   netmask 255.255.255.0
-
-   auto br-ex
-   iface br-ex inet static
    address 192.168.100.51
    netmask 255.255.255.0
    gateway 192.168.100.1
-   broadcast 192.168.100.255
    dns-nameservers 8.8.8.8
+
+   #Not internet connected(used for OpenStack management)
+   auto eth0
+   iface eth0 inet static
+   address 100.10.10.51
+   netmask 255.255.255.0
 
 
 2.3. MySQL & RabbitMQ
@@ -167,10 +146,8 @@ Status: testing
    sysctl net.ipv4.ip_forward=1
 
 
-3. Keystone
-=====================================================================
-
-This is how we install OpenStack's identity service:
+2.6. Keystone
+-------------------
 
 * Start by the keystone packages::
 
@@ -180,12 +157,12 @@ This is how we install OpenStack's identity service:
 
    mysql -u root -p
    CREATE DATABASE keystone;
-   GRANT ALL ON keystone.* TO 'keystoneUser'@'localhost' IDENTIFIED BY 'keystonePass';
+   GRANT ALL ON keystone.* TO 'keystoneUser'@'%' IDENTIFIED BY 'keystonePass';
    quit;
 
 * Adapt the connection attribute in the /etc/keystone/keystone.conf to the new database::
 
-   connection = mysql://keystoneUser:keystonePass@localhost/keystone
+   connection = mysql://keystoneUser:keystonePass@100.10.10.51/keystone
 
 * Restart the identity service then synchronize the database::
 
@@ -194,7 +171,7 @@ This is how we install OpenStack's identity service:
 
 * Fill up the keystone database using the two scripts available in the `Scripts folder <https://github.com/mseknibilel/OpenStack-Folsom-Install-guide/tree/master/Keystone_Scripts>`_ of this git repository. Beware that you MUST comment every part related to Quantum if you don't intend to install it otherwise you will have trouble with your dashboard later::
 
-   #Modify the HOST_IP variable before executing the scripts
+   #Modify the HOST_IP and HOST_IP_EXT variables before executing the scripts
 
    chmod +x keystone_basic.sh
    chmod +x keystone_endpoints_basic.sh
@@ -216,10 +193,10 @@ This is how we install OpenStack's identity service:
 * To test Keystone, we use a simple curl request::
 
    apt-get install curl openssl
-   curl http://192.168.100.51:35357/v2.0/endpoints -H 'x-auth-token: ADMIN'
+   curl http://192.168.100.51:5000/v2.0/endpoints -H 'x-auth-token: ADMIN'
 
-4. Glance
-=====================================================================
+2.7. Glance
+-------------------
 
 * After installing Keystone, we continue with installing image storage service a.k.a Glance::
 
@@ -229,14 +206,14 @@ This is how we install OpenStack's identity service:
 
    mysql -u root -p
    CREATE DATABASE glance;
-   GRANT ALL ON glance.* TO 'glanceUser'@'localhost' IDENTIFIED BY 'glancePass';
+   GRANT ALL ON glance.* TO 'glanceUser'@'%' IDENTIFIED BY 'glancePass';
    quit;
 
 * Update /etc/glance/glance-api-paste.ini with::
 
    [filter:authtoken]
    paste.filter_factory = keystone.middleware.auth_token:filter_factory
-   auth_host = 192.168.100.51
+   auth_host = 100.10.10.51
    auth_port = 35357
    auth_protocol = http
    admin_tenant_name = service
@@ -247,7 +224,7 @@ This is how we install OpenStack's identity service:
 
    [filter:authtoken]
    paste.filter_factory = keystone.middleware.auth_token:filter_factory
-   auth_host = 192.168.100.51
+   auth_host = 100.10.10.51
    auth_port = 35357
    auth_protocol = http
    admin_tenant_name = service
@@ -256,7 +233,7 @@ This is how we install OpenStack's identity service:
 
 * Update /etc/glance/glance-api.conf with::
 
-   sql_connection = mysql://glanceUser:glancePass@localhost/glance
+   sql_connection = mysql://glanceUser:glancePass@100.10.10.51/glance
 
 * And::
 
@@ -265,7 +242,7 @@ This is how we install OpenStack's identity service:
 
 * Update the /etc/glance/glance-registry.conf with::
 
-   sql_connection = mysql://glanceUser:glancePass@localhost/glance
+   sql_connection = mysql://glanceUser:glancePass@100.10.10.51/glance
 
 * And::
 
@@ -280,6 +257,10 @@ This is how we install OpenStack's identity service:
 
    glance-manage db_sync
 
+* Restart the services again to take into account the new modifications::
+
+   service glance-registry restart; service glance-api restart
+
 * To test Glance's well installation, we upload a new image to the store. Start by downloading the cirros cloud image to your node and then uploading it to Glance::
 
    mkdir images
@@ -291,42 +272,12 @@ This is how we install OpenStack's identity service:
 
    glance image-list
 
-5. OpenVSwitch
-=====================================================================
+2.8. Quantum
+-------------------
 
-* Install the openVSwitch::
+* Install the Quantum server::
 
-   apt-get install -y openvswitch-switch openvswitch-datapath-dkms
-
-* Create the bridges::
-
-   #br-int is used for VM integration.
-   ovs-vsctl add-br br-int
-
-   #br-eth1 is used for VM configuration.
-   ovs-vsctl add-br br-eth1
-   ovs-vsctl add-port br-eth1 eth1
-
-   #br-ex is used for accessing internet.
-   ovs-vsctl add-br br-ex
-   ovs-vsctl add-port br-ex eth0
-   
-
-* **Reboot** and then re-establish your routing table::
-
-   route add default gw 192.168.100.1 br-ex
-
-   #If there are other gateways, you must delete them using
-   #route del default gw %gateway_address dev <interface>
-
-6. Quantum
-=====================================================================
-
-Quantum literaly eliminated the network overhead i used to deal with during the nova-network era.
-
-* Install the Quantum server and the OpenVSwitch package collection::
-
-   apt-get install quantum-server quantum-plugin-openvswitch quantum-plugin-openvswitch-agent
+   apt-get install quantum-server quantum-plugin-openvswitch
 
 * Create a database::
 
@@ -339,48 +290,30 @@ Quantum literaly eliminated the network overhead i used to deal with during the 
 
    #Under the database section
    [DATABASE]
-   sql_connection = mysql://quantumUser:quantumPass@localhost/quantum
+   sql_connection = mysql://quantumUser:quantumPass@100.10.10.51/quantum
 
    #Under the OVS section
    [OVS]
    tenant_network_type=vlan
    network_vlan_ranges = physnet1:1:4094
-   bridge_mappings = physnet1:br-eth1
-
-* Install quantum DHCP and l3 agents::
-
-   apt-get -y install quantum-dhcp-agent quantum-l3-agent
 
 * Edit /etc/quantum/api-paste.ini ::
 
    [filter:authtoken]
    paste.filter_factory = keystone.middleware.auth_token:filter_factory
-   auth_host = 192.168.100.51
+   auth_host = 100.10.10.51
    auth_port = 35357
    auth_protocol = http
    admin_tenant_name = service
    admin_user = quantum
    admin_password = service_pass
 
-* In addition, update the /etc/quantum/l3_agent.ini::
-
-   auth_url = http://192.168.100.51:35357/v2.0
-   auth_region = RegionOne
-   admin_tenant_name = service
-   admin_user = quantum
-   admin_password = service_pass
-   metadata_ip = 192.168.100.51
-   metadata_port = 8775
-
-* Restart all the services::
+* Restart the quantum server::
 
    service quantum-server restart
-   service quantum-dhcp-agent restart
-   service quantum-l3-agent restart
-   service quantum-plugin-openvswitch-agent restart
 
-7. Nova
-=================
+2.9. Nova
+-------------------
 
 * Start by installing nova components::
 
@@ -397,7 +330,7 @@ Quantum literaly eliminated the network overhead i used to deal with during the 
 
    [filter:authtoken]
    paste.filter_factory = keystone.middleware.auth_token:filter_factory
-   auth_host = 192.168.100.51
+   auth_host = 100.10.10.51
    auth_port = 35357
    auth_protocol = http
    admin_tenant_name = service
@@ -414,24 +347,25 @@ Quantum literaly eliminated the network overhead i used to deal with during the 
    verbose=True
    api_paste_config=/etc/nova/api-paste.ini
    scheduler_driver=nova.scheduler.simple.SimpleScheduler
-   s3_host=192.168.100.51
-   ec2_host=192.168.100.51
-   ec2_dmz_host=192.168.100.51
-   rabbit_host=192.168.100.51
-   cc_host=192.168.100.51
-   metadata_host=192.168.100.51
+   s3_host=100.10.10.51
+   ec2_host=100.10.10.51
+   ec2_dmz_host=100.10.10.51
+   rabbit_host=100.10.10.51
+   cc_host=100.10.10.51
+   dmz_cidr=169.254.169.254/32
+   metadata_host=100.10.10.51
    metadata_listen=0.0.0.0
-   nova_url=http://192.168.100.51:8774/v1.1/
-   sql_connection=mysql://novaUser:novaPass@localhost/nova
-   ec2_url=http://192.168.100.51:8773/services/Cloud 
+   nova_url=http://100.10.10.51:8774/v1.1/
+   sql_connection=mysql://novaUser:novaPass@100.10.10.51/nova
+   ec2_url=http://100.10.10.51:8773/services/Cloud 
    root_helper=sudo nova-rootwrap /etc/nova/rootwrap.conf
 
    # Auth
    use_deprecated_auth=false
    auth_strategy=keystone
-   keystone_ec2_url=http://192.168.100.51:5000/v2.0/ec2tokens
+   keystone_ec2_url=http://100.10.10.51:5000/v2.0/ec2tokens
    # Imaging service
-   glance_api_servers=192.168.100.51:9292
+   glance_api_servers=100.10.10.51:9292
    image_service=nova.image.glance.GlanceImageService
 
    # Vnc configuration
@@ -443,12 +377,12 @@ Quantum literaly eliminated the network overhead i used to deal with during the 
 
    # Network settings
    network_api_class=nova.network.quantumv2.api.API
-   quantum_url=http://192.168.100.51:9696
+   quantum_url=http://100.10.10.51:9696
    quantum_auth_strategy=keystone
    quantum_admin_tenant_name=service
    quantum_admin_username=quantum
    quantum_admin_password=service_pass
-   quantum_admin_auth_url=http://192.168.100.51:35357/v2.0
+   quantum_admin_auth_url=http://100.10.10.51:35357/v2.0
    libvirt_vif_driver=nova.virt.libvirt.vif.LibvirtHybridOVSBridgeDriver
    linuxnet_interface_driver=nova.network.linux_net.LinuxOVSInterfaceDriver
    firewall_driver=nova.virt.libvirt.firewall.IptablesFirewallDriver
@@ -472,10 +406,9 @@ Quantum literaly eliminated the network overhead i used to deal with during the 
 
    nova-manage service list
 
-8. Cinder
-=================
 
-Although Cinder is a replacement of the old nova-volume service, its installation is now a seperated from the nova install process.
+2.10. Cinder
+-------------------
 
 * Install the required packages::
 
@@ -494,7 +427,7 @@ Although Cinder is a replacement of the old nova-volume service, its installatio
 
    mysql -u root -p
    CREATE DATABASE cinder;
-   GRANT ALL ON cinder.* TO 'cinderUser'@'localhost' IDENTIFIED BY 'cinderPass';
+   GRANT ALL ON cinder.* TO 'cinderUser'@'%' IDENTIFIED BY 'cinderPass';
    quit;
 
 * Configure /etc/cinder/api-paste.ini like the following::
@@ -504,7 +437,7 @@ Although Cinder is a replacement of the old nova-volume service, its installatio
    service_protocol = http
    service_host = 192.168.100.51
    service_port = 5000
-   auth_host = 192.168.100.51
+   auth_host = 100.10.10.51
    auth_port = 35357
    auth_protocol = http
    admin_tenant_name = service
@@ -515,7 +448,7 @@ Although Cinder is a replacement of the old nova-volume service, its installatio
 
    [DEFAULT]
    rootwrap_config=/etc/cinder/rootwrap.conf
-   sql_connection = mysql://cinderUser:cinderPass@localhost/cinder
+   sql_connection = mysql://cinderUser:cinderPass@100.10.10.51/cinder
    api_paste_confg = /etc/cinder/api-paste.ini
    iscsi_helper=ietadm
    volume_name_template = volume-%s
@@ -555,9 +488,8 @@ Although Cinder is a replacement of the old nova-volume service, its installatio
    service cinder-volume restart
    service cinder-api restart
 
-9. Horizon
-============
-
+2.11. Horizon
+-------------------
 * To install horizon, proceed like this ::
 
    apt-get install openstack-dashboard memcached
@@ -581,10 +513,10 @@ You can now access your OpenStack **192.168.100.51/horizon** with credentials **
 
 **Note:** A reboot might be needed for a successful login
 
-10. Adding a compute node
+3. Network Node
 =========================
 
-10.1. Preparing the Node
+3.1. Preparing the Node
 ------------------
 
 * Update your system::
@@ -599,7 +531,7 @@ You can now access your OpenStack **192.168.100.51/horizon** with credentials **
 
 * Configure the NTP server to follow the controller node::
    
-   sed -i 's/server ntp.ubuntu.com/server 192.168.100.51/g' /etc/ntp.conf
+   sed -i 's/server ntp.ubuntu.com/server 100.10.10.51/g' /etc/ntp.conf
    service ntp restart  
 
 * Install other services::
@@ -612,28 +544,157 @@ You can now access your OpenStack **192.168.100.51/horizon** with credentials **
    # Uncomment net.ipv4.ip_forward=1, to save you from rebooting, perform the following
    sysctl net.ipv4.ip_forward=1
 
-10.2.Networking
+3.2.Networking
 ------------
 
-* It's recommended to have two NICs but only one needs to be internet connected::
+* 2 NICs must be present::
    
-   auto eth0
-   iface eth0 inet static
+
+   # VM internet Access
+   auto eth2
+   iface eth2 inet static
    address 192.168.100.52
    netmask 255.255.255.0
    gateway 192.168.100.1
-   broadcast 192.168.100.255
    dns-nameservers 8.8.8.8
+   
+   # OpenStack management & VM conf
+   auto eth0
+   iface eth0 inet manual
+   up ifconfig $IFACE 0.0.0.0 up
+   up ip link set $IFACE promisc on
+   down ip link set $IFACE promisc off
+   down ifconfig $IFACE down
 
-   auto eth1
-   iface eth1 inet static
+   auto br-eth1
+   iface br-eth1 inet static
    address 100.10.10.52
    netmask 255.255.255.0
 
-10.3 KVM
+3.4. OpenVSwitch
 ------------------
 
-* KVM is needed as the hypervisor that will be used to create virtual machines. Before you install KVM, make sure that your hardware enables virtualization::
+* Install the openVSwitch::
+
+   apt-get install -y openvswitch-switch openvswitch-datapath-dkms
+
+* Create the bridges::
+
+   #br-int will be used for VM integration	
+   ovs-vsctl add-br br-int
+
+   #br-eth1 will be used for VM configuration 
+   ovs-vsctl add-br br-eth1
+   ovs-vsctl add-port br-eth1 eth0
+
+   #br-ex is used to make to VM accessible from the internet
+   ovs-vsctl add-br br-ex
+   ovs-vsctl add-port br-ex eth2
+
+3.5. Quantum
+------------------
+
+* Install the Quantum openvswitch agent, l3 agent and dhcp agent::
+
+   apt-get -y install quantum-plugin-openvswitch-agent quantum-dhcp-agent quantum-l3-agent
+
+* Edit /etc/quantum/api-paste.ini::
+
+   [filter:authtoken]
+   paste.filter_factory = keystone.middleware.auth_token:filter_factory
+   auth_host = 100.10.10.51
+   auth_port = 35357
+   auth_protocol = http
+   admin_tenant_name = service
+   admin_user = quantum
+   admin_password = service_pass
+
+* Edit the OVS plugin configuration file /etc/quantum/plugins/openvswitch/ovs_quantum_plugin.ini with:: 
+
+   #Under the database section
+   [DATABASE]
+   sql_connection = mysql://quantumUser:quantumPass@100.10.10.51/quantum
+
+   #Under the OVS section
+   [OVS]
+   tenant_network_type=vlan
+   network_vlan_ranges = physnet1:1:4094
+   bridge_mappings = physnet1:br-eth1
+
+* In addition, update the /etc/quantum/l3_agent.ini::
+
+   auth_url = http://100.10.10.51:35357/v2.0
+   auth_region = RegionOne
+   admin_tenant_name = service
+   admin_user = quantum
+   admin_password = service_pass
+   metadata_ip = 192.168.100.51
+   metadata_port = 8775
+
+* Make sure that your rabbitMQ IP in /etc/quantum/quantum.conf is set to the controller node::
+   
+   rabbit_host = 100.10.10.51
+
+* Restart all the services::
+
+   service quantum-plugin-openvswitch-agent restart
+   service quantum-dhcp-agent restart
+   service quantum-l3-agent restart
+
+4. Compute Node
+=========================
+
+4.1. Preparing the Node
+------------------
+
+* Update your system::
+
+   apt-get update
+   apt-get upgrade
+   apt-get dist-upgrade
+
+* Install ntp service::
+
+   apt-get install ntp
+
+* Configure the NTP server to follow the controller node::
+   
+   sed -i 's/server ntp.ubuntu.com/server 100.10.10.51/g' /etc/ntp.conf
+   service ntp restart  
+
+* Install other services::
+
+   apt-get install vlan bridge-utils
+
+* Enable IP_Forwarding::
+
+   nano /etc/sysctl.conf
+   # Uncomment net.ipv4.ip_forward=1, to save you from rebooting, perform the following
+   sysctl net.ipv4.ip_forward=1
+
+4.2.Networking
+------------
+
+* Perform the following::
+   
+   # OpenStack management & VM conf
+   auto eth0
+   iface eth0 inet manual
+   up ifconfig $IFACE 0.0.0.0 up
+   up ip link set $IFACE promisc on
+   down ip link set $IFACE promisc off
+   down ifconfig $IFACE down
+
+   auto br-eth1
+   iface br-eth1 inet static
+   address 100.10.10.53
+   netmask 255.255.255.0
+
+
+4.3 KVM
+------------------
+
+* make sure that your hardware enables virtualization::
 
    apt-get install cpu-checker
    kvm-ok
@@ -674,7 +735,7 @@ You can now access your OpenStack **192.168.100.51/horizon** with credentials **
 
    service libvirt-bin restart
 
-10.4. OpenVSwitch
+4.4. OpenVSwitch
 ------------------
 
 * Install the openVSwitch::
@@ -683,17 +744,15 @@ You can now access your OpenStack **192.168.100.51/horizon** with credentials **
 
 * Create the bridges::
 
-   #br-int is used for VM integration	
+   #br-int will be used for VM integration	
    ovs-vsctl add-br br-int
 
-   #br-eth1 is used for VM configuration 
+   #br-eth1 will be used for VM configuration 
    ovs-vsctl add-br br-eth1
-   ovs-vsctl add-port br-eth1 eth1
+   ovs-vsctl add-port br-eth1 eth0
 
-10.5. Quantum
+4.5. Quantum
 ------------------
-
-We don't need to install the hole quantum server here, just the openVSwitch plugin's agent
 
 * Install the Quantum openvswitch agent::
 
@@ -703,7 +762,7 @@ We don't need to install the hole quantum server here, just the openVSwitch plug
 
    #Under the database section
    [DATABASE]
-   sql_connection = mysql://quantumUser:quantumPass@192.168.100.51/quantum
+   sql_connection = mysql://quantumUser:quantumPass@100.10.10.51/quantum
 
    #Under the OVS section
    [OVS]
@@ -713,24 +772,24 @@ We don't need to install the hole quantum server here, just the openVSwitch plug
 
 * Make sure that your rabbitMQ IP in /etc/quantum/quantum.conf is set to the controller node::
    
-   rabbit_host = 192.168.100.51
+   rabbit_host = 100.10.10.51
 
 * Restart all the services::
 
    service quantum-plugin-openvswitch-agent restart
 
-10.6. Nova
+4.6. Nova
 ------------------
 
 * Install nova's required components for the compute node::
 
-   apt-get install nova-api-metadata nova-compute-kvm
+   apt-get install nova-compute-kvm
 
 * Now modify authtoken section in the /etc/nova/api-paste.ini file to this::
 
    [filter:authtoken]
    paste.filter_factory = keystone.middleware.auth_token:filter_factory
-   auth_host = 192.168.100.51
+   auth_host = 100.10.10.51
    auth_port = 35357
    auth_protocol = http
    admin_tenant_name = service
@@ -756,41 +815,42 @@ We don't need to install the hole quantum server here, just the openVSwitch plug
    verbose=True
    api_paste_config=/etc/nova/api-paste.ini
    scheduler_driver=nova.scheduler.simple.SimpleScheduler
-   s3_host=192.168.100.51
-   ec2_host=192.168.100.51
-   ec2_dmz_host=192.168.100.51
-   rabbit_host=192.168.100.51
-   cc_host=192.168.100.51
-   metadata_host=192.168.100.51
+   s3_host=100.10.10.51
+   ec2_host=100.10.10.51
+   ec2_dmz_host=100.10.10.51
+   rabbit_host=100.10.10.51
+   cc_host=100.10.10.51
+   dmz_cidr=169.254.169.254/32
+   metadata_host=100.10.10.51
    metadata_listen=0.0.0.0
-   nova_url=http://192.168.100.51:8774/v1.1/
-   sql_connection=mysql://novaUser:novaPass@192.168.100.51/nova
-   ec2_url=http://192.168.100.51:8773/services/Cloud 
+   nova_url=http://100.10.10.51:8774/v1.1/
+   sql_connection=mysql://novaUser:novaPass@100.10.10.51/nova
+   ec2_url=http://100.10.10.51:8773/services/Cloud 
    root_helper=sudo nova-rootwrap /etc/nova/rootwrap.conf
-   
+
    # Auth
    use_deprecated_auth=false
    auth_strategy=keystone
-   keystone_ec2_url=http://192.168.100.51:5000/v2.0/ec2tokens
+   keystone_ec2_url=http://100.10.10.51:5000/v2.0/ec2tokens
    # Imaging service
-   glance_api_servers=192.168.100.51:9292
+   glance_api_servers=100.10.10.51:9292
    image_service=nova.image.glance.GlanceImageService
 
    # Vnc configuration
    novnc_enabled=true
    novncproxy_base_url=http://192.168.100.51:6080/vnc_auto.html
    novncproxy_port=6080
-   vncserver_proxyclient_address=192.168.100.52
+   vncserver_proxyclient_address=100.10.10.53
    vncserver_listen=0.0.0.0 
 
    # Network settings
    network_api_class=nova.network.quantumv2.api.API
-   quantum_url=http://192.168.100.51:9696
+   quantum_url=http://100.10.10.51:9696
    quantum_auth_strategy=keystone
    quantum_admin_tenant_name=service
    quantum_admin_username=quantum
    quantum_admin_password=service_pass
-   quantum_admin_auth_url=http://192.168.100.51:35357/v2.0
+   quantum_admin_auth_url=http://100.10.10.51:35357/v2.0
    libvirt_vif_driver=nova.virt.libvirt.vif.LibvirtHybridOVSBridgeDriver
    linuxnet_interface_driver=nova.network.linux_net.LinuxOVSInterfaceDriver
    firewall_driver=nova.virt.libvirt.firewall.IptablesFirewallDriver
@@ -810,7 +870,7 @@ We don't need to install the hole quantum server here, just the openVSwitch plug
 
    nova-manage service list
 
-11. Your First VM
+5. Your First VM
 ============
 
 To start your first VM, we first need to create a new tenant, user, internal and external network. SSH to your controller node and perform the following.
@@ -830,7 +890,7 @@ To start your first VM, we first need to create a new tenant, user, internal and
 
 * Create a new subnet inside the new tenant network::
 
-   quantum subnet-create --tenant-id $put_id_of_project_one net_proj_one 10.10.10.0/24
+   quantum subnet-create --tenant-id $put_id_of_project_one net_proj_one 50.50.1.0/24
 
 * Create a router for the new tenant::
 
@@ -840,15 +900,13 @@ To start your first VM, we first need to create a new tenant, user, internal and
 
    quantum router-interface-add $put_router_proj_one_id_here $put_subnet_id_here
 
-You can now start creating VMs but they will not be accessible from the internet. If you like them to be so, perform the following:
-
 * Create your external network with the tenant id belonging to the service tenant (keystone tenant-list to get the appropriate id) ::
 
    quantum net-create --tenant-id $put_id_of_service_tenant ext_net --router:external=True
 
 * Create a subnet containing your floating IPs::
 
-   quantum subnet-create --tenant-id $put_id_of_service_tenant --gateway 192.168.100.1 ext_net 192.168.100.232/24 --enable_dhcp=False
+   quantum subnet-create --tenant-id $put_id_of_service_tenant --allocation-pool start=192.168.100.102,end=192.168.100.126 --gateway 192.168.100.1 ext_net 192.168.100.100/24 --enable_dhcp=False
 
 * Set the router for the external network::
 
@@ -860,9 +918,9 @@ VMs gain access to the metadata server locally present in the controller node vi
 
    quantum port-list -- --device_id <router_proj_one_id> --device_owner network:router_gateway
 
-* Add the following route on controller node only:
+* Add the following route on controller node only::
 
-   route add -net 10.10.10.0/24 gw $router_proj_one_IP
+   route add -net 50.50.1.0/24 gw $router_proj_one_IP
 
 Unfortunatly, you can't use the dashboard to assign floating IPs to VMs so you need to get your hands a bit dirty to give your VM a public IP.
 
@@ -882,7 +940,7 @@ Unfortunatly, you can't use the dashboard to assign floating IPs to VMs so you n
 
 I Hope you enjoyed this guide, please if you have any feedbacks, don't hesitate.
 
-12. Licensing
+6. Licensing
 ============
 
 OpenStack Folsom Install Guide by Bilel Msekni is licensed under a Creative Commons Attribution 3.0 Unported License.
@@ -890,12 +948,12 @@ OpenStack Folsom Install Guide by Bilel Msekni is licensed under a Creative Comm
 .. image:: http://i.imgur.com/4XWrp.png
 To view a copy of this license, visit [ http://creativecommons.org/licenses/by/3.0/deed.en_US ].
 
-13. Contacts
+7. Contacts
 ===========
 
 Bilel Msekni: bilel.msekni@telecom-sudparis.eu
 
-14. Acknowledgment
+8. Acknowledgment
 =================
 
 This work has been supported by:
@@ -903,7 +961,7 @@ This work has been supported by:
 * CompatibleOne Project (French FUI project) [http://compatibleone.org/]
 * Easi-Clouds (ITEA2 project) [http://easi-clouds.eu/]
 
-15. Credits
+9. Credits
 =================
 
 This work has been based on:
@@ -912,10 +970,10 @@ This work has been based on:
 * OpenStack Documentation [http://docs.openstack.org/trunk/openstack-compute/install/apt/content/]
 * OpenStack Quantum Install [http://docs.openstack.org/trunk/openstack-network/admin/content/ch_install.html]
 
-16. To do
+10. To do
 =======
 
-This guide is under testing. Your suggestions are always welcomed.
+This guide is just a startup. Your suggestions are always welcomed.
 
 Some of this guide's needs might be:
 
