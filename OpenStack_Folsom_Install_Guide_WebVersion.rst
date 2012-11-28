@@ -919,7 +919,7 @@ You can now start creating VMs but they will not be accessible from the internet
 
 * Create a subnet containing your floating IPs::
 
-   quantum subnet-create --tenant-id $put_id_of_service_tenant --allocation-pool start=192.168.100.102,end=192.168.50.126 --gateway 192.168.100.1 ext_net 192.168.100.100/24 --enable_dhcp=False
+   quantum subnet-create --tenant-id $put_id_of_service_tenant --allocation-pool start=192.168.100.102,end=192.168.100.126 --gateway 192.168.100.1 ext_net 192.168.100.100/24 --enable_dhcp=False
 
 * Set the router for the external network::
 
