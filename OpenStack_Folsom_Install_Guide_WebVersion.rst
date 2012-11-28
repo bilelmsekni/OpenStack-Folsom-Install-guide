@@ -532,7 +532,7 @@ You can now access your OpenStack **192.168.100.51/horizon** with credentials **
 
 * Configure the NTP server to follow the controller node::
    
-   sed -i 's/server ntp.ubuntu.com/server 192.168.100.51/g' /etc/ntp.conf
+   sed -i 's/server ntp.ubuntu.com/server 100.10.10.51/g' /etc/ntp.conf
    service ntp restart  
 
 * Install other services::
@@ -660,7 +660,7 @@ You can now access your OpenStack **192.168.100.51/horizon** with credentials **
 
 * Configure the NTP server to follow the controller node::
    
-   sed -i 's/server ntp.ubuntu.com/server 192.168.100.51/g' /etc/ntp.conf
+   sed -i 's/server ntp.ubuntu.com/server 100.10.10.51/g' /etc/ntp.conf
    service ntp restart  
 
 * Install other services::
