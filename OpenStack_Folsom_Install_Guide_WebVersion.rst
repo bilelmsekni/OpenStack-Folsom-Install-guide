@@ -303,7 +303,7 @@ This is how we install OpenStack's identity service:
 6. Quantum
 =====================================================================
 
-Quantum literaly eliminated the network overhead i used to deal with during the nova-network era.
+Quantum literally eliminated the network overhead I used to deal with during the nova-network era.
 
 * Install the Quantum server and the OpenVSwitch package collection::
 
