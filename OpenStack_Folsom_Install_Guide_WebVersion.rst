@@ -645,7 +645,7 @@ You can now access your OpenStack **192.168.100.51/horizon** with credentials **
 4. Compute Node
 =========================
 
-3.1. Preparing the Node
+4.1. Preparing the Node
 ------------------
 
 * Update your system::
