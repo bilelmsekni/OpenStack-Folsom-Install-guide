@@ -275,7 +275,7 @@ Status: stable
 
 * Install the Quantum server and the OpenVSwitch package collection::
 
-   apt-get install quantum-server quantum-plugin-openvswitch quantum-plugin-openvswitch-agent
+   apt-get install quantum-server quantum-plugin-openvswitch
 
 * Create a database::
 
@@ -530,7 +530,7 @@ You can now access your OpenStack **192.168.100.51/horizon** with credentials **
 
 * Configure the NTP server to follow the controller node::
    
-   sed -i 's/server ntp.ubuntu.com/server 192.168.100.51/g' /etc/ntp.conf
+   sed -i 's/server ntp.ubuntu.com/server 100.10.10.51/g' /etc/ntp.conf
    service ntp restart  
 
 * Install other services::
@@ -870,7 +870,7 @@ You can now access your OpenStack **192.168.100.51/horizon** with credentials **
 
    nova-manage service list
 
-11. Your First VM
+5. Your First VM
 ============
 
 To start your first VM, we first need to create a new tenant, user, internal and external network. SSH to your controller node and perform the following.
@@ -951,7 +951,7 @@ Unfortunatly, you can't use the dashboard to assign floating IPs to VMs so you n
 
 I Hope you enjoyed this guide, please if you have any feedbacks, don't hesitate.
 
-12. Licensing
+6. Licensing
 ============
 
 OpenStack Folsom Install Guide by Bilel Msekni is licensed under a Creative Commons Attribution 3.0 Unported License.
@@ -959,12 +959,12 @@ OpenStack Folsom Install Guide by Bilel Msekni is licensed under a Creative Comm
 .. image:: http://i.imgur.com/4XWrp.png
 To view a copy of this license, visit [ http://creativecommons.org/licenses/by/3.0/deed.en_US ].
 
-13. Contacts
+7. Contacts
 ===========
 
 Bilel Msekni: bilel.msekni@telecom-sudparis.eu
 
-14. Acknowledgment
+8. Acknowledgment
 =================
 
 This work has been supported by:
@@ -972,7 +972,7 @@ This work has been supported by:
 * CompatibleOne Project (French FUI project) [http://compatibleone.org/]
 * Easi-Clouds (ITEA2 project) [http://easi-clouds.eu/]
 
-15. Credits
+9. Credits
 =================
 
 This work has been based on:
@@ -981,7 +981,7 @@ This work has been based on:
 * OpenStack Documentation [http://docs.openstack.org/trunk/openstack-compute/install/apt/content/]
 * OpenStack Quantum Install [http://docs.openstack.org/trunk/openstack-network/admin/content/ch_install.html]
 
-16. To do
+10. To do
 =======
 
 This guide is just a startup. Your suggestions are always welcomed.
