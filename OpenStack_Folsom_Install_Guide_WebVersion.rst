@@ -2,7 +2,7 @@
   OpenStack Folsom Install Guide
 ==========================================================
 
-:Version: 1.0
+:Version: 3.0
 :Source: https://github.com/mseknibilel/OpenStack-Folsom-Install-guide
 :Keywords: Multi node OpenStack, Folsom, Quantum, Nova, Keystone, Glance, Horizon, Cinder, OpenVSwitch, KVM, Ubuntu Server 12.10 (64 bits).
 
@@ -61,13 +61,11 @@ Status: Testing
 :Network Node: eth0 (192.168.100.52), eth1(100.10.10.52)
 :Compute Node: eth0 (100.10.10.53)
 
-**Note 1:** If you don't have 2 NICs on controller node, you can check other branches for 2 NIC installation.
+**Note 1:** Compute and Controller nodes can be merged into one node.
 
-**Note 2:** Compute and Controller nodes can be merged into one node.
+**Note 2:** If you are not interrested in Quantum, you can also use this guide but you must follow the nova section found `here <https://github.com/mseknibilel/OpenStack-Folsom-Install-guide/blob/master/Tricks%26Ideas/install_nova-network.rst>`_ instead of the one written in this guide.
 
-**Note 3:** If you are not interrested in Quantum, you can also use this guide but you must follow the nova section found `here <https://github.com/mseknibilel/OpenStack-Folsom-Install-guide/blob/master/Tricks%26Ideas/install_nova-network.rst>`_ instead of the one written in this guide.
-
-**Note 4:** This is my current network architecture, you can add as many compute node as you wish.
+**Note 3:** This is my current network architecture, you can add as many compute node as you wish.
 
 .. image:: http://i.imgur.com/4D51h.jpg
 
@@ -279,7 +277,7 @@ This is how we install OpenStack's identity service:
 
 * Install the Quantum server and the OpenVSwitch package collection::
 
-   apt-get install quantum-server quantum-plugin-openvswitch quantum-plugin-openvswitch-agent
+   apt-get install quantum-server quantum-plugin-openvswitch
 
 * Create a database::
 
@@ -552,15 +550,15 @@ You can now access your OpenStack **192.168.100.51/horizon** with credentials **
 
 * Only one NIC needs to be internet connected::
    
-   auto eth0
-   iface eth0 inet static
+   auto eth2
+   iface eth2 inet static
    address 192.168.100.52
    netmask 255.255.255.0
    gateway 192.168.100.1
    dns-nameservers 8.8.8.8
 
-   auto eth1
-   iface eth1 inet static
+   auto eth0
+   iface eth0 inet static
    address 100.10.10.52
    netmask 255.255.255.0
 
@@ -579,7 +577,7 @@ You can now access your OpenStack **192.168.100.51/horizon** with credentials **
    #br-ex is used for accessing internet.
    ovs-vsctl add-br br-ex
    ovs-vsctl br-set-external-id br-ex bridge-id br-ex
-   ovs-vsctl add-port br-ex eth1
+   ovs-vsctl add-port br-ex eth2
 
 3.4. Quantum
 ------------------
