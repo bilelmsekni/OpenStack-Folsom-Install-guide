@@ -58,7 +58,7 @@ Status: Testing
 
 :Node Role: NICs
 :Control Node: eth0 (100.10.10.51), eth1 (192.168.100.51)
-:Network Node: eth0 (100.10.10.52), eth1(192.168.100.52)
+:Network Node: eth0 (100.10.10.52), eth2 (192.168.100.52)
 :Compute Node: eth0 (100.10.10.53)
 
 **Note 1:** Compute and Controller nodes can be merged into one node.
