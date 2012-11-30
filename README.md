@@ -18,6 +18,10 @@ https://github.com/mseknibilel/OpenStack-Folsom-Install-guide/blob/stable/GRE/Op
  
 https://github.com/mseknibilel/OpenStack-Folsom-Install-guide/blob/master/OpenStack_Folsom_Install_Guide_WebVersion.rst
 
+**Note:** Folsom + Quantum on GRE with 2 NICs is available through GRE/2NICs branch:
+
+https://github.com/mseknibilel/OpenStack-Folsom-Install-guide/blob/GRE/2NICs/OpenStack_Folsom_Install_Guide_WebVersion.rst
+
 **Note:** Folsom + Quantum on VLAN with 2 NICs is available through VLAN/2NICs branch:
 
 https://github.com/mseknibilel/OpenStack-Folsom-Install-guide/blob/VLAN/2NICs/OpenStack_Folsom_Install_Guide_WebVersion.rst
