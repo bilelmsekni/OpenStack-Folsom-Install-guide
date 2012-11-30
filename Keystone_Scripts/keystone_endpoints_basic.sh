@@ -12,7 +12,7 @@
 
 # Host address
 HOST_IP=100.10.10.51
-HOST_EXT_IP=192.168.100.51
+EXT_HOST_IP=192.168.100.51
 
 # MySQL definitions
 MYSQL_USER=keystoneUser
