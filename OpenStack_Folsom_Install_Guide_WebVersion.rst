@@ -58,7 +58,7 @@ Status: stable
 
 :Node Role: NICs
 :Control Node: eth0 (192.168.100.51), eth1 (100.10.10.51)
-:Network Node: eth0 (192.168.100.52), eth1(100.10.10.52), eth2 (100.20.20.52)
+:Network Node: eth0 (100.10.10.52), eth1(100.20.20.52), eth2 (192.168.100.52)
 :Compute Node: eth0 (100.10.10.53), eth1 (100.20.20.53)
 
 **Note 1:** If you don't have 2 NICs on controller node, you can check other branches for 2 NIC installation.
