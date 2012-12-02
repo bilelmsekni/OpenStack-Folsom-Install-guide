@@ -56,10 +56,14 @@ Status: stable
 1. Requirements
 ====================
 
+* OpenStack Management Network: 10.20.10.0/24
+* VM Configuration Network: 172.20.10.0/24
+* Public Network: 192.168.10.0/24
+
 :Node Role: NICs
-:Control Node: eth0 (100.10.10.51), eth1 (192.168.100.51)
-:Network Node: eth0 (100.10.10.52), eth1 (100.20.20.52), eth2 (192.168.100.52)
-:Compute Node: eth0 (100.10.10.53), eth1 (100.20.20.53)
+:Control Node: eth0 (10.20.10.51), eth1 ---------------------> (192.168.10.51)
+:Network Node: eth0 (10.20.10.52), eth1 (172.20.10.52), eth2 (192.168.10.52)
+:Compute Node: eth0 (10.20.10.53), eth1 (172.20.10.53)
 
 **Note 1:** If you don't have 2 NICs on controller node, you can check other branches for 2 NIC installation.
 
@@ -94,14 +98,14 @@ Status: stable
 
    auto eth0
    iface eth0 inet static
-   address 192.168.100.51
+   address 192.168.10.51
    netmask 255.255.255.0
-   gateway 192.168.100.1
+   gateway 192.168.10.1
    dns-nameservers 8.8.8.8
 
    auto eth1
    iface eth1 inet static
-   address 100.10.10.51
+   address 10.20.10.51
    netmask 255.255.255.0
 
 * Restart your networking services::
@@ -159,12 +163,13 @@ Status: stable
 
    mysql -u root -p
    CREATE DATABASE keystone;
-   GRANT ALL ON keystone.* TO 'keystoneUser'@'%' IDENTIFIED BY 'keystonePass';
+   GRANT ALL ON keystone.* TO 'keystoneUser'@'10.20.10.%' IDENTIFIED BY 'keystonePass';
+   GRANT ALL ON keystone.* TO 'keystoneUser'@'localhost' IDENTIFIED BY 'keystonePass';
    quit;
 
 * Adapt the connection attribute in the /etc/keystone/keystone.conf to the new database::
 
-   connection = mysql://keystoneUser:keystonePass@100.10.10.51/keystone
+   connection = mysql://keystoneUser:keystonePass@10.20.10.51/keystone
 
 * Restart the identity service then synchronize the database::
 
@@ -183,19 +188,19 @@ Status: stable
 
 * Create a simple credential file and load it so you won't be bothered later::
 
-   nano creds
+   vi creds
    #Paste the following:
    export OS_TENANT_NAME=admin
    export OS_USERNAME=admin
-   export OS_PASSWORD=admin_pass
-   export OS_AUTH_URL="http://192.168.100.51:5000/v2.0/"
+   export OS_PASSWORD=adminPass
+   export OS_AUTH_URL="http://192.168.10.51:5000/v2.0/"
    # Load it:
    source creds
 
 * To test Keystone, we use a simple curl request::
 
    apt-get install curl openssl
-   curl http://192.168.100.51:5000/v2.0/endpoints -H 'x-auth-token: ADMIN'
+   curl http://192.168.10.51:5000/v2.0/ -H 'x-auth-token: ADMIN'
 
 2.7. Glance
 -------------------
@@ -208,34 +213,35 @@ Status: stable
 
    mysql -u root -p
    CREATE DATABASE glance;
-   GRANT ALL ON glance.* TO 'glanceUser'@'%' IDENTIFIED BY 'glancePass';
+   GRANT ALL ON glance.* TO 'glanceUser'@'10.20.10.%' IDENTIFIED BY 'glancePass';
+   GRANT ALL ON glance.* TO 'glanceUser'@'localhost' IDENTIFIED BY 'glancePass';
    quit;
 
 * Update /etc/glance/glance-api-paste.ini with::
 
    [filter:authtoken]
    paste.filter_factory = keystone.middleware.auth_token:filter_factory
-   auth_host = 100.10.10.51
+   auth_host = 10.20.10.51
    auth_port = 35357
    auth_protocol = http
    admin_tenant_name = service
    admin_user = glance
-   admin_password = service_pass
+   admin_password = servicePass
 
 * Update the /etc/glance/glance-registry-paste.ini with::
 
    [filter:authtoken]
    paste.filter_factory = keystone.middleware.auth_token:filter_factory
-   auth_host = 100.10.10.51
+   auth_host = 10.20.10.51
    auth_port = 35357
    auth_protocol = http
    admin_tenant_name = service
    admin_user = glance
-   admin_password = service_pass
+   admin_password = servicePass
 
 * Update /etc/glance/glance-api.conf with::
 
-   sql_connection = mysql://glanceUser:glancePass@100.10.10.51/glance
+   sql_connection = mysql://glanceUser:glancePass@10.20.10.51/glance
 
 * And::
 
@@ -244,7 +250,7 @@ Status: stable
 
 * Update the /etc/glance/glance-registry.conf with::
 
-   sql_connection = mysql://glanceUser:glancePass@100.10.10.51/glance
+   sql_connection = mysql://glanceUser:glancePass@10.20.10.51/glance
 
 * And::
 
@@ -261,9 +267,10 @@ Status: stable
 
 * To test Glance's well installation, we upload a new image to the store. Start by downloading the cirros cloud image to your node and then uploading it to Glance::
 
+   apt-get install axel
    mkdir images
    cd images
-   wget https://launchpad.net/cirros/trunk/0.3.0/+download/cirros-0.3.0-x86_64-disk.img
+   axel https://launchpad.net/cirros/trunk/0.3.0/+download/cirros-0.3.0-x86_64-disk.img
    glance image-create --name myFirstImage --is-public true --container-format bare --disk-format qcow2 < cirros-0.3.0-x86_64-disk.img
 
 * Now list the images to see what you have just uploaded::
@@ -281,14 +288,15 @@ Status: stable
 
    mysql -u root -p
    CREATE DATABASE quantum;
-   GRANT ALL ON quantum.* TO 'quantumUser'@'%' IDENTIFIED BY 'quantumPass';
+   GRANT ALL ON quantum.* TO 'quantumUser'@'10.20.10.%' IDENTIFIED BY 'quantumPass';
+   GRANT ALL ON quantum.* TO 'quantumUser'@'localhost' IDENTIFIED BY 'quantumPass';
    quit; 
 
 * Edit the OVS plugin configuration file /etc/quantum/plugins/openvswitch/ovs_quantum_plugin.ini with:: 
 
    #Under the database section
    [DATABASE]
-   sql_connection = mysql://quantumUser:quantumPass@100.10.10.51/quantum
+   sql_connection = mysql://quantumUser:quantumPass@10.20.10.51/quantum
 
    #Under the OVS section
    [OVS]
@@ -300,12 +308,12 @@ Status: stable
 
    [filter:authtoken]
    paste.filter_factory = keystone.middleware.auth_token:filter_factory
-   auth_host = 100.10.10.51
+   auth_host = 10.20.10.51
    auth_port = 35357
    auth_protocol = http
    admin_tenant_name = service
    admin_user = quantum
-   admin_password = service_pass
+   admin_password = servicePass
 
 * Restart the quantum server::
 
@@ -322,19 +330,20 @@ Status: stable
 
    mysql -u root -p
    CREATE DATABASE nova;
-   GRANT ALL ON nova.* TO 'novaUser'@'%' IDENTIFIED BY 'novaPass';
+   GRANT ALL ON nova.* TO 'novaUser'@'10.20.10.%' IDENTIFIED BY 'novaPass';
+   GRANT ALL ON nova.* TO 'novaUser'@'localhost' IDENTIFIED BY 'novaPass';
    quit;
 
 * Now modify authtoken section in the /etc/nova/api-paste.ini file to this::
 
    [filter:authtoken]
    paste.filter_factory = keystone.middleware.auth_token:filter_factory
-   auth_host = 100.10.10.51
+   auth_host = 10.20.10.51
    auth_port = 35357
    auth_protocol = http
    admin_tenant_name = service
    admin_user = nova
-   admin_password = service_pass
+   admin_password = servicePass
    signing_dirname = /tmp/keystone-signing-nova
 
 * Modify the /etc/nova/nova.conf like this::
@@ -346,42 +355,42 @@ Status: stable
    verbose=True
    api_paste_config=/etc/nova/api-paste.ini
    scheduler_driver=nova.scheduler.simple.SimpleScheduler
-   s3_host=100.10.10.51
-   ec2_host=100.10.10.51
-   ec2_dmz_host=100.10.10.51
-   rabbit_host=100.10.10.51
-   cc_host=100.10.10.51
+   s3_host=10.20.10.51
+   ec2_host=10.20.10.51
+   ec2_dmz_host=10.20.10.51
+   rabbit_host=10.20.10.51
+   cc_host=10.20.10.51
    dmz_cidr=169.254.169.254/32
-   metadata_host=100.10.10.51
+   metadata_host=10.20.10.51
    metadata_listen=0.0.0.0
-   nova_url=http://100.10.10.51:8774/v1.1/
-   sql_connection=mysql://novaUser:novaPass@100.10.10.51/nova
-   ec2_url=http://100.10.10.51:8773/services/Cloud 
+   nova_url=http://10.20.10.51:8774/v1.1/
+   sql_connection=mysql://novaUser:novaPass@10.20.10.51/nova
+   ec2_url=http://10.20.10.51:8773/services/Cloud 
    root_helper=sudo nova-rootwrap /etc/nova/rootwrap.conf
 
    # Auth
    use_deprecated_auth=false
    auth_strategy=keystone
-   keystone_ec2_url=http://100.10.10.51:5000/v2.0/ec2tokens
+   keystone_ec2_url=http://10.20.10.51:5000/v2.0/ec2tokens
    # Imaging service
-   glance_api_servers=100.10.10.51:9292
+   glance_api_servers=10.20.10.51:9292
    image_service=nova.image.glance.GlanceImageService
 
    # Vnc configuration
    novnc_enabled=true
-   novncproxy_base_url=http://192.168.100.51:6080/vnc_auto.html
+   novncproxy_base_url=http://192.168.10.51:6080/vnc_auto.html
    novncproxy_port=6080
-   vncserver_proxyclient_address=192.168.100.51
+   vncserver_proxyclient_address=192.168.10.51
    vncserver_listen=0.0.0.0 
 
    # Network settings
    network_api_class=nova.network.quantumv2.api.API
-   quantum_url=http://100.10.10.51:9696
+   quantum_url=http://10.20.10.51:9696
    quantum_auth_strategy=keystone
    quantum_admin_tenant_name=service
    quantum_admin_username=quantum
-   quantum_admin_password=service_pass
-   quantum_admin_auth_url=http://100.10.10.51:35357/v2.0
+   quantum_admin_password=servicePass
+   quantum_admin_auth_url=http://10.20.10.51:35357/v2.0
    libvirt_vif_driver=nova.virt.libvirt.vif.LibvirtHybridOVSBridgeDriver
    linuxnet_interface_driver=nova.network.linux_net.LinuxOVSInterfaceDriver
    firewall_driver=nova.virt.libvirt.firewall.IptablesFirewallDriver
@@ -425,7 +434,8 @@ Status: stable
 
    mysql -u root -p
    CREATE DATABASE cinder;
-   GRANT ALL ON cinder.* TO 'cinderUser'@'%' IDENTIFIED BY 'cinderPass';
+   GRANT ALL ON cinder.* TO 'cinderUser'@'10.20.10.%' IDENTIFIED BY 'cinderPass';
+   GRANT ALL ON cinder.* TO 'cinderUser'@'localhost' IDENTIFIED BY 'cinderPass';
    quit;
 
 * Configure /etc/cinder/api-paste.ini like the following::
@@ -433,20 +443,20 @@ Status: stable
    [filter:authtoken]
    paste.filter_factory = keystone.middleware.auth_token:filter_factory
    service_protocol = http
-   service_host = 192.168.100.51
+   service_host = 192.168.10.51
    service_port = 5000
-   auth_host = 100.10.10.51
+   auth_host = 10.20.10.51
    auth_port = 35357
    auth_protocol = http
    admin_tenant_name = service
    admin_user = cinder
-   admin_password = service_pass
+   admin_password = servicePass
 
 * Edit the /etc/cinder/cinder.conf to::
 
    [DEFAULT]
    rootwrap_config=/etc/cinder/rootwrap.conf
-   sql_connection = mysql://cinderUser:cinderPass@100.10.10.51/cinder
+   sql_connection = mysql://cinderUser:cinderPass@10.20.10.51/cinder
    api_paste_confg = /etc/cinder/api-paste.ini
    iscsi_helper=ietadm
    volume_name_template = volume-%s
@@ -508,7 +518,7 @@ Status: stable
 
    service apache2 restart; service memcached restart
 
-You can now access your OpenStack **192.168.100.51/horizon** with credentials **admin:admin_pass**.
+You can now access your OpenStack **192.168.10.51/horizon** with credentials **admin:adminPass**.
 
 **Note:** A reboot might be needed for a successful login
 
@@ -530,7 +540,7 @@ You can now access your OpenStack **192.168.100.51/horizon** with credentials **
 
 * Configure the NTP server to follow the controller node::
    
-   sed -i 's/server ntp.ubuntu.com/server 100.10.10.51/g' /etc/ntp.conf
+   sed -i 's/server ntp.ubuntu.com/server 10.20.10.51/g' /etc/ntp.conf
    service ntp restart  
 
 * Install other services::
@@ -548,27 +558,25 @@ You can now access your OpenStack **192.168.100.51/horizon** with credentials **
 
 * 3 NICs must be present::
    
-
-   # VM internet Access
-   auto eth2
-   iface eth2 inet static
-   address 192.168.100.52
-   netmask 255.255.255.0
-   gateway 192.168.100.1
-   dns-nameservers 8.8.8.8
-   
    # OpenStack management
    auto eth0
    iface eth0 inet static
-   address 100.10.10.52
+   address 10.20.10.52
    netmask 255.255.255.0
 
    # VM Configuration
    auto eth1
    iface eth1 inet static
-   address 100.20.20.52
+   address 172.20.10.52
    netmask 255.255.255.0
 
+   # VM internet Access
+   auto eth2
+   iface eth2 inet static
+   address 192.168.10.52
+   netmask 255.255.255.0
+   gateway 192.168.10.1
+   dns-nameservers 8.8.8.8
 
 3.4. OpenVSwitch
 ------------------
@@ -597,18 +605,18 @@ You can now access your OpenStack **192.168.100.51/horizon** with credentials **
 
    [filter:authtoken]
    paste.filter_factory = keystone.middleware.auth_token:filter_factory
-   auth_host = 100.10.10.51
+   auth_host = 10.20.10.51
    auth_port = 35357
    auth_protocol = http
    admin_tenant_name = service
    admin_user = quantum
-   admin_password = service_pass
+   admin_password = servicePass
 
 * Edit the OVS plugin configuration file /etc/quantum/plugins/openvswitch/ovs_quantum_plugin.ini with:: 
 
    #Under the database section
    [DATABASE]
-   sql_connection = mysql://quantumUser:quantumPass@100.10.10.51/quantum
+   sql_connection = mysql://quantumUser:quantumPass@10.20.10.51/quantum
 
    #Under the OVS section
    [OVS]
@@ -616,17 +624,17 @@ You can now access your OpenStack **192.168.100.51/horizon** with credentials **
    tunnel_id_ranges = 1:1000
    integration_bridge = br-int
    tunnel_bridge = br-tun
-   local_ip = 100.20.20.52
+   local_ip = 172.20.10.52
    enable_tunneling = True
 
 * In addition, update the /etc/quantum/l3_agent.ini::
 
-   auth_url = http://100.10.10.51:35357/v2.0
+   auth_url = http://10.20.10.51:35357/v2.0
    auth_region = RegionOne
    admin_tenant_name = service
    admin_user = quantum
-   admin_password = service_pass
-   metadata_ip = 192.168.100.51
+   admin_password = servicePass
+   metadata_ip = 192.168.10.51
    metadata_port = 8775
    use_namespaces = False
 
@@ -638,7 +646,7 @@ You can now access your OpenStack **192.168.100.51/horizon** with credentials **
 
 * Make sure that your rabbitMQ IP in /etc/quantum/quantum.conf is set to the controller node::
    
-   rabbit_host = 100.10.10.51
+   rabbit_host = 10.20.10.51
 
 * Restart all the services::
 
@@ -664,7 +672,7 @@ You can now access your OpenStack **192.168.100.51/horizon** with credentials **
 
 * Configure the NTP server to follow the controller node::
    
-   sed -i 's/server ntp.ubuntu.com/server 100.10.10.51/g' /etc/ntp.conf
+   sed -i 's/server ntp.ubuntu.com/server 10.20.10.51/g' /etc/ntp.conf
    service ntp restart  
 
 * Install other services::
@@ -685,13 +693,13 @@ You can now access your OpenStack **192.168.100.51/horizon** with credentials **
    # OpenStack management
    auto eth0
    iface eth0 inet static
-   address 100.10.10.53
+   address 10.20.10.53
    netmask 255.255.255.0
 
    # VM Configuration
    auto eth1
    iface eth1 inet static
-   address 100.20.20.53
+   address 172.20.10.53
    netmask 255.255.255.0
 
 4.3 KVM
@@ -761,7 +769,7 @@ You can now access your OpenStack **192.168.100.51/horizon** with credentials **
 
    #Under the database section
    [DATABASE]
-   sql_connection = mysql://quantumUser:quantumPass@100.10.10.51/quantum
+   sql_connection = mysql://quantumUser:quantumPass@10.20.10.51/quantum
 
    #Under the OVS section
    [OVS]
@@ -769,12 +777,12 @@ You can now access your OpenStack **192.168.100.51/horizon** with credentials **
    tunnel_id_ranges = 1:1000
    integration_bridge = br-int
    tunnel_bridge = br-tun
-   local_ip = 100.20.20.53
+   local_ip = 172.20.10.53
    enable_tunneling = True
 
 * Make sure that your rabbitMQ IP in /etc/quantum/quantum.conf is set to the controller node::
    
-   rabbit_host = 100.10.10.51
+   rabbit_host = 10.20.10.51
 
 * Restart all the services::
 
@@ -791,12 +799,12 @@ You can now access your OpenStack **192.168.100.51/horizon** with credentials **
 
    [filter:authtoken]
    paste.filter_factory = keystone.middleware.auth_token:filter_factory
-   auth_host = 100.10.10.51
+   auth_host = 10.20.10.51
    auth_port = 35357
    auth_protocol = http
    admin_tenant_name = service
    admin_user = nova
-   admin_password = service_pass
+   admin_password = servicePass
    signing_dirname = /tmp/keystone-signing-nova
 
 * Edit /etc/nova/nova-compute.conf file ::
@@ -817,42 +825,42 @@ You can now access your OpenStack **192.168.100.51/horizon** with credentials **
    verbose=True
    api_paste_config=/etc/nova/api-paste.ini
    scheduler_driver=nova.scheduler.simple.SimpleScheduler
-   s3_host=100.10.10.51
-   ec2_host=100.10.10.51
-   ec2_dmz_host=100.10.10.51
-   rabbit_host=100.10.10.51
-   cc_host=100.10.10.51
+   s3_host=10.20.10.51
+   ec2_host=10.20.10.51
+   ec2_dmz_host=10.20.10.51
+   rabbit_host=10.20.10.51
+   cc_host=10.20.10.51
    dmz_cidr=169.254.169.254/32
-   metadata_host=100.10.10.51
+   metadata_host=10.20.10.51
    metadata_listen=0.0.0.0
-   nova_url=http://100.10.10.51:8774/v1.1/
-   sql_connection=mysql://novaUser:novaPass@100.10.10.51/nova
-   ec2_url=http://100.10.10.51:8773/services/Cloud 
+   nova_url=http://10.20.10.51:8774/v1.1/
+   sql_connection=mysql://novaUser:novaPass@10.20.10.51/nova
+   ec2_url=http://10.20.10.51:8773/services/Cloud 
    root_helper=sudo nova-rootwrap /etc/nova/rootwrap.conf
 
    # Auth
    use_deprecated_auth=false
    auth_strategy=keystone
-   keystone_ec2_url=http://100.10.10.51:5000/v2.0/ec2tokens
+   keystone_ec2_url=http://10.20.10.51:5000/v2.0/ec2tokens
    # Imaging service
-   glance_api_servers=100.10.10.51:9292
+   glance_api_servers=10.20.10.51:9292
    image_service=nova.image.glance.GlanceImageService
 
    # Vnc configuration
    novnc_enabled=true
-   novncproxy_base_url=http://192.168.100.51:6080/vnc_auto.html
+   novncproxy_base_url=http://192.168.10.51:6080/vnc_auto.html
    novncproxy_port=6080
-   vncserver_proxyclient_address=100.10.10.53
+   vncserver_proxyclient_address=10.20.10.53
    vncserver_listen=0.0.0.0 
 
    # Network settings
    network_api_class=nova.network.quantumv2.api.API
-   quantum_url=http://100.10.10.51:9696
+   quantum_url=http://10.20.10.51:9696
    quantum_auth_strategy=keystone
    quantum_admin_tenant_name=service
    quantum_admin_username=quantum
-   quantum_admin_password=service_pass
-   quantum_admin_auth_url=http://100.10.10.51:35357/v2.0
+   quantum_admin_password=servicePass
+   quantum_admin_auth_url=http://10.20.10.51:35357/v2.0
    libvirt_vif_driver=nova.virt.libvirt.vif.LibvirtHybridOVSBridgeDriver
    linuxnet_interface_driver=nova.network.linux_net.LinuxOVSInterfaceDriver
    firewall_driver=nova.virt.libvirt.firewall.IptablesFirewallDriver
@@ -919,7 +927,7 @@ You can now start creating VMs but they will not be accessible from the internet
 
 * Create a subnet containing your floating IPs::
 
-   quantum subnet-create --tenant-id $put_id_of_service_tenant --allocation-pool start=192.168.100.102,end=192.168.100.126 --gateway 192.168.100.1 ext_net 192.168.100.100/24 --enable_dhcp=False
+   quantum subnet-create --tenant-id $put_id_of_service_tenant --allocation-pool start=192.168.10.102,end=192.168.10.126 --gateway 192.168.10.1 ext_net 192.168.10.0/24 --enable_dhcp=False
 
 * Set the router for the external network::
 
