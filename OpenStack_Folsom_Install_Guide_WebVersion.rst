@@ -171,7 +171,7 @@ Status: Experimental (Deprecated unless you are a skilled networking person)
 
 * Fill up the keystone database using the two scripts available in the `Scripts folder <https://github.com/mseknibilel/OpenStack-Folsom-Install-guide/tree/master/Keystone_Scripts>`_ of this git repository. Beware that you MUST comment every part related to Quantum if you don't intend to install it otherwise you will have trouble with your dashboard later::
 
-   #Modify the HOST_IP and HOST_IP_EXT variables before executing the scripts
+   #Modify the HOST_IP and EXT_HOST_IP variables before executing the scripts
 
    chmod +x keystone_basic.sh
    chmod +x keystone_endpoints_basic.sh
