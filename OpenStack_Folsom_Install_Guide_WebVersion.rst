@@ -197,7 +197,7 @@ This is how we install OpenStack's identity service:
 * To test Keystone, we use a simple curl request::
 
    apt-get install curl openssl
-   curl http://192.168.100.51:5000/v2.0/endpoints -H 'x-auth-token: ADMIN'
+   curl http://192.168.100.51:35357/v2.0/endpoints -H 'x-auth-token: ADMIN'
 
 2.7. Glance
 -------------------
