@@ -17,7 +17,7 @@ EXT_HOST_IP=192.168.100.51
 # MySQL definitions
 MYSQL_USER=keystoneUser
 MYSQL_DATABASE=keystone
-MYSQL_HOST=localhost
+MYSQL_HOST=100.10.10.51
 MYSQL_PASSWORD=keystonePass
 
 # Keystone definitions
