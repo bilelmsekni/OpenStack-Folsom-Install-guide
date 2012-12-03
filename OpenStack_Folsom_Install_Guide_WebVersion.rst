@@ -97,17 +97,41 @@ Status: sharing my ideas.. -Joshua
  
 * Only one NICs on the controller should be internet connected::
 
+   # OpenStack Management Interface
    auto eth0
    iface eth0 inet static
+   address 10.20.10.51
+   netmask 255.255.255.0
+
+   # Pre-Install Public Interface
+   # Note: Comment this out, after Open vSwitch is in effect and reboot.
+   auto eth1
+   iface eth1 inet static
    address 192.168.10.51
    netmask 255.255.255.0
    gateway 192.168.10.1
    dns-nameservers 8.8.8.8
 
-   auto eth1
-   iface eth1 inet static
-   address 10.20.10.51
+   # Post-Install Public Interface
+   # Note: Uncomment this block after Open vSwitch is in effect and reboot.
+   #       eth2 will not have an address, once Open vSwitch is applied.
+   auto eth2
+   iface eth2 inet manual
+   up ifconfig $IFACE 0.0.0.0 up
+   up ip link set $IFACE promisc on 
+   down ifconfig $IFACE down
+
+   # Post-Install Public Bridge
+   # Note: Uncomment this block after Open vSwitch is in effect and reboot.
+   #       br-ex should have the address of eth2, once Open vSwitch is applied.
+   #       It is expected that br-ex will hang at boot time, because Open vSwitch's
+   #       /etc/init.d script will modify the network configuration.
+   auto br-ex
+   iface br-ex inet static
+   address 192.168.10.51
    netmask 255.255.255.0
+   gateway 192.168.10.1
+   dns-nameservers 8.8.8.8
 
 * Restart your networking services::
    
@@ -162,7 +186,7 @@ Status: sharing my ideas.. -Joshua
 
 * Create a new MySQL database for keystone::
 
-   mysql -u root -pMysqlRootPassMysqlRootPass
+   mysql -u root -pMysqlRootPass
    CREATE DATABASE keystone;
    GRANT ALL ON keystone.* TO 'keystoneUser'@'localhost' IDENTIFIED BY 'keystonePass';
    GRANT ALL ON keystone.* TO 'keystoneUser'@'10.20.10.%' IDENTIFIED BY 'keystonePass';
