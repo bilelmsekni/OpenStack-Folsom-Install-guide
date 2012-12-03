@@ -11,18 +11,18 @@
 #
 
 # Host address
-HOST_IP=100.10.10.51
-EXT_HOST_IP=192.168.100.51
+HOST_IP=10.20.10.51
+EXT_HOST_IP=192.168.10.51
 
 # MySQL definitions
 MYSQL_USER=keystoneUser
 MYSQL_DATABASE=keystone
-MYSQL_HOST=100.10.10.51
-MYSQL_PASSWORD=keystonePass
+MYSQL_HOST=10.20.10.51
+MYSQL_PASSWORD=KeystonePass
 
 # Keystone definitions
 KEYSTONE_REGION=RegionOne
-export SERVICE_TOKEN=ADMIN
+export SERVICE_TOKEN=AdminToken
 export SERVICE_ENDPOINT="http://${HOST_IP}:35357/v2.0"
 
 while getopts "u:D:p:m:K:R:E:T:vh" opt; do
