@@ -92,15 +92,15 @@ Status: stable
  
 * Only one NICs on the controller should be internet connected::
 
-   auto eth0
-   iface eth0 inet static
+   auto eth1
+   iface eth1 inet static
    address 192.168.100.51
    netmask 255.255.255.0
    gateway 192.168.100.1
    dns-nameservers 8.8.8.8
 
-   auto eth1
-   iface eth1 inet static
+   auto eth0
+   iface eth0 inet static
    address 100.10.10.51
    netmask 255.255.255.0
 
