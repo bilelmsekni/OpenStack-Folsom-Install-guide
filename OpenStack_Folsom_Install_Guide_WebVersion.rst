@@ -88,7 +88,7 @@ Status: Testing
 2.2.Networking
 ------------
  
-* Two NICs on the controller should be internet connected::
+* Only one NIC on the controller should be internet connected::
 
    #Exposes OpenStack API to the internet 
    auto eth0
