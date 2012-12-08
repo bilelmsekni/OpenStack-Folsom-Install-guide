@@ -1,11 +1,8 @@
-
 Welcome to the OpenStack Folsom Install Guide!
 ==========================================================
 
 .. toctree::
    :maxdepth: 2
-
-
 
 
 .. image:: http://i.imgur.com/VBJL6.png
@@ -49,10 +46,19 @@ Zach VanDuyn | Technical Marketing Intern
 
 Getting Started
 =============
-**Note:** This guide intentionally uses 'nova-network' 
+**Note:** This guide intentionally uses the 'nova-network' package instead of the newly released 'quantum'. This decision was made in order to reduce the setup time for a basic network configuration. Although the next release plans to freeze nova-network development, the team responsible for overseeing OpenStack networking (Thierry, Vish, Dan) have decided that they will "...continue to support nova-network as it currently exists in Folsom".
 
+You can read more about their decision `here <https://lists.launchpad.net/openstack/msg16368.html>`_.
 
+Hardware Requirements
+=============
+The following are recommended hardware requirements for both the controller and compute nodes.
 
+Controller Node
+=============
+(runs network, volume, API, scheduler and image services)
+
+* **Processor**: 64-bit x86
 
 
 
