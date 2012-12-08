@@ -1,18 +1,52 @@
+.. image:: http://i.imgur.com/VBJL6.png
 ==========================================================
-  OpenStack Folsom Install Guide
+  Basic OpenStack Folsom Install Guide
 ==========================================================
 
-:Version: 3.0
-:Source: https://github.com/mseknibilel/OpenStack-Folsom-Install-guide
-:Keywords: Multi node OpenStack, Folsom, Quantum, Nova, Keystone, Glance, Horizon, Cinder, OpenVSwitch, KVM, Ubuntu Server 12.10 (64 bits).
+:Version: 1.0
+:Source: https://github.com/nimbula/Basic-OpenStack-Folsom-Install-Guide
+:Keywords: Multi node OpenStack, Folsom, Nova, Keystone, Glance, Horizon, Cinder, KVM, Ubuntu Server 12.10 (64-bit release).
 
-Authors
+Overview
+=============
+
+This guide focuses on providing step-by-step instruction to users who are interested in taking a bare-metal server installation to a fully functioning OpenStack cloud. We will avoid using scripts like TryStack and DevStack and will attempt to configure a “vanilla” OpenStack environment. The only scripts used in this tutorial are slight modifications of the existing keystone scripts available on the official OpenStack GitHub repo.
+(https://github.com/openstack/keystone/blob/master/tools/sample_data.sh)
+
+Who should read this guide
 ==========
 
-Copyright (C) Bilel Msekni <bilel.msekni@telecom-sudparis.eu>
+This guide is for the system administrator who is installing, configuring and managing the OpenStack “Folsom” cluster infrastructure. A reasonable level of familiarity with the following is assumed:
 
-Contributors
+* The Unix command line
+
+* Installing packages
+
+* Basic networking concepts
+
+Special thanks to
 ==========
+
+`Emilien Macchi <http://www.linkedin.com/profile/view?id=128600871>`_ at eNovance for assistance in merging some portions of this text into the official OpenStack repository.
+
+`Bilel Msekni <http://www.linkedin.com/profile/view?id=136237741>`_ from TELECOM SudParis for allowing me to fork sections of his OpenStack install guide and for the valuable suggestions and input.
+
+Author
+==========
+
+Zach VanDuyn | Technical Marketing Intern
+
+
+Getting Started
+=============
+**Note:** This guide intentionally uses 'nova-network' 
+
+
+
+
+
+
+
 
 =================================================== =======================================================
 
