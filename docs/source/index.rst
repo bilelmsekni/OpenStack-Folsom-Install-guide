@@ -1,3 +1,13 @@
+
+Welcome to the OpenStack Folsom Install Guide!
+==========================================================
+
+.. toctree::
+   :maxdepth: 2
+
+
+
+
 .. image:: http://i.imgur.com/VBJL6.png
 ==========================================================
   Basic OpenStack Folsom Install Guide
