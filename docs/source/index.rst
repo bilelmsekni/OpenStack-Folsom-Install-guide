@@ -1,27 +1,36 @@
-Welcome to the OpenStack Folsom Install Guide!
-==========================================================
-
 .. toctree::
    :maxdepth: 2
 
+------------------------------------
+Basic OpenStack Folsom Install Guide
+------------------------------------
+
+
 
 .. image:: http://i.imgur.com/VBJL6.png
-==========================================================
-  Basic OpenStack Folsom Install Guide
-==========================================================
+   :height: 75
+
+
+.. image:: http://i.imgur.com/GsjzH.png
+   :height: 65
+
+
 
 :Version: 1.0
 :Source: https://github.com/nimbula/Basic-OpenStack-Folsom-Install-Guide
 :Keywords: Multi node OpenStack, Folsom, Nova, Keystone, Glance, Horizon, Cinder, KVM, Ubuntu Server 12.10 (64-bit release).
 
-0. Overview
-=============
+
+
+
+Overview
+===========
 
 This guide focuses on providing step-by-step instruction to users who are interested in taking a bare-metal server installation to a fully functioning OpenStack cloud. We will avoid using scripts like TryStack and DevStack and will attempt to configure a “vanilla” OpenStack environment. The only scripts used in this tutorial are slight modifications of the existing keystone scripts available on the official OpenStack GitHub repo.
 (https://github.com/openstack/keystone/blob/master/tools/sample_data.sh)
 
-0.1 Who should read this guide
-==========
+Who should read this guide
+------------------------------
 
 This guide is for the system administrator who is installing, configuring and managing the OpenStack “Folsom” cluster infrastructure. A reasonable level of familiarity with the following is assumed:
 
@@ -31,33 +40,35 @@ This guide is for the system administrator who is installing, configuring and ma
 
 * Basic networking concepts
 
-0.2 Special thanks to
-==========
+Special thanks to
+---------------------
 
 `Emilien Macchi <http://www.linkedin.com/profile/view?id=128600871>`_ at eNovance for assistance in merging some portions of this text into the official OpenStack repository.
 
 `Bilel Msekni <http://www.linkedin.com/profile/view?id=136237741>`_ from TELECOM SudParis for allowing me to fork sections of his OpenStack install guide and for the valuable suggestions and input.
 
-0.3 Author
-==========
+Author
+----------
 
 `Zachary VanDuyn <http://www.linkedin.com/profile/view?id=132309630&trk=hb_tab_pro_top>`_
 Technical Marketing Intern
 `Nimbula <http://www.nimbula.com/>`_
 
 
-1 Getting Started
-=============
+Getting Started
+=================
 **Note:** This guide intentionally uses the 'nova-network' package instead of the newly released 'quantum'. This decision was made in order to reduce the setup time for a basic network configuration. Although the next release plans to freeze nova-network development, the team responsible for overseeing OpenStack networking (Thierry, Vish, Dan) have decided that they will "...continue to support nova-network as it currently exists in Folsom".
 
 You can read more about their decision `here <https://lists.launchpad.net/openstack/msg16368.html>`_.
 
-1.0 Hardware Requirements
-=============
+Hardware Requirements
+-------------------------
+
 The following are recommended hardware requirements for both the controller and compute nodes.
 
-1.1 Controller Node
-=============
+Controller Node
+-------------------
+
 (runs network, volume, API, scheduler and image services)
 
 * **Processor**: 64-bit x86
@@ -66,8 +77,8 @@ The following are recommended hardware requirements for both the controller and 
 * **Volume Storage**: two disks with 2TB (SATA) for volumes attached to the compute nodes
 * **Network**: one 1GB NIC
 
-1.2 Compute Node(s)
-=============
+Compute Node(s)
+---------------
 (runs virtual instances)
 
 * **Processor**: 64-bit x86
@@ -76,18 +87,19 @@ The following are recommended hardware requirements for both the controller and 
 * **Network**: one 1GB NIC
 
 2 Basic Configuration
-=============
+=====================
+
 .. image:: http://i.imgur.com/r6tE9.png
 
 
 3 OpenStack Install
-=============
+===================
 
 3.1 Control Node Install
-=============
+------------------------
 
 3.1.1 Updating Your System
------------------
+**************************
 * After you complete the Ubuntu 12.10 installation, go into superuser mode and stay there until this tutorial concludes::
 
    sudo su
@@ -136,20 +148,18 @@ The following are recommended hardware requirements for both the controller and 
 
    vi /etc/sysctl.conf
 
-   ##
-
-* Now, run systcl with the updated configuration
+* Now, run systcl with the updated configuration::
 
    sysctl -p 
 
 3.1.5 Install and configure Keystone
 -----------------
 
-* Install the Keystone identity service
+* Install the Keystone identity service::
 
    apt-get install keystone
 
-* Create a new MySQL database for Keystone
+* Create a new MySQL database for Keystone::
 
    mysql -u root -p
    CREATE DATABASE keystone;
