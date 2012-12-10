@@ -1020,11 +1020,11 @@ Setting up projects using Horizon
    username: admin
    password: admin_pass
 
-* Next, navigate to the "Projects" tab on the bottom left of the landing screen.
+* Next, navigate to the "Projects" tab on the bottom left of the landing screen::
 
 .. image:: http://i.imgur.com/H5w98.png
 
-* Now, in the new pane go ahead and click the "Create Project" button in the top right. You will be greeted with a modal dialog like so:
+* Now, in the new pane go ahead and click the "Create Project" button in the top right. You will be greeted with a modal dialog like so::
 
 .. image:: http://i.imgur.com/1jDD7.png
 
