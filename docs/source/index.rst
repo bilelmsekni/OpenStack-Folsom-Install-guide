@@ -1019,9 +1019,14 @@ Setting up projects using Horizon
 
    username: admin
    password: admin_pass
-   Next, navigate to the "Projects" tab on the bottom left of the landing screen.
 
-* Now, in the new pane go ahead and click the "Create Project" button in the top right. You will be greeted with a modal dialog like so::
+* Next, navigate to the "Projects" tab on the bottom left of the landing screen.
+
+.. image:: http://i.imgur.com/H5w98.png
+
+* Now, in the new pane go ahead and click the "Create Project" button in the top right. You will be greeted with a modal dialog like so:
+
+.. image:: http://i.imgur.com/1jDD7.png
 
 * Fill in the fields presented, and don't forget the tabs on top. Make sure you add yourself as a project member::
 
@@ -1031,7 +1036,7 @@ Creating a network
 ******************
 
 * We are almost finished. Now it's time to create a network and bind it to that project::
-* **Note: Remember to use the instance network::**
+* **Note: Remember to use the instance network**::
 
    nova-manage network create --label=NimbulaNetwork --fixed_range_v4=10.33.14.0/24 --bridge=br100 --project_id=<InsertProjectIDHere> --num_networks=1 --multi_host=T
 
