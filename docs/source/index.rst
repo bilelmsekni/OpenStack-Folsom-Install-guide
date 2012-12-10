@@ -57,7 +57,8 @@ Technical Marketing Intern at
 
 Getting Started
 ===============
-**Note:** This guide intentionally uses the `nova-network` package instead of the newly released `quantum`. This decision was made in order to reduce the setup time for a basic network configuration. Although the next release plans to freeze nova-network development, the team responsible for overseeing OpenStack networking (Thierry, Vish, Dan) have decided that they will "...continue to support nova-network as it currently exists in Folsom".
+
+This guide intentionally uses the `nova-network` package instead of the newly released `quantum`. This decision was made in order to reduce the setup time for a basic network configuration. Although the next release plans to freeze nova-network development, the team responsible for overseeing OpenStack networking (Thierry, Vish, Dan) have decided that they will "...continue to support nova-network as it currently exists in Folsom".
 
 You can read more about their decision `here <https://lists.launchpad.net/openstack/msg16368.html>`_.
 
@@ -185,7 +186,7 @@ Install and configure Keystone
 * In the keystone_basic.sh script, change the $HOST_IP variable to your X.X.X.232 address
 * In the keystone_endpoints_basic.sh script, change the $HOST_IP, $EXT_HOST_IP, & $MYSQL_HOST variables to your X.X.X.232 address and then execute the scripts.
  
-* **Note: Double check your work here, screwing up keystone can be a pain to recover from.**::
+* **Note: Double check your work here, screwing up keystone can be a pain to recover from**::
  
    vi keystone_basic.sh
    vi keystone_endpoints_basic.sh
@@ -446,7 +447,7 @@ Install and configure Glance
 
    glance-manage db_sync
 
-**Note:** You'll probably get a warning, reminding you that 'useexisting' is deprecated. That's normal, don't worry about it.
+* **Note: You'll probably get a warning, reminding you that 'useexisting' is deprecated. That's normal, don't worry about it.**
 
 * Restart the services again to take into account the new modifications
 
@@ -643,7 +644,7 @@ Install and configure Nova
 
    nova-manage db sync
 
-**Note**: You may get some debug output mentioning 'nova.db.sqlalchemy.migration'. That's normal, don't worry about it.
+* **Note: You may get some debug output mentioning 'nova.db.sqlalchemy.migration'. That's normal, don't worry about it.**
 
 * Restart all of your nova-* services::
 
@@ -661,7 +662,7 @@ Install and configure Nova
    nova-scheduler   folsom-1                             nova             enabled    :-)   2012-11-06 18:31:05
    nova-network     folsom-1                             nova             enabled    :-)   2012-11-06 18:31:09
 
-**Note:** You may get some debug output mentioning 'nova.db.sqlalchemy.migration'. That's normal, don't worry about it.
+* **Note: You may get some debug output mentioning 'nova.db.sqlalchemy.migration'. That's normal, don't worry about it.**
 
 Install and configure Cinder
 **************************** 
@@ -1009,7 +1010,7 @@ Install and configure nova-api and nova-compute
    nova-compute     folsom-2                             nova             enabled    :-)   2012-11-08 00:26:00
    nova-network     folsom-2                             nova             enabled    :-)   2012-11-08 00:26:00
 
-* Note: You may get some debug output mentioning 'nova.db.sqlalchemy.api'. That's normal, don't worry about it.
+* **Note: You may get some debug output mentioning 'nova.db.sqlalchemy.api'. That's normal, don't worry about it.**
 
 Setting up projects using Horizon
 *********************************
@@ -1030,7 +1031,7 @@ Creating a network
 ******************
 
 * We are almost finished. Now it's time to create a network and bind it to that project::
-* Note: Remember to use the instance network::
+* **Note: Remember to use the instance network::**
 
    nova-manage network create --label=NimbulaNetwork --fixed_range_v4=10.33.14.0/24 --bridge=br100 --project_id=<InsertProjectIDHere> --num_networks=1 --multi_host=T
 
