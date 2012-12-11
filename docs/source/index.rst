@@ -748,7 +748,7 @@ Install and configure Horizon
 
    apt-get install openstack-dashboard memcached
 
-* Now, for some reason, they felt that the Ubuntu theme was stable enough to be the default option - it's not.  Disable it by doing the following::
+* Some users (including myself) have encountered a few bugs when using the default Ubuntu theme. Disable it by doing the following::
 
    vi /etc/openstack-dashboard/local_settings.py
 
@@ -1049,7 +1049,7 @@ Tips & Tricks
 Removing 'error' state instances
 -------------------------------- 
 
-So, it's entirely possible that you screw up your network the first time, maybe you give it the wrong IP Pool, or maybe you assign it to the wrong project. Now, all of your instances are in the error state and you can't delete them. Luckily, the intern already found two very simple and undocumented processes of removing them.
+So, it's entirely possible that you screw up your network the first time, maybe you give it the wrong IP Pool, or maybe you assign it to the wrong project. Now, all of your instances are in the error state and you can't delete them. Luckily, I've already found two very simple and undocumented processes of removing them.
 
 * Jump on your first node, open up the terminal as root, and plugin the following commands::
 
