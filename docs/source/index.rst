@@ -1132,7 +1132,7 @@ Floating IP setup
 Feedback
 ========
 
-If you find any errors, or have any ideas on how to improve this guide, send an email to zach (at) nimbula.com
+If you find any errors, or have any ideas on how to improve this guide, send an email to openstack-docs (at) nimbula.com
 
 
 
