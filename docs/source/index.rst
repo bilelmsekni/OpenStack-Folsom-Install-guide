@@ -443,7 +443,7 @@ Install and configure Glance
 
    service glance-api restart; service glance-registry restart
 
-* ...and sync databases::
+* Sync databases::
 
    glance-manage db_sync
 
@@ -460,7 +460,7 @@ Install and configure Glance
    wget https://launchpad.net/cirros/trunk/0.3.0/+download/cirros-0.3.0-x86_64-disk.img
    glance image-create --name NimbulaTest --is-public true --container-format bare --disk-format qcow2 < cirros-0.3.0-x86_64-disk.img
 
-* ...that last command should produce output similar to::
+* That last command should produce output similar to::
 
    +-----------------+------------------------------------+
    | Property | Value |
@@ -487,7 +487,7 @@ Install and configure Glance
 
    glance image-list
 
-* ...it should return something like this::
+* It should return something like this::
 
    +--------------------------------------+-------------+-------------+------------------+---------+--------+
    | ID                                   | Name        | Disk Format | Container Format | Size    | Status |
@@ -540,27 +540,27 @@ Install and configure Nova
 
 * We are also going to remove the Quantum endpoint and service, the script we ran earlier assumes that we will use Quantum instead of nova-networks, and having both endpoints on the same installation can cause some serious conflicts::
 
-* ...first, get the endpoint ID::
+* First, get the endpoint ID::
 
    keystone endpoint-list | grep 9696
 
-* ...it will return output similar to this::
+* It will return output similar to this::
 
    | b0974d6c9bbb4f2cab281f3ff5bcd412 | RegionOne | http://192.168.161.232:9696/ | http://192.168.161.232:9696/ | http://192.168.161.232:9696/ | 
  
-* ...grab the ID from the output and then remove that endpoint::
+* Grab the ID from the output and then remove that endpoint::
 
    keystone endpoint-delete b0974d6c9bbb4f2cab281f3ff5bcd412
 
-* ...next, find the Quantum service ID::
+* Next, find the Quantum service ID::
 
    keystone service-list | grep quantum
 
-* ...it will return output similar to this::
+* It will return output similar to this::
 
    | 9e3b400f6531414c93262644f20cfda1 | quantum  |   network    | OpenStack Networking Service |
 
-* ...grab the ID from the output and then remove that service::
+* Grab the ID from the output and then remove that service::
 
    keystone service-delete 9e3b400f6531414c93262644f20cfda1
 
@@ -654,7 +654,7 @@ Install and configure Nova
 
    nova-manage service list
 
-* ...you should get something like this::
+* You should get something like this::
 
    Binary           Host                                 Zone             Status     State Updated_At
    nova-cert        folsom-1                             nova             enabled    :-)   2012-11-06 18:30:58
@@ -719,7 +719,7 @@ Install and configure Cinder
    losetup /dev/loop2 cinder-volumes
    fdisk /dev/loop2
 
-* ...and at the fdisk prompt, enter the following commands::
+* And at the fdisk prompt, enter the following commands::
 
    n
    p
@@ -736,7 +736,7 @@ Install and configure Cinder
    vgcreate cinder-volumes /dev/loop2
 
 * Now, let's add this to the rc.local to make sure that we don't lose this volume on a server reboot
-* ...add the following to the file before the exit 0 line::
+* Add the following to the file before the exit 0 line::
 
    #the path is wherever you ran the previous two steps + "cinder-volumes"
    losetup /dev/loop2 <PATH_TO_VG>
@@ -771,7 +771,7 @@ Updating your system
 ********************
 
 * Now, all we have to do is add a compute node. Log onto the next available node on your cluster. (repeat for as many nodes as you'd like)
-* .....start by updating your system as root::
+* Start by updating your system as root::
 
    sudo su
    apt-get update
@@ -809,11 +809,11 @@ Setup vlan, bridge-utils, and KVM
  
    apt-get install cpu-checker
 
-* ....then run::
+* Then run::
 
    kvm-ok
 
-* ...you should get a response similar to::
+* You should get a response similar to::
 
    KVM acceleration can be used
 
@@ -852,7 +852,7 @@ Setup live migration
 
    vi /etc/default/libvirt-bin.conf
 
-* ...find env libvirtd_opts and set it to::
+* Find env libvirtd_opts and set it to::
 
    env libvirtd_opts="-d -l"
 
@@ -1000,7 +1000,7 @@ Install and configure nova-api and nova-compute
 
    nova-manage service list
 
-* ...you should now see a mix of services running on multiple nodes::
+* You should now see a mix of services running on multiple nodes::
 
    Binary           Host                                 Zone             Status     State Updated_At
    nova-cert        folsom-1                             nova             enabled    :-)   2012-11-08 00:26:03
@@ -1057,12 +1057,12 @@ So, it's entirely possible that you screw up your network the first time, maybe 
    nova-manage project scrub <ProjectName>
    nova-manage network list
  
-* ...it should return something like this::
+* It should return something like this::
 
    id      IPv4                IPv6            start address   DNS1            DNS2            VlanID          project         uuid           
    3       10.33.14.0/24       None            10.33.14.2      8.8.4.4         None            None            Nimbula         8ccdef11-7070-4852-a212-31c3ddedccd3
  
-* ...find the network you want to remove and copy the IPv4 section::
+* Find the network you want to remove and copy the IPv4 section::
 
    nova-manage network delete 10.33.14.0/24
 
@@ -1070,7 +1070,7 @@ So, it's entirely possible that you screw up your network the first time, maybe 
 
    nova list | grep ERROR
  
-* ...should return a list of all ERROR state instances::
+* That command should return a list of all ERROR state instances::
 
    +------+------------+--------+--------------------------------+
    |  ID  |    Name    | Status |            Networks            |
@@ -1078,7 +1078,7 @@ So, it's entirely possible that you screw up your network the first time, maybe 
    | 1805 | testserver | ERROR  | private=10.4.96.81             |
    +------+------------+--------+--------------------------------+
 
-* ...this returns all of the instances stuck in the error state - plug in their names to the following command:
+* To delete, plug in their names to the following command(s):
 
    nova reset-state --active <name>
    nova delete <name>
@@ -1087,7 +1087,7 @@ So, it's entirely possible that you screw up your network the first time, maybe 
 
    vi DeleteInstances.sh
  
-* ....paste the following in::
+* Paste the following in::
 
    #!/bin/bash
    mysql -uroot -ppassword << EOF
@@ -1097,11 +1097,11 @@ So, it's entirely possible that you screw up your network the first time, maybe 
    DELETE FROM nova.instances WHERE uuid='$1';
    EOF
  
-* ...save it by hitting ESC, then ":", then x, and hitting Enter - Then make sure it's executable by using the following::
+* Save it by hitting ESC, then ":", then x, and hitting Enter - Then make sure it's executable by using the following::
 
    chmod +x DeleteInstances.sh
  
-* ...and run it::
+* And run it::
 
    ./DeleteInstances.sh
  
@@ -1109,11 +1109,11 @@ So, it's entirely possible that you screw up your network the first time, maybe 
 Floating IP setup
 -----------------
 
-* ...first create a dedicated pool::
+* First create a dedicated pool::
 
    sudo nova-mange floating create --pool pool_auto_assign --ip_range X.X.X.X/X
 
-* ...then modify the nova.conf with these flags::
+* Then modify the nova.conf with these flags::
 
    vi /etc/nova/nova.conf
 
