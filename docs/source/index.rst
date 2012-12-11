@@ -17,7 +17,7 @@ Basic OpenStack Folsom Install Guide
 
 
 :Version: 1.0
-:Source: https://github.com/nimbula/Basic-OpenStack-Folsom-Install-Guide
+:Source: https://github.com/nimbula/OpenStack-Folsom-Install-Guide
 :Keywords: Multi-node OpenStack, Folsom, Nova, Keystone, Glance, Horizon, Cinder, KVM, Ubuntu Server 12.10 (64-bit release).
 
 
