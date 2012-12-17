@@ -889,7 +889,7 @@ You can now start creating VMs but they will not be accessible from the internet
 * Go back to the /etc/quantum/l3_agent.ini file and edit it::
 
    gateway_external_net_id = $id_of_ext_net
-   router_id = $your_router_id
+   router_id = $router_proj_one_id
 
 * Restart l3-agent::
 
