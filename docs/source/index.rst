@@ -850,7 +850,7 @@ Setup live migration
 
 * Edit libvirtd_opts variable in the libvirt-bin.conf file::
 
-   vi /etc/default/libvirt-bin.conf
+   vi /etc/init/libvirt-bin.conf
 
 * Find env libvirtd_opts and set it to::
 
@@ -898,7 +898,7 @@ Install and configure nova-network
 
 * Now, make sure the br100 is added and restart the networking services::
 
-   brctl add br100; /etc/init.d/networking restart
+   brctl addbr br100; /etc/init.d/networking restart
 
 Install and configure nova-api and nova-compute
 ***********************************************
