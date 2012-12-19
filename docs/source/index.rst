@@ -850,7 +850,7 @@ Setup live migration
 
 * Edit libvirtd_opts variable in the libvirt-bin.conf file::
 
-   vi /etc/default/libvirt-bin.conf
+   vi /etc/init/libvirt-bin.conf
 
 * Find env libvirtd_opts and set it to::
 
