@@ -69,7 +69,7 @@ Status: Experimental (Deprecated unless you are a skilled networking person)
 
 .. image:: http://i.imgur.com/Qtee3.jpg
 
-2. Getting Ready
+2. Controller Node
 ===============
 
 2.1. Preparing Ubuntu 12.10
