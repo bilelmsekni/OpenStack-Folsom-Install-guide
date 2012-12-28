@@ -15,10 +15,10 @@ HOST_IP=100.10.10.51
 EXT_HOST_IP=192.168.100.51
 
 # MySQL definitions
-MYSQL_USER=keystoneUser
+MYSQL_USER=Pranav
 MYSQL_DATABASE=keystone
 MYSQL_HOST=$HOST_IP
-MYSQL_PASSWORD=keystonePass
+MYSQL_PASSWORD=cloud
 
 # Keystone definitions
 KEYSTONE_REGION=RegionOne
