@@ -176,10 +176,20 @@ Install and configure Keystone
    service keystone restart
    keystone-manage db_sync
 
-* Use mseknibilel's scripts::
+* Use mseknibilel's scripts
 
-   wget https://raw.github.com/nimbula/OpenStack-Folsom-Install-guide/master/Keystone_Scripts/keystone_basic.sh
-   wget https://raw.github.com/nimbula/OpenStack-Folsom-Install-guide/master/Keystone_Scripts/keystone_endpoints_basic.sh
+    * With Quantum::
+
+        wget https://raw.github.com/nimbula/OpenStack-Folsom-Install-guide/master/Keystone_Scripts/With%20Quantum/keystone_basic.sh
+        wget https://raw.github.com/nimbula/OpenStack-Folsom-Install-guide/master/Keystone_Scripts/With%20Quantum/keystone_endpoints_basic.sh
+
+    * Without Quantum::
+
+        wget https://raw.github.com/nimbula/OpenStack-Folsom-Install-guide/master/Keystone_Scripts/Without%20Quantum/keystone_basic.sh
+        wget https://raw.github.com/nimbula/OpenStack-Folsom-Install-guide/master/Keystone_Scripts/Without%20Quantum/keystone_endpoints_basic.sh
+
+* Change the mode for both files::
+
    chmod +x keystone_basic.sh
    chmod +x keystone_endpoints_basic.sh
 
