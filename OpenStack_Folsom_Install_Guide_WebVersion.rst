@@ -551,11 +551,12 @@ You can now access your OpenStack **192.168.100.51/horizon** with credentials **
 
    # VM internet Access
    auto eth2
-   iface eth2 inet static
-   address 192.168.100.52
-   netmask 255.255.255.0
-   gateway 192.168.100.1
-   dns-nameservers 8.8.8.8
+   iface eth2 inet manual
+   up ifconfig $IFACE 0.0.0.0 up
+   up ip link set $IFACE promisc on
+   down ip link set $IFACE promisc off
+   down ifconfig $IFACE down
+
    
    # OpenStack management
    auto eth0
