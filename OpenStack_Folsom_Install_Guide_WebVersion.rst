@@ -610,7 +610,7 @@ We need to install the l3 agent, dhcp agent and the openVSwitch plugin agent
    admin_tenant_name = service
    admin_user = quantum
    admin_password = service_pass
-   metadata_ip = 192.168.100.51
+   metadata_ip = 100.10.10.51
    metadata_port = 8775
    use_namespaces = False
 
