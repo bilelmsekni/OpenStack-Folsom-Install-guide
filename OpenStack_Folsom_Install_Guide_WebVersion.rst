@@ -629,7 +629,7 @@ You can now access your OpenStack **192.168.100.51/horizon** with credentials **
    admin_tenant_name = service
    admin_user = quantum
    admin_password = service_pass
-   metadata_ip = 192.168.100.51
+   metadata_ip = 100.10.10.51
    metadata_port = 8775
 
 * Make sure that your rabbitMQ IP in /etc/quantum/quantum.conf is set to the controller node::
