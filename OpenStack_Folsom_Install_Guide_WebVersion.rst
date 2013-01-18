@@ -46,7 +46,7 @@ Table of Contents
 0. What is it?
 ==============
 
-OpenStack Folsom Install Guide is an easy and tested way to create your own OpenStack plateform. 
+OpenStack Folsom Install Guide is an easy and tested way to create your own OpenStack platform. 
 
 Version 3.0
 
