@@ -354,7 +354,7 @@ Status: stable
    rabbit_host=$controller_ip
    cc_host=$controller_ip
    dmz_cidr=169.254.169.254/32
-   metadata_hostcontroller_ip
+   metadata_host=$controller_ip
    metadata_listen=0.0.0.0
    nova_url=http://$controller_ip:8774/v1.1/
    sql_connection=mysql://novaUser:novaPass@$controller_ip/nova
