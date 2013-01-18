@@ -340,6 +340,7 @@ Status: stable
    signing_dirname = /tmp/keystone-signing-nova
 
 * Modify the /etc/nova/nova.conf like this::
+
    controller_ip=100.10.10.51
    [DEFAULT]
    logdir=/var/log/nova
