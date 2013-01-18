@@ -362,7 +362,6 @@ Status: stable
    root_helper=sudo nova-rootwrap /etc/nova/rootwrap.conf
 
    # Auth
-   use_deprecated_auth=false
    auth_strategy=keystone
    keystone_ec2_url=http://100.10.10.51:5000/v2.0/ec2tokens
    # Imaging service
@@ -370,7 +369,7 @@ Status: stable
    image_service=nova.image.glance.GlanceImageService
 
    # Vnc configuration
-   novnc_enabled=true
+   vnc_enabled=true
    novncproxy_base_url=http://192.168.100.51:6080/vnc_auto.html
    novncproxy_port=6080
    vncserver_proxyclient_address=192.168.100.51
