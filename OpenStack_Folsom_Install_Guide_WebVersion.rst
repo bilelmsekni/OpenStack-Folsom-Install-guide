@@ -296,7 +296,7 @@ Status: stable
    #Under the OVS section
    [OVS]
    tenant_network_type=vlan
-   network_vlan_ranges = physnet1:1:4094
+   network_vlan_ranges = physnet1:1000:4094
 
 * Edit /etc/quantum/api-paste.ini ::
 
