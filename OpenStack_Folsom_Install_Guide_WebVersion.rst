@@ -340,7 +340,7 @@ Status: stable
    signing_dirname = /tmp/keystone-signing-nova
 
 * Modify the /etc/nova/nova.conf like this::
-
+   controller_ip=100.10.10.51
    [DEFAULT]
    logdir=/var/log/nova
    state_path=/var/lib/nova
@@ -348,42 +348,42 @@ Status: stable
    verbose=True
    api_paste_config=/etc/nova/api-paste.ini
    scheduler_driver=nova.scheduler.simple.SimpleScheduler
-   s3_host=100.10.10.51
-   ec2_host=100.10.10.51
-   ec2_dmz_host=100.10.10.51
-   rabbit_host=100.10.10.51
-   cc_host=100.10.10.51
+   s3_host=$controller_ip
+   ec2_host=$controller_ip
+   ec2_dmz_host=$controller_ip
+   rabbit_host=$controller_ip
+   cc_host=$controller_ip
    dmz_cidr=169.254.169.254/32
-   metadata_host=100.10.10.51
+   metadata_hostcontroller_ip
    metadata_listen=0.0.0.0
-   nova_url=http://100.10.10.51:8774/v1.1/
-   sql_connection=mysql://novaUser:novaPass@100.10.10.51/nova
-   ec2_url=http://100.10.10.51:8773/services/Cloud 
+   nova_url=http://$controller_ip:8774/v1.1/
+   sql_connection=mysql://novaUser:novaPass@$controller_ip/nova
+   ec2_url=http://$controller_ip:8773/services/Cloud 
    root_helper=sudo nova-rootwrap /etc/nova/rootwrap.conf
 
    # Auth
    use_deprecated_auth=false
    auth_strategy=keystone
-   keystone_ec2_url=http://100.10.10.51:5000/v2.0/ec2tokens
+   keystone_ec2_url=http://$controller_ip:5000/v2.0/ec2tokens
    # Imaging service
-   glance_api_servers=100.10.10.51:9292
+   glance_api_servers=$controller_ip:9292
    image_service=nova.image.glance.GlanceImageService
 
    # Vnc configuration
    novnc_enabled=true
-   novncproxy_base_url=http://192.168.100.51:6080/vnc_auto.html
+   novncproxy_base_url=http://$controller_ip:6080/vnc_auto.html
    novncproxy_port=6080
-   vncserver_proxyclient_address=192.168.100.51
+   vncserver_proxyclient_address=$controller_ip
    vncserver_listen=0.0.0.0 
 
    # Network settings
    network_api_class=nova.network.quantumv2.api.API
-   quantum_url=http://100.10.10.51:9696
+   quantum_url=http://$controller_ip:9696
    quantum_auth_strategy=keystone
    quantum_admin_tenant_name=service
    quantum_admin_username=quantum
    quantum_admin_password=service_pass
-   quantum_admin_auth_url=http://100.10.10.51:35357/v2.0
+   quantum_admin_auth_url=http://$controller_ip:35357/v2.0
    libvirt_vif_driver=nova.virt.libvirt.vif.LibvirtHybridOVSBridgeDriver
    linuxnet_interface_driver=nova.network.linux_net.LinuxOVSInterfaceDriver
    firewall_driver=nova.virt.libvirt.firewall.IptablesFirewallDriver
