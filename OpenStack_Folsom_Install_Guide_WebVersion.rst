@@ -541,8 +541,8 @@ You can now access your OpenStack **192.168.100.51/horizon** with credentials **
 
 * Enable IP_Forwarding::
 
-   nano /etc/sysctl.conf
-   # Uncomment net.ipv4.ip_forward=1, to save you from rebooting, perform the following
+   sed -i 's/#net.ipv4.ip_forward=1/net.ipv4.ip_forward=1/' /etc/sysctl.conf
+   # To save you from rebooting, perform the following
    sysctl net.ipv4.ip_forward=1
 
 3.2.Networking
@@ -669,8 +669,8 @@ You can now access your OpenStack **192.168.100.51/horizon** with credentials **
 
 * Enable IP_Forwarding::
 
-   nano /etc/sysctl.conf
-   # Uncomment net.ipv4.ip_forward=1, to save you from rebooting, perform the following
+   sed -i 's/#net.ipv4.ip_forward=1/net.ipv4.ip_forward=1/' /etc/sysctl.conf
+   # To save you from rebooting, perform the following
    sysctl net.ipv4.ip_forward=1
 
 4.2.Networking
