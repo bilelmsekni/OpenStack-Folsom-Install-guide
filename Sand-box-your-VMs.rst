@@ -122,7 +122,7 @@ The following are the host only connections that you will be setting up later on
   2. vboxnet2 - VM Conf. Network - Host Static IP 100.20.20.1
   3. vboxnet3 - VM External Network Access (Host Machine)
 
-.. image:: https://raw.github.com/cloud-rack/cloud-rack-docs/master/Diagrams/WIth%20Host%20only.png
+    .. image:: https://raw.github.com/cloud-rack/cloud-rack-docs/master/Diagrams/WIth%20Host%20only.png
 
 
 2. Setup Your VM Environment
@@ -161,19 +161,20 @@ Rest of the configurations reamin same except for the UI and few other trivial d
     Select **Network** Option.
   Step 3: 
     Click on **Create Host Only Networks** - Create three networks. They will be automatically named as
-      vboxnet0
-      vboxnet1
-      vboxnet2
+      vboxnet0, vboxnet1, vboxnet2
+        
       .. image:: https://raw.github.com/cloud-rack/cloud-rack-docs/master/ScreenShots/1.%20Virtual%20Network/1-Create%20Host%20only%20Network.png
 
   Step 4:
     Select vboxnet0 and click on edit, select **Adapter Tab**
       Set the IPv4 address as  **100.10.10.1**
       Leave the other options as it is.
+      
       .. image:: https://raw.github.com/cloud-rack/cloud-rack-docs/master/ScreenShots/1.%20Virtual%20Network/2-Give%20Static%20Ip%20to%20Host.png
     
     Select **DHCP Server** tab
       Deselect the **Enable Server** option
+      
       .. image:: https://raw.github.com/cloud-rack/cloud-rack-docs/master/ScreenShots/1.%20Virtual%20Network/3-%20Configure%20DHCP.png
 
 **2. Set up Virtual Machines** :
@@ -181,13 +182,18 @@ Rest of the configurations reamin same except for the UI and few other trivial d
   Step 1:
     Control Node
       Create a new Virtual Machine ... select the appropriate options
+      
       .. image:: https://raw.github.com/cloud-rack/cloud-rack-docs/master/ScreenShots/2.%20Setup%20VM/Control%20Node/1-%20Basic%20Info.png
+    
     Ram Required for this node is 512 MB, if you have more ram feel free to allocate itbut remember that your Compute Node needs
     the highest amount of RAM and Processor so I usually save up for the compute node...reduce the processor allocation pool
+      
       .. image:: https://raw.github.com/cloud-rack/cloud-rack-docs/master/ScreenShots/2.%20Setup%20VM/Control%20Node/2-%20Resource%20Allocation.png
     
     For **Bridged Connections** set up two NIC cards as bridged connections and the settings as shown by the diagram...
+      
       .. image:: https://raw.github.com/cloud-rack/cloud-rack-docs/master/ScreenShots/2.%20Setup%20VM/Control%20Node/7-%20Bridge%20Connection.png
+      
       Note: Internet is avaliable to bridged connected VM's directly so no need to setup a seperate NIC for internet.
     For **Host Only Connections** set up three NIC cards as per the given diagram.
       .. image:: https://raw.github.com/cloud-rack/cloud-rack-docs/master/ScreenShots/2.%20Setup%20VM/Control%20Node/3-%20control-nw1.png
