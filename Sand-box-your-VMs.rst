@@ -43,19 +43,23 @@ OpenStack:
   1.I am using **OpenStack Folsom Install Guide** by  **SkiBLE mseknibilel** as it is well written, easy and tested by 
   Open Source geeks, with regular updates.
   You can find OpenStack Folsom Install Guide link `here <https://github.com/mseknibilel/OpenStack-Folsom-Install-guide>`_
+  
   2.If you want to blow your brains out then you can refer the OpenStack Official Website which contains all the related 
   Documentation, API's, guides , Wiki's etc. Access the OpenStack Official Website `here <http://www.openstack.org/>`_
 
+
 Networking:
   1.Basic Networking concepts are necessary but can be ignored, if you want to dig into networking I would 
-  suggest `Computer Networks (5th Edition) by Andrew S. Tanenbaum http://www.amazon.com/Computer-Networks-5th-Andrew-Tanenbaum/dp/0132126958`_ is an awesome one to learn networking 
-  2.For learning Virtual Networking or Networking for Virtual Machines the following guide by Virtual Box `here http://www.virtualbox.org/manual/ch06.html`_ should suffice.
+  suggest `Computer Networks (5th Edition) by Andrew S. Tanenbaum <http://www.amazon.com/Computer-Networks-5th-Andrew-Tanenbaum/dp/0132126958>`_  is an awesome one to learn networking 
+  
+  2.For learning Virtual Networking or Networking for Virtual Machines the following guide by Virtual Box `here <http://www.virtualbox.org/manual/ch06.html>`_  should suffice.
   ** Note : ** This is required as further in the guide these Concepts will be handy and you need to know what kind of networks you are setting up as there will be nesting of networks , meaning Virtual Networks inside Virtual Networks.
 
 Virtualization:
   1.Learn, go through the Virtual Box Guide `here <http://www.virtualbox.org/manual/UserManual.html>`_, this should be sufficient to provide a fair idea on how to Virtualization.
+  
   2.Virtual Box provides User Interface and API for using it, although API will provide more flexibility, UI will have lesser learning curve, its up to you. I will try to provide both if time permits but I have to remind my-selves that this guide is meant for OpenStack sand-boxing :).
-    You can access the API's for advanced networking `here <https://www.virtualbox.org/wiki/Advanced_Networking_Linux>`_.
+  You can access the API's for advanced networking `here <https://www.virtualbox.org/wiki/Advanced_Networking_Linux>`_.
 
 Linux:
   1.You will need some basic knowledge of Linux otherwise you will go through tremendous torture of blindly following these Guides and if in case come to an error/dead lock, you will get stuck for silly reasons. There are many books, docs available and I don't know which one to recommend so please `Google <https://www.google.com/>`_ it.
