@@ -196,8 +196,11 @@ Rest of the configurations reamin same except for the UI and few other trivial d
       
       Note: Internet is avaliable to bridged connected VM's directly so no need to setup a seperate NIC for internet.
     For **Host Only Connections** set up three NIC cards as per the given diagram.
+      OpenStack Management Network - 100.10.10.51
       .. image:: https://raw.github.com/cloud-rack/cloud-rack-docs/master/ScreenShots/2.%20Setup%20VM/Control%20Node/3-%20control-nw1.png
+      Expose OpenStack API
       .. image:: https://raw.github.com/cloud-rack/cloud-rack-docs/master/ScreenShots/2.%20Setup%20VM/Control%20Node/4%20-%20control-nw2.png
+      Virtual Box NAT (Network Address Translation) - for internet Connection.
       .. image:: https://raw.github.com/cloud-rack/cloud-rack-docs/master/ScreenShots/2.%20Setup%20VM/Control%20Node/5%20-control-nw3.png
 
 
