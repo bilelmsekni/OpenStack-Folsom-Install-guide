@@ -32,8 +32,8 @@ Table of Contents
 
 0. What is it?
 ==============
-Well this guide will help you to setup your own OpenStack Cloud on Virtual Machiens and Virtual Networks. 
-These Virtual Machines and Virtual Networks will be given equal privilage as a physical machine on a physical network.
+Well this guide will help you to setup your own OpenStack Cloud on Virtual Machines and Virtual Networks. 
+These Virtual Machines and Virtual Networks will be given equal privilege as a physical machine on a physical network.
 
 This Guide is not responsible for teaching OpenStack, Networking , Virtualization and Linux related concepts.
 
@@ -41,28 +41,24 @@ For learning more follow these links :
 
 OpenStack:
   1.I am using **OpenStack Folsom Install Guide** by  **SkiBLE mseknibilel** as it is well written, easy and tested by 
-    OpenSource geeks, with regular updates.
-    You can find OpenStack Folsom Install Guide link `here https://github.com/mseknibilel/OpenStack-Folsom-Install-guide`
+    Open Source geeks, with regular updates.
+    You can find OpenStack Folsom Install Guide link `here <https://github.com/mseknibilel/OpenStack-Folsom-Install-guide>`
   2.If you want to blow your brains out then you can refer the OpenStack Official Website which contains all the related 
-    Documentation, API's, guides , Wikis etc. Access the OpenStack Official Website `here http://www.openstack.org/`
+    Documentation, API's, guides , Wiki's etc. Access the OpenStack Official Website `here <http://www.openstack.org/>`
 
 Networking:
   1.Basic Networking concepts are necessary but can be ignored, if you want to dig into networking I would 
     suggest `Computer Networks (5th Edition) by Andrew S. Tanenbaum http://www.amazon.com/Computer-Networks-5th-Andrew-Tanenbaum/dp/0132126958` is an awesome one to learn networking 
   2.For learning Virtual Networking or Networking for Virtual Machines the following guide by Virtual Box `here http://www.virtualbox.org/manual/ch06.html` should suffice.
-    ** Note : ** This is required as furthur in the guid these Concepts will be handy and you need to know what kind of
-                 networks you are setting up as there will be nesting of networks , meaning Virtual Networks inside Virtual Networks.
+    ** Note : ** This is required as further in the guide these Concepts will be handy and you need to know what kind of networks you are setting up as there will be nesting of networks , meaning Virtual Networks inside Virtual Networks.
 
 Virtualization:
-  1.Learn, go through the Virtual Box Guide `here http://www.virtualbox.org/manual/UserManual.html`, this should be sufficient to provide a fair idea on how to Virtualization.
-  2.Virtual Box provides User Interface and API for using it, although API will provide more flexibility, UI will have lesser lerning curve, its upto you. I will try
-    to provide both if time permits but I have to remind myselves that this guide is meant for OpenStack sandboxing :).
-    You can access the API's for advanced networking `here https://www.virtualbox.org/wiki/Advanced_Networking_Linux`.
+  1.Learn, go through the Virtual Box Guide `here <http://www.virtualbox.org/manual/UserManual.html>`, this should be sufficient to provide a fair idea on how to Virtualization.
+  2.Virtual Box provides User Interface and API for using it, although API will provide more flexibility, UI will have lesser learning curve, its up to you. I will try to provide both if time permits but I have to remind my-selves that this guide is meant for OpenStack sand-boxing :).
+    You can access the API's for advanced networking `here <https://www.virtualbox.org/wiki/Advanced_Networking_Linux>`.
 
 Linux:
-  1.You will need some basic knowledge of Linux otherwise you will go through tremendios torture of blindly following these Guides and
-    if incase come to an error/dead lock, you will get stuck for silly reasons. There are many books, docs avaliable and I dont know which
-    one to recommend so please google it.
+  1.You will need some basic knowledge of Linux otherwise you will go through tremendous torture of blindly following these Guides and if in case come to an error/dead lock, you will get stuck for silly reasons. There are many books, docs available and I don't know which one to recommend so please `Google <https://www.google.com/>` it.
 
 
 Version 0.1
@@ -72,8 +68,25 @@ Status: work in progress
 
 1. Requirements
 ====================
+Basic Requirements 
+:VT Enabled PC:Intel ix or Amd QuadCore
+:4GB Ram:DDR2/DDR3 
 
-Well there are many ways to configure you OpenStack installation but I am going to follow `this one https://github.com/mseknibilel/OpenStack-Folsom-Install-guide/blob/master/OpenStack_Folsom_Install_Guide_WebVersion.rst`
+If you dont know wether your processor is VT enabled, you could check it by installing ** cpu checker**
+::
+        $sudo apt-get install cpu-checker
+        $sudo kvm-ok
+if your pc does not support VT it will show 
+::
+        INFO: Your CPU does not support KVM extensions
+        KVM acceleration can NOT be used
+        
+Don't worry you will still be able to use Virtual Box but it will be very slow, so I must consider putting the requirements to be Patience or VT enabled processor ;).
+
+Well there are many ways to configure you OpenStack installation but I am going to follow `OpenStack-Folsom-Install-guide <https://github.com/mseknibilel/OpenStack-Folsom-Install-guide/blob/master/OpenStack_Folsom_Install_Guide_WebVersion.rst>`
+
+
+
 
 :Node Role: NICs
 :Control Node: eth0 (100.10.10.51), eth1 (192.168.100.51)
