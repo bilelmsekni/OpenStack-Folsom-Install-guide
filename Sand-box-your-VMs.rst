@@ -249,7 +249,7 @@ Rest of the configurations remain same except for the UI and few other trivial d
   3. Compute Node :
       Select eth2
 
-**Note:** You can select the network interface orders as per your choice but to make life simpler I have followed `OpenStack-Folsom-Install-Guide by  SkiBLE mseknibilel<https://github.com/mseknibilel/OpenStack-Folsom-Install-guide>`_ 
+**Note:** You can select the network interface orders as per your choice but to make life simpler I have followed `OpenStack-Folsom-Install-Guide by  SkiBLE mseknibilel <https://github.com/mseknibilel/OpenStack-Folsom-Install-guide>`_ 
 
 **Warning:**  You have to select the MAC addresses of the NIC cards before you start the installation of Ubuntu server. And make sure
               that the MAC address are not changed once you start the installation. This leads to Network Interface variable name registory error
