@@ -58,6 +58,44 @@ Status: stable
 
 .. image:: http://i.imgur.com/aJvZ7.jpg
 
+2. Setup Your VM Environment
+==============
+
+3. Add Virtual Networks
+==============
+
+4. Install SSH and FTP
+==============
+
+
+5. Install Your VM's Instances
+==============
+
+
+6. Its about to get sticky
+==============
+
+
+7. Controller Node
+==============
+
+
+8. Network Node
+==============
+
+
+9. Compute Node
+==============
+
+
+10. Configure the internal networks
+==============
+
+
+11. Word Of Advice.
+==============
+
+
 2. Controller node
 ===============
 
