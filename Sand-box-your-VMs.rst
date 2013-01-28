@@ -53,7 +53,7 @@ Networking:
   suggest `Computer Networks (5th Edition) by Andrew S. Tanenbaum <http://www.amazon.com/Computer-Networks-5th-Andrew-Tanenbaum/dp/0132126958>`_  is an awesome one to learn networking 
   
   2.For learning Virtual Networking or Networking for Virtual Machines the following guide by Virtual Box `here <http://www.virtualbox.org/manual/ch06.html>`_  should suffice.
-  ** Note : ** This is required as further in the guide these Concepts will be handy and you need to know what kind of networks you are setting up as there will be nesting of networks , meaning Virtual Networks inside Virtual Networks.
+  **Note :** This is required as further in the guide these Concepts will be handy and you need to know what kind of networks you are setting up as there will be nesting of networks , meaning Virtual Networks inside Virtual Networks.
 
 Virtualization:
   1.Learn, go through the Virtual Box Guide `here <http://www.virtualbox.org/manual/UserManual.html>`_, this should be sufficient to provide a fair idea on how to Virtualization.
@@ -76,7 +76,7 @@ Basic Requirements
 :VT Enabled PC:Intel ix or Amd QuadCore
 :4GB Ram:DDR2/DDR3 
 
-If you dont know wether your processor is VT enabled, you could check it by installing ** cpu checker**
+If you dont know wether your processor is VT enabled, you could check it by installing **cpu checker**
 ::
         $sudo apt-get install cpu-checker
         $sudo kvm-ok
@@ -196,15 +196,21 @@ Rest of the configurations reamin same except for the UI and few other trivial d
     For **Bridged Connections** set up two NIC cards as bridged connections and the settings as shown by the diagram...
       eth0 - 100.10.10.51 (IP addresses are not allocated now)
       eth1 - 192.168.100.51 (IP addresses are not allocated now)
+      
       .. image:: https://raw.github.com/cloud-rack/cloud-rack-docs/master/ScreenShots/2.%20Setup%20VM/Control%20Node/7-%20Bridge%20Connection.png
       
       Note: Internet is avaliable to bridged connected VM's directly so no need to setup a seperate NIC for internet.
     For **Host Only Connections** set up three NIC cards as per the given diagram.
       eth0 - OpenStack Management Network - 100.10.10.51 (IP addresses are not allocated now)
+      
       .. image:: https://raw.github.com/cloud-rack/cloud-rack-docs/master/ScreenShots/2.%20Setup%20VM/Control%20Node/3-%20control-nw1.png
+      
       eth1 - Expose OpenStack API - 192.168.100.51 (IP addresses are not allocated now)
+      
       .. image:: https://raw.github.com/cloud-rack/cloud-rack-docs/master/ScreenShots/2.%20Setup%20VM/Control%20Node/4%20-%20control-nw2.png
+      
       eth2 - Virtual Box NAT (Network Address Translation) - for internet Connection. (IP addresses are not allocated now)
+      
       .. image:: https://raw.github.com/cloud-rack/cloud-rack-docs/master/ScreenShots/2.%20Setup%20VM/Control%20Node/5%20-control-nw3.png
 
   Step 2:
