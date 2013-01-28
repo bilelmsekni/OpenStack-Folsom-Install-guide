@@ -149,6 +149,9 @@ If you have i5 or i7 2nd gen processor you can have VT technology inside VM's pr
 nodes will give positive result on KVM-OK. (Nesting of type-2 Hypervisors).
 Rest of the configurations reamin same except for the UI and few other trivial differences.
 
+3. Configure Virtual Networks 
+==============
+
 **1. Setting up Virtual Network** :
 
   **Note:** If you are using Bridged Connections Please Ignore this section.
@@ -177,7 +180,7 @@ Rest of the configurations reamin same except for the UI and few other trivial d
       
       .. image:: https://raw.github.com/cloud-rack/cloud-rack-docs/master/ScreenShots/1.%20Virtual%20Network/3-%20Configure%20DHCP.png
 
-**2. Set up Virtual Machines** :
+**2. Set up Network Interface Cards(NIC) on Virtual Machines** :
       
   Step 1:
     Control Node
@@ -248,47 +251,84 @@ Rest of the configurations reamin same except for the UI and few other trivial d
               to change in MAC address after installaion of the OS's and OpenStack packages on your VM's.
             
 
-**3. Install Packages on Virtual Machines** :
 
-
-
-3. Configure Virtual Networks 
-==============
 
 4. Install SSH and FTP
 ==============
+I feel that there is a need to install SSH and FTP so that you could use your remote shell to login into the machine and use
+your terminal which is more convinent that using the Virtual Machines tty through the Virtual Box's  UI. You get a few added
+comforts like copy - paste stuff into the remote terminal which is not possible directly on VM.
+
+FTP is for transferring files to and fro ... you can also use SFTP or install FTPD on both HOST and VM's.
+
+Installation of SSH and FTP with its configuration is out of scope of this GUIDE and I may put it up but it depends upon my free time.
+If someone wants to contribute to this - please welcome. 
+
+**Note:** Please set up the Networks from inside the VM before trying to SSH and FTP into the machines. I would suggest setting
+it up at once just after the installation of the Server on VM's is over.
 
 
 5. Install Your VM's Instances
 ==============
 
+1. Control Node: Install **SSH server** when asked for **Custom Software to Install**. Rest of the packages are not required and may
+   come in the way of OpenStack packages - like DNS servers etc. (not necessary). Unless you know what you are doing.
+
+2. Quantum/Network Node: Install **SSH server** when asked for **Custom Software to Install**. Rest of the packages are not required and may
+   come in the way of OpenStack packages - like DNS servers etc. (not necessary). Unless you know what you are doing.
+
+3. Control Node: Install **SSH server** and **Virtual Machines Host** when asked for **Custom Software to Install**. Rest of the packages are not required and may
+   come in the way of OpenStack packages - like DNS servers etc. (not necessary). Unless you know what you are doing.
 
 6. Its about to get sticky
 ==============
+
+Well there are a few warnings that I must give you out of experience due to stupid habtis that normal Users like me have -
+1. Never Shutdown your Virtual Machine - just save its state Virtual Box and VmWare both provide it.
+      In past this has broken NOVA packages , NOVA database, other errors have risen. I had to go restart each and every NOVA service on Control and Compute node. Believe me sometimes they can be pain in ass as they refuse to start up on reboot.
+      Once you configure up the messy part of Quantum Floating Ip's etc., honestly you dont want to re do it cuz the settins get lost on reboot/shutdown.
+      Linux Servers are meant to be running 24x7 ... so no need for restarts until required. 
+2. If you are using bridged connection over a different physical router and have a seperate Internet connection/network ... then you can put up additional network interface NAT connections on your VM's for giving them Internet Access.
+3. VmWare NAT connection has minimal functionality issues. Virtual Box NAT connection is a bad boy - will disconnect or not work properly many times. So if your VM's are not getting internet connection do not panic ... follow these steps
+::
+    // Use ping command to see wether internet is on.
+    $ping google.com
+    // If its not connected restart networking service-
+    $sudo service networking restart
+    // Now Ping again
+    $ping google.com
+
+This should reconnect your network about 99% of the times. If you are really unlucky you must be having some other problems or your internet connection itselves is not functioning... well try to avoid immature decisions. Believe me you dont want to mess up your existing setup.
 
 
 7. Controller Node
 ==============
 
 
+
 8. Network Node
 ==============
+
 
 
 9. Compute Node
 ==============
 
 
+
 10. Configure the internal networks
 ==============
+
 
 
 11. Word Of Advice.
 ==============
 
 
+
 2. Controller node
 ===============
+
 
 2.1. Preparing Ubuntu 12.10
 -----------------
