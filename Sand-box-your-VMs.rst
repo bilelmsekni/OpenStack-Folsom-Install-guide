@@ -397,28 +397,41 @@ For the remaining Installation Follow `OpenStack-Folsom-Install-guide 2. Control
 8.2.Networking
 ------------
 
-* 3 NICs must be present::
+* 4 NICs must be present::
    
+    # This file describes the network interfaces available on your system
+    # and how to activate them. For more information, see interfaces(5).
 
-   # VM internet Access
-   auto eth2
-   iface eth2 inet static
-   address 192.168.100.52
-   netmask 255.255.255.0
-   gateway 192.168.100.1
-   dns-nameservers 8.8.8.8
-   
-   # OpenStack management
-   auto eth0
-   iface eth0 inet static
-   address 100.10.10.52
-   netmask 255.255.255.0
+    # The loopback network interface
+    auto lo
+    iface lo inet loopback
 
-   # VM Configuration
-   auto eth1
-   iface eth1 inet static
-   address 100.20.20.52
-   netmask 255.255.255.0
+    # The primary network interface - Virtual Box NAT connection
+    auto eth3
+    iface eth3 inet dhcp
+
+
+    # vboxnet0  - OpenStack Management Netowork
+    auto eth0
+    iface eth0 inet static
+    address 100.10.10.52
+    netmask 255.255.255.0
+    gateway 100.10.10.1
+
+    # vboxnet1 - OpenStack VM Conf. Network
+    auto eth1
+    iface eth1 inet static
+    address 100.20.20.52
+    netmask 255.255.255.0
+    gateway 100.20.20.1
+
+    # vboxnet2 - Expose OpenStack API's to external network.
+    auto eth2
+    iface eth2 inet static
+    address 192.168.100.52
+    netmask 255.255.255.0
+    gateway 192.168.100.1
+
 
 For the remaining Installation Follow `OpenStack-Folsom-Install-guide 3. Network Node <https://github.com/mseknibilel/OpenStack-Folsom-Install-guide/blob/master/OpenStack_Folsom_Install_Guide_WebVersion.rst>`_
 
@@ -450,28 +463,35 @@ For the remaining Installation Follow `OpenStack-Folsom-Install-guide 3. Network
 ------------
 
 * 3 NICs must be present::
-   
+                                           
 
-   # VM internet Access
-   auto eth2
-   iface eth2 inet static
-   address 192.168.100.52
-   netmask 255.255.255.0
-   gateway 192.168.100.1
-   dns-nameservers 8.8.8.8
-   
-   # OpenStack management
-   auto eth0
-   iface eth0 inet static
-   address 100.10.10.52
-   netmask 255.255.255.0
-
-   # VM Configuration
-   auto eth1
-   iface eth1 inet static
-   address 100.20.20.52
-   netmask 255.255.255.0
-
+    # This file describes the network interfaces available on your system
+    # and how to activate them. For more information, see interfaces(5).
+    
+    # The loopback network interface
+    auto lo
+    iface lo inet loopback
+    
+    # The primary network interface - Virtual Box NAT connection
+    auto eth2
+    iface eth2 inet dhcp
+    
+    # Virtual Box vboxnet0 - Openstack Management Network
+    auto eth0
+    iface eth0 inet static
+    address 100.10.10.53
+    netmask 255.255.255.0
+    gateway 100.10.10.1
+    
+    # Virtual Box vboxnet1 - for exposing Openstack API over external network
+    auto eth1
+    iface eth1 inet static
+    address 100.20.20.53
+    netmask 255.255.255.0
+    gateway 100.20.20.1
+    
+    
+    
 For the remaining Installation Follow `OpenStack-Folsom-Install-guide 4. Compute Node <https://github.com/mseknibilel/OpenStack-Folsom-Install-guide/blob/master/OpenStack_Folsom_Install_Guide_WebVersion.rst>`_
 
 After Finishing With the Guide's Steps ... please do the following Changes.
@@ -486,7 +506,7 @@ After Finishing With the Guide's Steps ... please do the following Changes.
 
 * If you are using VMWare then you may get a good response. install 
 
-* Edit /etc/nova/nova-compute.conf file again and change 'kvm' to 'qemu'::
+* Edit /etc/nova/nova-compute.conf file again and change 'kvm' to 'qemu' leave the rest as it is::
    
    [DEFAULT]
    libvirt_type=qemu
