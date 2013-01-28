@@ -474,6 +474,26 @@ For the remaining Installation Follow `OpenStack-Folsom-Install-guide 3. Network
 
 For the remaining Installation Follow `OpenStack-Folsom-Install-guide 4. Compute Node <https://github.com/mseknibilel/OpenStack-Folsom-Install-guide/blob/master/OpenStack_Folsom_Install_Guide_WebVersion.rst>`_
 
+After Finishing With the Guide's Steps ... please do the following Changes.
+
+4.3 KVM
+------------------
+
+* your hardware does not support virtualization because it is a virtual machine itselves ::
+
+   apt-get install cpu-checker
+   kvm-ok
+
+* If you are using VMWare then you may get a good response. install 
+
+* Edit /etc/nova/nova-compute.conf file again and change 'kvm' to 'qemu'::
+   
+   [DEFAULT]
+   libvirt_type=qemu
+   
+* Now if you try to launch virtual machine instances they will work. 
+
+**Note :** This is for SandBoxing purposes only. Ideal for learning and testing, checking out OpenStack. If you want proper working you must have physical machines working.
 
 10. Configure the internal networks
 ==============
@@ -483,31 +503,10 @@ For the remaining Installation Follow `OpenStack-Folsom-Install-guide 4. Compute
 11. Word Of Advice.
 ==============
 
+* On any condition do not restart - shutdown your VM's, just Save the machine state.
 
 
 
-4.3 KVM
-------------------
-
-* make sure that your hardware enables virtualization::
-
-   apt-get install cpu-checker
-   kvm-ok
-
-* Normally you would get a good response. Now, move to install kvm and configure it::
-
-   apt-get install -y kvm libvirt-bin pm-utils
-
-
-
-* Edit /etc/nova/nova-compute.conf file ::
-   
-   [DEFAULT]
-   libvirt_type=kvm xxx to qemu
-   libvirt_ovs_bridge=br-int
-   libvirt_vif_type=ethernet
-   libvirt_vif_driver=nova.virt.libvirt.vif.LibvirtHybridOVSBridgeDriver
-   libvirt_use_virtio_for_bridges=True
 
 
 
@@ -522,6 +521,7 @@ To view a copy of this license, visit [ http://creativecommons.org/licenses/by/3
 13. Contacts
 ===========
 
+Pranav Salunke: pps.pranav@gmail.com
 Bilel Msekni: bilel.msekni@telecom-sudparis.eu
 
 14. Acknowledgment
