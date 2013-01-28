@@ -32,8 +32,21 @@ Table of Contents
 
 0. What is it?
 ==============
+Well this guide will help you to setup your own OpenStack Cloud on Virtual Machiens and Virtual Networks. 
+These Virtual Machines and Virtual Networks will be given equal privilage as a physical machine on a physical network.
 
-OpenStack Folsom Install Guide is an easy and tested way to create your own OpenStack platform. 
+This Guide is not responsible for teaching OpenStack, Networking , Virtualization and Linux related concepts.
+
+For learning more follow these links :
+
+OpenStack:
+  1.I am using **OpenStack Folsom Install Guide** by  **SkiBLE mseknibilel** as it is well written, easy and tested by OpenSource geeks, with regular updates.
+    You can find OpenStack Folsom Install Guide ![here](https://github.com/mseknibilel/OpenStack-Folsom-Install-guide)
+  2.If you want to blow your brains out then you can refer the OpenStack Official Website which contains all the related Documentation,
+    API guides , Wikis etc. Access the OpenStack Official Website ![here](http://www.openstack.org/)
+
+Networking:
+  1. Well as an Engineer I had this subject for studies and would suggest ![Computer Networks (5th Edition) by Andrew S. Tanenbaum](http://www.amazon.com/Computer-Networks-5th-Andrew-Tanenbaum/dp/0132126958) is an awesome one to learn networking 
 
 Version 3.0
 
