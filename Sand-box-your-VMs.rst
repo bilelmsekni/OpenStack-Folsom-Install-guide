@@ -310,6 +310,11 @@ This should reconnect your network about 99% of the times. If you are really unl
 7. Controller Node
 ==============
 
+Configure your network by editing /etc/network/interfaces file
+
+If you have installed Ubuntu Server 12.04 then you need to follow `these <http://www.ubuntu.com/download/help/cloud-archive-instructions>`_ steps to access OpenStack Folsom archives
+
+Follow 
 
 
 8. Network Node
