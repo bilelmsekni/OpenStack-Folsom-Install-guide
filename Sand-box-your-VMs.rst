@@ -191,22 +191,68 @@ Rest of the configurations reamin same except for the UI and few other trivial d
       .. image:: https://raw.github.com/cloud-rack/cloud-rack-docs/master/ScreenShots/2.%20Setup%20VM/Control%20Node/2-%20Resource%20Allocation.png
     
     For **Bridged Connections** set up two NIC cards as bridged connections and the settings as shown by the diagram...
-      
+      eth0 - 100.10.10.51 (IP addresses are not allocated now)
+      eth1 - 192.168.100.51 (IP addresses are not allocated now)
       .. image:: https://raw.github.com/cloud-rack/cloud-rack-docs/master/ScreenShots/2.%20Setup%20VM/Control%20Node/7-%20Bridge%20Connection.png
       
       Note: Internet is avaliable to bridged connected VM's directly so no need to setup a seperate NIC for internet.
     For **Host Only Connections** set up three NIC cards as per the given diagram.
-      OpenStack Management Network - 100.10.10.51
+      eth0 - OpenStack Management Network - 100.10.10.51 (IP addresses are not allocated now)
       .. image:: https://raw.github.com/cloud-rack/cloud-rack-docs/master/ScreenShots/2.%20Setup%20VM/Control%20Node/3-%20control-nw1.png
-      Expose OpenStack API
+      eth1 - Expose OpenStack API - 192.168.100.51 (IP addresses are not allocated now)
       .. image:: https://raw.github.com/cloud-rack/cloud-rack-docs/master/ScreenShots/2.%20Setup%20VM/Control%20Node/4%20-%20control-nw2.png
-      Virtual Box NAT (Network Address Translation) - for internet Connection.
+      eth2 - Virtual Box NAT (Network Address Translation) - for internet Connection. (IP addresses are not allocated now)
       .. image:: https://raw.github.com/cloud-rack/cloud-rack-docs/master/ScreenShots/2.%20Setup%20VM/Control%20Node/5%20-control-nw3.png
 
+  Step 2:
+    Network Node
+      Create a new Virtual Machine ... configure it similar to the Control Node except for the networking part.
+      
+        **For bridged connections** Create three NIC's connect them to bridge network as done above.
+
+        **For Host-Only Connections** Create four NIC's 
+          1. eth0 - OpenStack Management Network - 100.10.10.52 (IP addresses are not allocated now)
+          2. eth1 - OpenStack VM Conf. Network - 100.20.20.52 (IP addresses are not allocated now)
+          3. eth2 - Expose OpenStack to external networks - 192.168.100.52 (IP addresses are not allocated now)
+          4. eth3 - NAT - for internet connection.
+  Step 3:
+    Compute Node:
+      Create a new Virtual Machine ... configure it as follows:
+        If possible give it about **1gb - 4 gb of ram** depending how much extra RAM you have
+        Give as many Processor Cores you can spare with **100% processor Execution Capacity**
+
+        **For bridged connections** Create two NIC's connect them to bridge network as done above.
+
+        **For Host-Only Connections** Create four NIC's 
+          1. eth0 - OpenStack Management Network - 100.10.10.53 (IP addresses are not allocated now)
+          2. eth1 - OpenStack VM Conf. Network - 100.20.20.53 (IP addresses are not allocated now)
+          3. eth2 - NAT - for internet connection.
+
+
+**Note:** For Host Only Connections - Please do remember to select the NIC card which has the internet access NAT - which is
+::
+  During Installation of Ubuntu Server on the Virtual Machine Nodes you will be asked for the Network Interface to be 
+  Selected for Internet. Make sure you select the proper one.
+  1. Control Node :
+      Select eth2
+  2. Network Node :
+      Select eth3
+  3. Compute Node :
+      Select eth2
+
+**Note:** You can select the network interface orders as per your choice but to make life simpler I have followed `OpenStack-Folsom-Install-Guide by  SkiBLE mseknibilel<https://github.com/mseknibilel/OpenStack-Folsom-Install-guide>`_ 
+
+**Warning:**  You have to select the MAC addresses of the NIC cards before you start the installation of Ubuntu server. And make sure
+              that the MAC address are not changed once you start the installation. This leads to Network Interface variable name registory error
+              inside the kernel network configurations and you will have to manually edit it , let alone the hell of SSH Key conflicts due
+              to change in MAC address after installaion of the OS's and OpenStack packages on your VM's.
+            
 
 **3. Install Packages on Virtual Machines** :
 
-3. Add Virtual Networks
+
+
+3. Configure Virtual Networks 
 ==============
 
 4. Install SSH and FTP
