@@ -2,7 +2,7 @@
   OpenStack Folsom Install Guide
 ==========================================================
 
-:Version: 1.0
+:Version: 0.1
 :Source: https://github.com/mseknibilel/OpenStack-Folsom-Install-guide
 :Keywords: Multi node OpenStack, Folsom, Quantum, Nova, Keystone, Glance, Horizon, Cinder, OpenVSwitch, KVM, Ubuntu Server 12.10 (64 bits),Virtual Box, Sand-Boxing, VmWare, Virtual Networks.
 
@@ -40,21 +40,40 @@ This Guide is not responsible for teaching OpenStack, Networking , Virtualizatio
 For learning more follow these links :
 
 OpenStack:
-  1.I am using **OpenStack Folsom Install Guide** by  **SkiBLE mseknibilel** as it is well written, easy and tested by OpenSource geeks, with regular updates.
-    You can find OpenStack Folsom Install Guide ..link :: https://github.com/mseknibilel/OpenStack-Folsom-Install-guide
-  2.If you want to blow your brains out then you can refer the OpenStack Official Website which contains all the related Documentation,
-    API guides , Wikis etc. Access the OpenStack Official Website ![here](http://www.openstack.org/)
+  1.I am using **OpenStack Folsom Install Guide** by  **SkiBLE mseknibilel** as it is well written, easy and tested by 
+    OpenSource geeks, with regular updates.
+    You can find OpenStack Folsom Install Guide link `here https://github.com/mseknibilel/OpenStack-Folsom-Install-guide`
+  2.If you want to blow your brains out then you can refer the OpenStack Official Website which contains all the related 
+    Documentation, API's, guides , Wikis etc. Access the OpenStack Official Website `here http://www.openstack.org/`
 
 Networking:
-  1. Well as an Engineer I had this subject for studies and would suggest ![Computer Networks (5th Edition) by Andrew S. Tanenbaum](http://www.amazon.com/Computer-Networks-5th-Andrew-Tanenbaum/dp/0132126958) is an awesome one to learn networking 
+  1.Basic Networking concepts are necessary but can be ignored, if you want to dig into networking I would 
+    suggest `Computer Networks (5th Edition) by Andrew S. Tanenbaum http://www.amazon.com/Computer-Networks-5th-Andrew-Tanenbaum/dp/0132126958` is an awesome one to learn networking 
+  2.For learning Virtual Networking or Networking for Virtual Machines the following guide by Virtual Box `here http://www.virtualbox.org/manual/ch06.html` should suffice.
+    ** Note : ** This is required as furthur in the guid these Concepts will be handy and you need to know what kind of
+                 networks you are setting up as there will be nesting of networks , meaning Virtual Networks inside Virtual Networks.
 
-Version 3.0
+Virtualization:
+  1.Learn, go through the Virtual Box Guide `here http://www.virtualbox.org/manual/UserManual.html`, this should be sufficient to provide a fair idea on how to Virtualization.
+  2.Virtual Box provides User Interface and API for using it, although API will provide more flexibility, UI will have lesser lerning curve, its upto you. I will try
+    to provide both if time permits but I have to remind myselves that this guide is meant for OpenStack sandboxing :).
+    You can access the API's for advanced networking `here https://www.virtualbox.org/wiki/Advanced_Networking_Linux`.
 
-Status: stable 
+Linux:
+  1.You will need some basic knowledge of Linux otherwise you will go through tremendios torture of blindly following these Guides and
+    if incase come to an error/dead lock, you will get stuck for silly reasons. There are many books, docs avaliable and I dont know which
+    one to recommend so please google it.
+
+
+Version 0.1
+
+Status: work in progress 
 
 
 1. Requirements
 ====================
+
+Well there are many ways to configure you OpenStack installation but I am going to follow `this one https://github.com/mseknibilel/OpenStack-Folsom-Install-guide/blob/master/OpenStack_Folsom_Install_Guide_WebVersion.rst`
 
 :Node Role: NICs
 :Control Node: eth0 (100.10.10.51), eth1 (192.168.100.51)
