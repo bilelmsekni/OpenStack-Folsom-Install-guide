@@ -131,12 +131,12 @@ The following are the host only connections that you will be setting up later on
 Well a few of these sections will be full of screenshots because it is essential for people to understand some of the networking
 related configurations so please bear with me since its quite necessary to put it up.
 
-Before you can start confiruging your Environment you need to download some of the following stuff:
+Before you can start configuring your Environment you need to download some of the following stuff:
 
-  1. `Oracle Virtual Box <https://www.virtualbox.org/wiki/Downloads>`_ 
+  1. `Oracle Virtual Box <https://www.virtualbox.org/wiki/Downloads>`_
         Note: You cannot set up a amd64 VM on a x86 machine. 
         
-  2. `Ubuntu 12.04 Server or Ubuntu 12.10 Server<http://www.ubuntu.com/download/server>`_
+  2. `Ubuntu 12.04 Server or Ubuntu 12.10 Server <http://www.ubuntu.com/download/server>`_
         Note: You need a x86 image for VM's if kvm-ok fails, even though you are on amd64 machine.
 
   3. My host machine is Ubuntu 12.04 amd64 (Core2duo (VT not supported)) and Ubuntu 12.10 amd64 (Intel i5 2nd gen (VT enabled))
@@ -149,9 +149,9 @@ If you have i5 or i7 2nd gen processor you can have VT technology inside VM's pr
 nodes will give positive result on KVM-OK. (Nesting of type-2 Hypervisors).
 Rest of the configurations reamin same except for the UI and few other trivial differences.
 
-** 1. Setting up Virtual Network** :
+**1. Setting up Virtual Network** :
 
-  **Note  **If you are using Bridged Connections Please Ignore this section.
+  **Note:** If you are using Bridged Connections Please Ignore this section.
 
   Step 1:
     Start **Virtual Box**
@@ -176,7 +176,7 @@ Rest of the configurations reamin same except for the UI and few other trivial d
       Deselect the **Enable Server** option
       .. image:: https://raw.github.com/cloud-rack/cloud-rack-docs/master/ScreenShots/1.%20Virtual%20Network/3-%20Configure%20DHCP.png
 
-** 2. Set up Virtual Machines ** :
+**2. Set up Virtual Machines** :
       
   Step 1:
     Control Node
@@ -195,7 +195,7 @@ Rest of the configurations reamin same except for the UI and few other trivial d
       .. image:: https://raw.github.com/cloud-rack/cloud-rack-docs/master/ScreenShots/2.%20Setup%20VM/Control%20Node/5%20-control-nw3.png
 
 
-** 3. Install Packages on Virtual Machines ** :
+**3. Install Packages on Virtual Machines** :
 
 3. Add Virtual Networks
 ==============
