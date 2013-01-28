@@ -326,7 +326,7 @@ This should reconnect your network about 99% of the times. If you are really unl
 2.2.Networking
 ------------
 
-Configure your network by editing /etc/network/interfaces file
+Configure your network by editing ::/etc/network/interfaces file
 
 * Only one NIC on the controller node need internet access::
   
