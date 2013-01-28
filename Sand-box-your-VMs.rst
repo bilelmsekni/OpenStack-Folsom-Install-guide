@@ -86,6 +86,15 @@ Don't worry you will still be able to use Virtual Box but it will be very slow, 
 Well there are many ways to configure you OpenStack installation but I am going to follow `OpenStack-Folsom-Install-guide <https://github.com/mseknibilel/OpenStack-Folsom-Install-guide/blob/master/OpenStack_Folsom_Install_Guide_WebVersion.rst>`
 
 
+There are two different types of configurations that are possible for setting up of Virtual Networks.
+
+**1. Bridged Connections :** 
+Bridged Connection connects your VM as if its a physical machine. This means that your machine will be able to use
+internet and can be traced from other machines from internet. So if your network has a physical switch or you can
+spare a few IP addresses then I would suggest bridged connection
+                            
+Advantage of bridged connections is that your networks remain the same and you are free of the hassels of creating
+virtual networks.
 
 
 :Node Role: NICs
@@ -93,15 +102,24 @@ Well there are many ways to configure you OpenStack installation but I am going 
 :Network Node: eth0 (100.10.10.52), eth1 (100.20.20.52), eth2 (192.168.100.52)
 :Compute Node: eth0 (100.10.10.53), eth1 (100.20.20.53)
 
-**Note 1:** If you don't have 2 NICs on controller node, you can check other branches for 2 NIC installation.
 
-**Note 2:** Compute and Controller nodes can be merged into one node.
-
-**Note 3:** If you are not interrested in Quantum, you can also use this guide but you must follow the nova section found `here <https://github.com/mseknibilel/OpenStack-Folsom-Install-guide/blob/master/Tricks%26Ideas/install_nova-network.rst>`_ instead of the one written in this guide.
-
-**Note 4:** This is my current network architecture, you can add as many compute node as you wish.
 
 .. image:: http://i.imgur.com/aJvZ7.jpg
+
+**Note:** If you are using bridged connections you may skip this section as there is no need to set up host-only connections.
+
+**2. Host Only Connections:** 
+Host only connections provide an internet network between your host and the Virtual Machine instances
+up and running on your host machine. This network is not tracable by other networks.
+
+The following are the host only connections that you will be setting up later on :
+
+  1. vboxnet1 - Openstack Management Network - Host static IP 100.10.10.1 
+  2. vboxnet2 - VM Conf. Network - Host Static IP 100.20.20.1
+  3. vboxnet3 - VM External Network Access (Host Machine)
+
+.. image:: https://raw.github.com/cloud-rack/cloud-rack-docs/master/Diagrams/WIth%20Host%20only.png
+
 
 2. Setup Your VM Environment
 ==============
