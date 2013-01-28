@@ -37,7 +37,7 @@ These Virtual Machines and Virtual Networks will be given equal privilege as a p
 
 This Guide is not responsible for teaching OpenStack, Networking , Virtualization and Linux related concepts.
 
-For learning more follow these links :
+For learning more follow these links:
 
 OpenStack:
   1.I am using **OpenStack Folsom Install Guide** by  **SkiBLE mseknibilel** as it is well written, easy and tested by 
