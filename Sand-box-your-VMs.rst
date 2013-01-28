@@ -11,20 +11,6 @@ Authors
 
 Copyright (C) Pranav Salunke <pps.pranav@gmail.com>
 
-Contributors
-==========
-
-=================================================== =======================================================
-
- Roy Sowa <Roy.Sowa@ssc-spc.gc.ca>                  Stephen gran <stephen.gran@guardian.co.uk> 
-
- Dennis E Miyoshi <dennis.miyoshi@hp.com>            Marco Consonni <marco_consonni@hp.com>
-
- Houssem Medhioub <houssem.medhioub@it-sudparis.eu> Djamal Zeghlache <djamal.zeghlache@telecom-sudparis.eu>
-
-=================================================== =======================================================
-
-Wana contribute ? Read the guide, send your contribution and get your name listed ;)
 
 Table of Contents
 =================
@@ -33,15 +19,16 @@ Table of Contents
 
   0. What is it?
   1. Requirements
-  2. Controller Node
-  3. Network Node
-  4. Compute Node
-  5. Start your first VM
-  6. Licencing
-  7. Contacts
-  8. Acknowledgement
-  9. Credits
-  10. To do
+  2. Setup Your VM Environment
+  3. Add Virtual Networks
+  4. Install SSH and FTP
+  5. Install Your VM's Instances
+  6. Its about to get sticky
+  7. Controller Node
+  8. Network Node
+  9. Compute Node
+  10. Configure the internal networks
+  11. Word Of Advice.
 
 0. What is it?
 ==============
