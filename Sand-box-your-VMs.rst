@@ -310,11 +310,50 @@ This should reconnect your network about 99% of the times. If you are really unl
 7. Controller Node
 ==============
 
+7.1. Preparing Ubuntu 12.10/12.04
+-----------------
+
+* After you install Ubuntu 12.10 Server 64bits, Go to the sudo mode and don't leave it until the end of this guide::
+
+   sudo su
+
+* Update your system::
+
+   apt-get update
+   apt-get upgrade
+   apt-get dist-upgrade
+
+2.2.Networking
+------------
+
 Configure your network by editing /etc/network/interfaces file
+
+* Only one NIC on the controller node need internet access::
+  
+   # NAT should be preconfigured otherwise can copy the following ...
+   # The primary network interface
+   auto eth2
+   iface eth2 inet dhcp
+
+   #For Exposing OpenStack API over the internet - Virtual Box vboxnet0 
+   auto eth1
+   iface eth1 inet static
+   address 192.168.100.51
+   netmask 255.255.255.0
+   gateway 192.168.100.1
+   
+
+   #Not internet connected(used for OpenStack management) - Virtual Box vboxnet1
+   auto eth0
+   iface eth0 inet static
+   address 100.10.10.51
+   netmask 255.255.255.0
+  
+
 
 If you have installed Ubuntu Server 12.04 then you need to follow `these <http://www.ubuntu.com/download/help/cloud-archive-instructions>`_ steps to access OpenStack Folsom archives
 
-Follow 
+
 
 
 8. Network Node
