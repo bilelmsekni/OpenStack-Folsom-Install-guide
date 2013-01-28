@@ -42,7 +42,7 @@ For learning more follow these links:
 OpenStack:
   1.I am using **OpenStack Folsom Install Guide** by  **SkiBLE mseknibilel** as it is well written, easy and tested by 
   Open Source geeks, with regular updates.
-  You can find OpenStack Folsom Install Guide link 'here <https://github.com/mseknibilel/OpenStack-Folsom-Install-guide>'
+  You can find OpenStack Folsom Install Guide link `here <https://github.com/mseknibilel/OpenStack-Folsom-Install-guide>`_
   2.If you want to blow your brains out then you can refer the OpenStack Official Website which contains all the related 
   Documentation, API's, guides , Wiki's etc. Access the OpenStack Official Website 'here <http://www.openstack.org/>'
 
