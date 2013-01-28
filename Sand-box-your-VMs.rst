@@ -41,16 +41,16 @@ For learning more follow these links:
 
 OpenStack:
   1.I am using **OpenStack Folsom Install Guide** by  **SkiBLE mseknibilel** as it is well written, easy and tested by 
-    Open Source geeks, with regular updates.
-    You can find OpenStack Folsom Install Guide link `here <https://github.com/mseknibilel/OpenStack-Folsom-Install-guide>`
+  Open Source geeks, with regular updates.
+  You can find OpenStack Folsom Install Guide link `here <https://github.com/mseknibilel/OpenStack-Folsom-Install-guide>`
   2.If you want to blow your brains out then you can refer the OpenStack Official Website which contains all the related 
-    Documentation, API's, guides , Wiki's etc. Access the OpenStack Official Website `here <http://www.openstack.org/>`
+  Documentation, API's, guides , Wiki's etc. Access the OpenStack Official Website `here <http://www.openstack.org/>`
 
 Networking:
   1.Basic Networking concepts are necessary but can be ignored, if you want to dig into networking I would 
-    suggest `Computer Networks (5th Edition) by Andrew S. Tanenbaum http://www.amazon.com/Computer-Networks-5th-Andrew-Tanenbaum/dp/0132126958` is an awesome one to learn networking 
+  suggest `Computer Networks (5th Edition) by Andrew S. Tanenbaum http://www.amazon.com/Computer-Networks-5th-Andrew-Tanenbaum/dp/0132126958` is an awesome one to learn networking 
   2.For learning Virtual Networking or Networking for Virtual Machines the following guide by Virtual Box `here http://www.virtualbox.org/manual/ch06.html` should suffice.
-    ** Note : ** This is required as further in the guide these Concepts will be handy and you need to know what kind of networks you are setting up as there will be nesting of networks , meaning Virtual Networks inside Virtual Networks.
+  ** Note : ** This is required as further in the guide these Concepts will be handy and you need to know what kind of networks you are setting up as there will be nesting of networks , meaning Virtual Networks inside Virtual Networks.
 
 Virtualization:
   1.Learn, go through the Virtual Box Guide `here <http://www.virtualbox.org/manual/UserManual.html>`, this should be sufficient to provide a fair idea on how to Virtualization.
