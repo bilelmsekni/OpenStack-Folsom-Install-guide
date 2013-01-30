@@ -2,7 +2,7 @@
   OpenStack Folsom Install Guide
 ==========================================================
 
-:Version: 0.1
+:Version: 0.2
 :Source: https://github.com/mseknibilel/OpenStack-Folsom-Install-guide
 :Keywords: Multi node OpenStack, Folsom, Quantum, Nova, Keystone, Glance, Horizon, Cinder, OpenVSwitch, KVM, Ubuntu Server 12.10 (64 bits),Virtual Box, Sand-Boxing, VmWare, Virtual Networks.
 
@@ -65,9 +65,9 @@ Linux:
   1.You will need some basic knowledge of Linux otherwise you will go through tremendous torture of blindly following these Guides and if in case come to an error/dead lock, you will get stuck for silly reasons. There are many books, docs available and I don't know which one to recommend so please `Google <https://www.google.com/>`_ it.
 
 
-Version 0.1
+Version 0.2
 
-Status: work in progress 
+Status: Beta
 
 
 1. Requirements
