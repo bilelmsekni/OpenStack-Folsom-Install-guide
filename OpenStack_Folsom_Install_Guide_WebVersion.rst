@@ -357,8 +357,7 @@ Status: stable
    metadata_host=100.10.10.51
    metadata_listen=0.0.0.0
    nova_url=http://100.10.10.51:8774/v1.1/
-   sql_connection=mysql://novaUser:novaPass@100.10.10.51/nova
-   ec2_url=http://100.10.10.51:8773/services/Cloud 
+   sql_connection=mysql://novaUser:novaPass@100.10.10.51/nova 
    root_helper=sudo nova-rootwrap /etc/nova/rootwrap.conf
 
    # Auth
@@ -823,7 +822,6 @@ You can now access your OpenStack **192.168.100.51/horizon** with credentials **
    metadata_listen=0.0.0.0
    nova_url=http://100.10.10.51:8774/v1.1/
    sql_connection=mysql://novaUser:novaPass@100.10.10.51/nova
-   ec2_url=http://100.10.10.51:8773/services/Cloud 
    root_helper=sudo nova-rootwrap /etc/nova/rootwrap.conf
 
    # Auth
