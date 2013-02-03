@@ -352,7 +352,6 @@ Status: stable
    ec2_host=100.10.10.51
    ec2_dmz_host=100.10.10.51
    rabbit_host=100.10.10.51
-   cc_host=100.10.10.51
    dmz_cidr=169.254.169.254/32
    metadata_host=100.10.10.51
    metadata_listen=0.0.0.0
@@ -816,7 +815,6 @@ You can now access your OpenStack **192.168.100.51/horizon** with credentials **
    ec2_host=100.10.10.51
    ec2_dmz_host=100.10.10.51
    rabbit_host=100.10.10.51
-   cc_host=100.10.10.51
    dmz_cidr=169.254.169.254/32
    metadata_host=100.10.10.51
    metadata_listen=0.0.0.0
