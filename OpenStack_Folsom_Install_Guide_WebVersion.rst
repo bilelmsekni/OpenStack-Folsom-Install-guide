@@ -111,7 +111,7 @@ Status: stable
 
 * Install MySQL::
 
-   apt-get install mysql-server python-mysqldb
+   apt-get install -y mysql-server python-mysqldb
 
 * Configure mysql to accept all incoming requests::
 
@@ -120,14 +120,14 @@ Status: stable
 
 * Install RabbitMQ::
 
-   apt-get install rabbitmq-server 
+   apt-get install -y rabbitmq-server 
 
 2.4. Node synchronization
 ------------------
 
 * Install other services::
 
-   apt-get install ntp
+   apt-get install -y ntp
 
 * Configure the NTP server to synchronize between your compute nodes and the controller node::
    
@@ -139,7 +139,7 @@ Status: stable
 
 * Install other services::
 
-   apt-get install vlan bridge-utils
+   apt-get install -y vlan bridge-utils
 
 * Enable IP_Forwarding::
 
@@ -152,7 +152,7 @@ Status: stable
 
 * Start by the keystone packages::
 
-   apt-get install keystone
+   apt-get install -y keystone
 
 * Create a new MySQL database for keystone::
 
@@ -193,7 +193,7 @@ Status: stable
 
 * To test Keystone, we use a simple curl request::
 
-   apt-get install curl openssl
+   apt-get install -y curl openssl
    curl http://192.168.100.51:35357/v2.0/endpoints -H 'x-auth-token: ADMIN'
 
 2.7. Glance
@@ -201,7 +201,7 @@ Status: stable
 
 * After installing Keystone, we continue with installing image storage service a.k.a Glance::
 
-   apt-get install glance
+   apt-get install -y glance
 
 * Create a new MySQL database for Glance::
 
@@ -278,7 +278,7 @@ Status: stable
 
 * Install the Quantum server::
 
-   apt-get install quantum-server quantum-plugin-openvswitch
+   apt-get install -y quantum-server quantum-plugin-openvswitch
 
 * Create a database::
 
@@ -409,7 +409,7 @@ Status: stable
 
 * Install the required packages::
 
-   apt-get install cinder-api cinder-scheduler cinder-volume iscsitarget open-iscsi iscsitarget-dkms
+   apt-get install -y cinder-api cinder-scheduler cinder-volume iscsitarget open-iscsi iscsitarget-dkms
 
 * Configure the iscsi services::
 
@@ -490,7 +490,7 @@ Status: stable
 
 * To install horizon, proceed like this ::
 
-   apt-get install openstack-dashboard memcached
+   apt-get install -y openstack-dashboard memcached
 
 
 * If you don't like the OpenStack ubuntu theme, you can disabled it and go back to the default look::
@@ -525,7 +525,7 @@ You can now access your OpenStack **192.168.100.51/horizon** with credentials **
 
 * Install ntp service::
 
-   apt-get install ntp
+   apt-get install -y ntp
 
 * Configure the NTP server to follow the controller node::
    
@@ -534,7 +534,7 @@ You can now access your OpenStack **192.168.100.51/horizon** with credentials **
 
 * Install other services::
 
-   apt-get install vlan bridge-utils
+   apt-get install -y vlan bridge-utils
 
 * Enable IP_Forwarding::
 
@@ -578,7 +578,7 @@ You can now access your OpenStack **192.168.100.51/horizon** with credentials **
 
 * Create the bridges::
 
-   #br-int will be used for VM integration	
+   #br-int will be used for VM integration  
    ovs-vsctl add-br br-int
 
    #br-eth1 will be used for VM configuration 
@@ -653,7 +653,7 @@ You can now access your OpenStack **192.168.100.51/horizon** with credentials **
 
 * Install ntp service::
 
-   apt-get install ntp
+   apt-get install -y ntp
 
 * Configure the NTP server to follow the controller node::
    
@@ -662,7 +662,7 @@ You can now access your OpenStack **192.168.100.51/horizon** with credentials **
 
 * Install other services::
 
-   apt-get install vlan bridge-utils
+   apt-get install -y vlan bridge-utils
 
 * Enable IP_Forwarding::
 
@@ -692,7 +692,7 @@ You can now access your OpenStack **192.168.100.51/horizon** with credentials **
 
 * make sure that your hardware enables virtualization::
 
-   apt-get install cpu-checker
+   apt-get install -y cpu-checker
    kvm-ok
 
 * Normally you would get a good response. Now, move to install kvm and configure it::
@@ -779,7 +779,7 @@ You can now access your OpenStack **192.168.100.51/horizon** with credentials **
 
 * Install nova's required components for the compute node::
 
-   apt-get install nova-compute-kvm
+   apt-get install -y nova-compute-kvm
 
 * Now modify authtoken section in the /etc/nova/api-paste.ini file to this::
 
