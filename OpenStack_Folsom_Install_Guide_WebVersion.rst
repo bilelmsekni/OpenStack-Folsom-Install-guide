@@ -506,7 +506,7 @@ Status: stable
 
    service apache2 restart; service memcached restart
 
-You can now access your OpenStack **192.168.100.51/horizon** with credentials **admin:admin_pass**.
+You can now access your OpenStack **192.168.100.51/dashboard** with credentials **admin:admin_pass**.
 
 **Note:** A reboot might be needed for a successful login
 
