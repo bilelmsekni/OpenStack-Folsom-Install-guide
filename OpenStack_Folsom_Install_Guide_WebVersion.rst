@@ -37,7 +37,7 @@ Table of Contents
   3. Network Node
   4. Compute Node
   5. Start your first VM
-  6. Licencing
+  6. Licensing
   7. Contacts
   8. Acknowledgement
   9. Credits
