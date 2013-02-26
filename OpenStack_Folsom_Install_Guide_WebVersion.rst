@@ -492,15 +492,9 @@ Status: stable
    apt-get install openstack-dashboard memcached
 
 
-* If you don't like the OpenStack ubuntu theme, you can disabled it and go back to the default look::
+* If you don't like the OpenStack ubuntu theme, you can remove the package to disable it:
 
-   nano /etc/openstack-dashboard/local_settings.py
-   #Comment these lines
-   #Enable the Ubuntu theme if it is present.
-   #try:
-   #    from ubuntu_theme import *
-   #except ImportError:
-   #    pass
+   dpkg --purge openstack-dashboard-ubuntu-theme
 
 * Reload Apache and memcached::
 
