@@ -492,7 +492,7 @@ Status: stable
    apt-get install openstack-dashboard memcached
 
 
-* If you don't like the OpenStack ubuntu theme, you can remove the package to disable it:
+* If you don't like the OpenStack ubuntu theme, you can remove the package to disable it::
 
    dpkg --purge openstack-dashboard-ubuntu-theme
 
