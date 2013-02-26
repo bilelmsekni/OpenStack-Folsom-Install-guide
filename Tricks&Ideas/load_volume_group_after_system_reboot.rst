@@ -48,11 +48,11 @@ There are multiple ways to fix this, two of them are described below.
 2. Using upstart
 ================
 
-* Create an upstart script to create the loopback device as soon as the mount is available:
+* Create an upstart script to create the loopback device as soon as the mount is available::
 
     sudo vim /etc/init/losetup.conf
 
-* Add the following lines
+* Add the following lines::
 
     description     "Set up loop devices"
 
