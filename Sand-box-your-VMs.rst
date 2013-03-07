@@ -16,6 +16,3 @@ OpenStack-Folsom-VM-SandBox-Guide
 
 * For Advanced Users who know all about virtualziation - or do not want to use Virtual Machines for OpenStack deployment should check out:
     `OpenStack-Folsom-Install-Guide <https://github.com/mseknibilel/OpenStack-Folsom-Install-guide/blob/master/OpenStack_Folsom_Install_Guide_WebVersion.rst`_ by Bilel Msekni
-
-
-**Note :** If you are looking forward to learn Virtualization or OpenStack this is not a good place for you to start with. Why dont you `Google It <https://www.google.com>`_ !!!
