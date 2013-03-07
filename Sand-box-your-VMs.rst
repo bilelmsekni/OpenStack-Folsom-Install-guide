@@ -2,7 +2,7 @@ OpenStack-Folsom-VM-SandBox-Guide
 =================================
 
  This Guide is for Stackers who want to Sand Box OpenStack Folsom in Virtual Box or Vmware
- ================================
+ 
  
 * For those who want to use `VMware` for `OpenStack Sandboxing`, can check out the following link:
     `OpenStack-Folsom-VM-SandBoxing-Guide with VMware <https://github.com/dguitarbite/OpenStack-Folsom-VM-SandBox-Guide/tree/VMware>`_
