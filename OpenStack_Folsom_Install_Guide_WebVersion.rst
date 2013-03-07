@@ -37,7 +37,7 @@ Table of Contents
   3. Network Node
   4. Compute Node
   5. Start your first VM
-  6. Licencing
+  6. Licensing
   7. Contacts
   8. Acknowledgement
   9. Credits
@@ -46,7 +46,7 @@ Table of Contents
 0. What is it?
 ==============
 
-OpenStack Folsom Install Guide is an easy and tested way to create your own OpenStack plateform. 
+OpenStack Folsom Install Guide is an easy and tested way to create your own OpenStack platform. 
 
 Version 3.0
 
@@ -143,8 +143,8 @@ Status: stable
 
 * Enable IP_Forwarding::
 
-   nano /etc/sysctl.conf
-   # Uncomment net.ipv4.ip_forward=1, to save you from rebooting, perform the following
+   sed -i 's/#net.ipv4.ip_forward=1/net.ipv4.ip_forward=1/' /etc/sysctl.conf
+   # To save you from rebooting, perform the following
    sysctl net.ipv4.ip_forward=1
 
 2.6. Keystone
@@ -352,17 +352,13 @@ Status: stable
    ec2_host=100.10.10.51
    ec2_dmz_host=100.10.10.51
    rabbit_host=100.10.10.51
-   cc_host=100.10.10.51
    dmz_cidr=169.254.169.254/32
    metadata_host=100.10.10.51
    metadata_listen=0.0.0.0
-   nova_url=http://100.10.10.51:8774/v1.1/
-   sql_connection=mysql://novaUser:novaPass@100.10.10.51/nova
-   ec2_url=http://100.10.10.51:8773/services/Cloud 
+   sql_connection=mysql://novaUser:novaPass@100.10.10.51/nova 
    root_helper=sudo nova-rootwrap /etc/nova/rootwrap.conf
 
    # Auth
-   use_deprecated_auth=false
    auth_strategy=keystone
    keystone_ec2_url=http://100.10.10.51:5000/v2.0/ec2tokens
    # Imaging service
@@ -370,7 +366,7 @@ Status: stable
    image_service=nova.image.glance.GlanceImageService
 
    # Vnc configuration
-   novnc_enabled=true
+   vnc_enabled=true
    novncproxy_base_url=http://192.168.100.51:6080/vnc_auto.html
    novncproxy_port=6080
    vncserver_proxyclient_address=192.168.100.51
@@ -496,15 +492,9 @@ Status: stable
    apt-get install openstack-dashboard memcached
 
 
-* If you don't like the OpenStack ubuntu theme, you can disabled it and go back to the default look::
+* If you don't like the OpenStack ubuntu theme, you can remove the package to disable it::
 
-   nano /etc/openstack-dashboard/local_settings.py
-   #Comment these lines
-   #Enable the Ubuntu theme if it is present.
-   #try:
-   #    from ubuntu_theme import *
-   #except ImportError:
-   #    pass
+   dpkg --purge openstack-dashboard-ubuntu-theme
 
 * Reload Apache and memcached::
 
@@ -541,8 +531,8 @@ You can now access your OpenStack **192.168.100.51/horizon** with credentials **
 
 * Enable IP_Forwarding::
 
-   nano /etc/sysctl.conf
-   # Uncomment net.ipv4.ip_forward=1, to save you from rebooting, perform the following
+   sed -i 's/#net.ipv4.ip_forward=1/net.ipv4.ip_forward=1/' /etc/sysctl.conf
+   # To save you from rebooting, perform the following
    sysctl net.ipv4.ip_forward=1
 
 3.2.Networking
@@ -669,8 +659,8 @@ You can now access your OpenStack **192.168.100.51/horizon** with credentials **
 
 * Enable IP_Forwarding::
 
-   nano /etc/sysctl.conf
-   # Uncomment net.ipv4.ip_forward=1, to save you from rebooting, perform the following
+   sed -i 's/#net.ipv4.ip_forward=1/net.ipv4.ip_forward=1/' /etc/sysctl.conf
+   # To save you from rebooting, perform the following
    sysctl net.ipv4.ip_forward=1
 
 4.2.Networking
@@ -818,13 +808,10 @@ You can now access your OpenStack **192.168.100.51/horizon** with credentials **
    ec2_host=100.10.10.51
    ec2_dmz_host=100.10.10.51
    rabbit_host=100.10.10.51
-   cc_host=100.10.10.51
    dmz_cidr=169.254.169.254/32
    metadata_host=100.10.10.51
    metadata_listen=0.0.0.0
-   nova_url=http://100.10.10.51:8774/v1.1/
    sql_connection=mysql://novaUser:novaPass@100.10.10.51/nova
-   ec2_url=http://100.10.10.51:8773/services/Cloud 
    root_helper=sudo nova-rootwrap /etc/nova/rootwrap.conf
 
    # Auth

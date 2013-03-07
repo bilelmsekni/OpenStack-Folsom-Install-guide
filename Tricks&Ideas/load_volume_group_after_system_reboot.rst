@@ -26,10 +26,11 @@ Contributors
 0. What is this about?
 ==============
 
-The Cinder service uses a volume group usually named cinder-volumes to provide storage for VMs. Unfortunatly, this volume group gets lost after a system reboot which causes failure when there is a volume provisioning. 
+The Cinder service uses a volume group usually named cinder-volumes to provide storage for VMs. Unfortunatly, this volume group gets lost after a system reboot which causes failure when there is a volume provisioning.
+There are multiple ways to fix this, two of them are described below.
 
-1. How to fix it?
-====================
+1. Using rc.local
+=================
 
 * To automatically load the volume group after a system reboot, proceed like the following::
 
@@ -44,7 +45,25 @@ The Cinder service uses a volume group usually named cinder-volumes to provide s
 
 **That's it**, try it out by rebooting your system and then run the vgdisplay command.
 
-2. I have a better idea!
+2. Using upstart
+================
+
+* Create an upstart script to create the loopback device as soon as the mount is available::
+
+    sudo vim /etc/init/losetup.conf
+
+* Add the following lines::
+
+    description     "Set up loop devices"
+
+    start on mounted MOUNTPOINT=/
+    task
+    exec /sbin/losetup /dev/loop0 %Your_path_to_cinder_volume%
+
+* Make sure that MOUNTPOINT in the above configuration is set to the mount point your loopback file is on,
+  and you substitute the Your_path_to_cinder_volume variable.
+
+3. I have a better idea!
 ====================
 
 You have a better idea ? Share it with us and get it named after you :)  
