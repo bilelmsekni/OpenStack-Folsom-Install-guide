@@ -25,3 +25,7 @@ https://github.com/mseknibilel/OpenStack-Folsom-Install-guide/blob/GRE/2NICs/Ope
 **Note:** Folsom + Quantum on VLAN with 2 NICs is available through VLAN/2NICs branch:
 
 https://github.com/mseknibilel/OpenStack-Folsom-Install-guide/blob/VLAN/2NICs/OpenStack_Folsom_Install_Guide_WebVersion.rst
+
+**Note:** If you want to try the above mentioned on a Virtual Environment follow :
+
+https://github.com/mseknibilel/OpenStack-Folsom-Install-guide/blob/master/Sand-box-your-VMs.rst
