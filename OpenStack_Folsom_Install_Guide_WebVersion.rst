@@ -449,7 +449,7 @@ This is how we install OpenStack's identity service:
    [DEFAULT]
    rootwrap_config=/etc/cinder/rootwrap.conf
    sql_connection = mysql://cinderUser:cinderPass@100.10.10.51/cinder
-   api_paste_confg = /etc/cinder/api-paste.ini
+   api_paste_config = /etc/cinder/api-paste.ini
    iscsi_helper=ietadm
    volume_name_template = volume-%s
    volume_group = cinder-volumes
