@@ -161,9 +161,9 @@ Status: stable
    GRANT ALL ON keystone.* TO 'keystoneUser'@'%' IDENTIFIED BY 'keystonePass';
    quit;
 
-* Adapt the connection attribute in the /etc/keystone/keystone.conf to the new database::
+* Adapt the connection attribute in the /etc/keystone/keystone.conf to the new database (This assumes that your database is on the same server)::
 
-   connection = mysql://keystoneUser:keystonePass@100.10.10.51/keystone
+   connection = mysql://keystoneUser:keystonePass@127.0.0.1/keystone
 
 * Restart the identity service then synchronize the database::
 
