@@ -872,7 +872,7 @@ To start your first VM, we first need to create a new tenant, user, internal and
 
 * Create a new network for the tenant::
 
-   quantum net-create --tenant-id $put_id_of_project_one net_proj_one --provider:network_type vlan --provider:physical_network physnet1 --provider:segmentation_id 1024
+   quantum net-create --tenant-id $put_id_of_project_one net_proj_one vlan --provider:network_type vlan --provider:physical_network physnet1 --provider:segmentation_id 1024
 
 * Create a new subnet inside the new tenant network::
 
