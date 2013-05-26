@@ -22,6 +22,7 @@ Contributors
 
  Houssem Medhioub <houssem.medhioub@it-sudparis.eu> Djamal Zeghlache <djamal.zeghlache@telecom-sudparis.eu>
 
+ Chathura S. Sarathchandra <77.chathura@gmail.com, csarata@essex.ac.uk>
 =================================================== =======================================================
 
 Wana contribute ? Read the guide, send your contribution and get your name listed ;)
@@ -72,12 +73,21 @@ Status: Testing
 2. Controller Node
 ===============
 
-2.1. Preparing Ubuntu 12.10
+2.1. Preparing Ubuntu 12.04
 -----------------
 
-* After you install Ubuntu 12.10 Server 64bits, Go to the sudo mode and don't leave it until the end of this guide::
+* After you install Ubuntu 12.04 Server 64bits, Go to the sudo mode and don't leave it until the end of this guide::
 
    sudo su
+
+* Use Ubuntu Cloud archive for Folsom as Ubuntu 12.04 has Openstack
+  Essex distribution.
+
+   apt-get install ubuntu-cloud-keyring
+
+* Edit /etc/apt/sources.list.d/cloud-archive.list:
+
+   deb http://ubuntu-cloud.archive.canonical.com/ubuntu precise-updates/folsom main   
 
 * Update your system::
 
