@@ -2,9 +2,9 @@
   OpenStack Folsom Install Guide
 ==========================================================
 
-:Version: 3.0
-:Source: https://github.com/mseknibilel/OpenStack-Folsom-Install-guide
-:Keywords: Multi node OpenStack, Folsom, Quantum, Nova, Keystone, Glance, Horizon, Cinder, OpenVSwitch, KVM, Ubuntu Server 12.10 (64 bits).
+:Version: 1.0
+:Source: https://github.com/chathura77/OpenStack-Folsom-Install-guide
+:Keywords: Multi node OpenStack, Folsom, Quantum, Nova, Keystone, Glance, Horizon, Cinder, OpenVSwitch, KVM, Ubuntu Server 12.04 (64 bits).
 
 Authors
 ==========
@@ -14,7 +14,7 @@ Copyright (C) Bilel Msekni <bilel.msekni@telecom-sudparis.eu>
 Contributors
 ==========
 
-=================================================== =======================================================
+=================================================== ======================================================
 
  Roy Sowa <Roy.Sowa@ssc-spc.gc.ca>                  Stephen gran <stephen.gran@guardian.co.uk> 
 
@@ -22,8 +22,8 @@ Contributors
 
  Houssem Medhioub <houssem.medhioub@it-sudparis.eu> Djamal Zeghlache <djamal.zeghlache@telecom-sudparis.eu>
 
- Chathura S. Sarathchandra <77.chathura@gmail.com, csarata@essex.ac.uk>
-=================================================== =======================================================
+ Chathura Sarathchandra M. <77.chathura@gmail.com>
+=================================================== ======================================================
 
 Wana contribute ? Read the guide, send your contribution and get your name listed ;)
 
@@ -49,7 +49,7 @@ Table of Contents
 
 OpenStack Folsom Install Guide is an easy and tested way to create your own OpenStack plateform. 
 
-Version 3.0
+Version 1.0
 
 Status: Testing
 
@@ -62,11 +62,10 @@ Status: Testing
 :Network Node: eth0 (100.10.10.52), eth2 (192.168.100.52)
 :Compute Node: eth0 (100.10.10.53)
 
-**Note 1:** Compute and Controller nodes can be merged into one node.
+**Note 1:** Compute and Controller nodes can be merged into one
+node. (This has not been tested yet)
 
-**Note 2:** If you are not interrested in Quantum, you can also use this guide but you must follow the nova section found `here <https://github.com/mseknibilel/OpenStack-Folsom-Install-guide/blob/master/Tricks%26Ideas/install_nova-network.rst>`_ instead of the one written in this guide.
-
-**Note 3:** This is my current network architecture, you can add as many compute node as you wish.
+**Note 2:** This is my current network architecture, you can add as many compute node as you wish.
 
 .. image:: http://i.imgur.com/4D51h.jpg
 
@@ -81,11 +80,11 @@ Status: Testing
    sudo su
 
 * Use Ubuntu Cloud archive for Folsom as Ubuntu 12.04 has Openstack
-  Essex distribution.
+  Essex distribution::
 
    apt-get install ubuntu-cloud-keyring
 
-* Edit /etc/apt/sources.list.d/cloud-archive.list:
+* Edit /etc/apt/sources.list.d/cloud-archive.list::
 
    deb http://ubuntu-cloud.archive.canonical.com/ubuntu precise-updates/folsom main   
 
@@ -370,6 +369,8 @@ This is how we install OpenStack's identity service:
    sql_connection=mysql://novaUser:novaPass@100.10.10.51/nova
    ec2_url=http://100.10.10.51:8773/services/Cloud 
    root_helper=sudo nova-rootwrap /etc/nova/rootwrap.conf
+   multihost=True
+   enabled_apis=metadata,ec2,osapi_compute,osapi_volume
 
    # Auth
    use_deprecated_auth=false
@@ -817,6 +818,9 @@ We need to install the l3 agent, dhcp agent and the openVSwitch plugin agent
    sql_connection=mysql://novaUser:novaPass@100.10.10.51/nova
    ec2_url=http://100.10.10.51:8773/services/Cloud 
    root_helper=sudo nova-rootwrap /etc/nova/rootwrap.conf
+   multi_host=True
+   enabled_apis=metadata
+   libvirt_cpu_mode = host-passthrough
 
    # Auth
    use_deprecated_auth=false
