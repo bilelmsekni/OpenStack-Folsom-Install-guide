@@ -22,7 +22,7 @@ https://github.com/mseknibilel/OpenStack-Folsom-Install-guide/blob/master/OpenSt
 
 https://github.com/mseknibilel/OpenStack-Folsom-Install-guide/blob/GRE/2NICs/OpenStack_Folsom_Install_Guide_WebVersion.rst
 
-**Note:** Folsom + Quantum on VLAN with 2 NICs is available through VLAN/2NICs branch for Ubuntu 12.04:
+**Note:** Folsom + Quantum on GRE with 2 NICs is available through GRE/2NICs branch for Ubuntu 12.04:
 
 https://github.com/chathura77/OpenStack-Folsom-Install-guide/blob/GRE/2NICs_Ubuntu2.04/OpenStack_Folsom_Install_Guide_WebVersion.rst
 
