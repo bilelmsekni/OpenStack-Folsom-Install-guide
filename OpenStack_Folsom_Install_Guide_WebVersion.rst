@@ -632,6 +632,7 @@ We need to install the l3 agent, dhcp agent and the openVSwitch plugin agent
 * Make sure that your rabbitMQ IP in /etc/quantum/quantum.conf is set to the controller node::
    
    rabbit_host = 100.10.10.51
+   fake_rabbit = False
 
 * To get the l3_agent to function properly, you need to undergo a special operation described `here <https://github.com/mseknibilel/OpenStack-Folsom-Install-guide/blob/stable/GRE/Tricks%26Ideas/modify_iptables_manager.rst>`_. 
 
