@@ -4,7 +4,7 @@
 
 :Version: 1.0
 :Source: https://github.com/chathura77/OpenStack-Folsom-Install-guide
-:Keywords: Multi node OpenStack, Folsom, Quantum, Nova, Keystone, Glance, Horizon, Cinder, OpenVSwitch, KVM, Ubuntu Server 12.04 (64 bits).
+:Keywords: Multi node OpenStack, Folsom, Quantum, Nova, Keystone, Glance, Horizon, Cinder, OpenVSwitch, KVM, Ubuntu Server 12.04 (64 bit).
 
 Authors
 ==========
